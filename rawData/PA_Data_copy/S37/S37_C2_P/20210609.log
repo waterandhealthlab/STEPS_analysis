@@ -1,0 +1,17 @@
+R tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:02.997 2021/06/09T00:17:35z: DS3231
+ 0h00:03.012 2021/06/09T00:17:35z: BME280 (0x76)
+ 0h00:03.027 2021/06/09T00:17:35z: 10:52:1c:4d:af:f9
+ 0h00:03.028 2021/06/09T00:17:35z: SSID: Apollonia Students Halls
+ 0h00:03.033 2021/06/09T00:17:35z: AP_STA

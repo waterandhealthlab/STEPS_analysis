@@ -1,0 +1,415 @@
+---
+title: "STEPS Study: Objective 3 - Comparison with guidelines and recommendations"
+author: "C. Konstantinou and X. Andrianou @ Water and Health Laboratory, CII-CUT"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  rmdformats::downcute:
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    highlight: tango
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r packages,  echo=FALSE, include=FALSE}
+
+## Prepare workspace & install libraries
+rm(list = ls(all = TRUE))
+
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg)) 
+    install.packages(new.pkg, dependencies = TRUE)
+  sapply(pkg, require, character.only = TRUE)
+}
+
+# usage
+packages <- c("readr", "dplyr", "tidyverse", "tabulizer", "stringr","glue", 
+              "lubridate", "weathermetrics", "geosphere", "janitor",
+              "svDialogs","readxl","sf","knitr")
+
+ipak(packages)
+
+```
+
+Data points will be categorized as below, within and above cut-offs following recommendations or guidelines on environmental exposures. 
+
+
+###	Temperature
+22°C-27°C for classrooms (category III, summer),	23°C-26°C for classrooms (category III, summer),	23.5°C-25.5°C for classrooms (category I, summer) - European Performance Per Building Directive -  https://www.rehva.eu/rehva-journal/chapter/new-health-comfort-promoting-cen-standard 
+
+
+
+###	Rel. Humidity: 
+40-60% (ASHRAE Guidelines and Harvard Healthy Building Program) - https://schools.forhealth.org/wp-content/uploads/sites/19/2020/11/Harvard-Healthy-Buildings-Program-COVID19-Risk-Reduction-in-Schools-Nov-2020.pdf
+
+
+###	CO2 
+
+
+a. 1350 ppm for classrooms (category III), 800 ppm for classrooms (category II),	550 ppm for classrooms (category I) - European Performance Per Building Directive -  https://www.rehva.eu/rehva-journal/chapter/new-health-comfort-promoting-cen-standard 
+
+
+b. Harvard tool to calculate optimal CO2 - https://schools.forhealth.org/wp-content/uploads/sites/19/2020/08/Harvard-Healthy-Buildings-program-How-to-assess-classroom-ventilation-08-28-2020.pdf 
+
+
+
+###	PM2.5 (24h)
+15 ug/m3 (WHO 2021 AQG, https://www.who.int/news-room/feature-stories/detail/what-are-the-who-air-quality-guidelines )
+
+
+###	PM10 (24h)
+
+
+(a) 45 ug/m3 (WHO 2021 AQG, https://www.who.int/news-room/feature-stories/detail/what-are-the-who-air-quality-guidelines)
+
+
+(b) 50 ug/m3 (https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:32008L0050&from=en)
+
+
+```{r read_data, echo=FALSE, message=FALSE, warning=FALSE}
+
+# read PA and MCF data
+questMCF_1 <- readRDS("produced_data/MCF_data_period.rds",  refhook = NULL) 
+questPA_1 <- readRDS("produced_data/PA_data_period.rds",  refhook = NULL) 
+
+
+```
+
+
+
+
+### 1b.	Compare classroom temperatures with European Performance of Buildings Directive (EPBD) guidelines - 22°C-27°C for classrooms (category III, summer) - only school hours
+
+https://www.rehva.eu/rehva-journal/chapter/new-health-comfort-promoting-cen-standard 
+
+```{r temp_class, echo=FALSE}
+
+questMCF_temp <- questMCF_1 %>% 
+  filter(name == "temperature") %>% 
+  filter(period_win !="no_school") %>%  
+  filter(location!="OD") %>%
+  mutate(guidelines = as.factor(case_when(value > 27 ~ ">27°C",
+                                value < 22 ~ "<22°C",
+                                TRUE ~ "22°C-27°C")))
+
+#summary(questMCF_temp$guidelines)
+
+table_temp <- questMCF_temp %>% 
+  dplyr::summarise(n=n(),
+                   categories = levels(guidelines),
+                   n_per_category=summary(guidelines, na.rm=TRUE),
+                   perc_per_category= round(n_per_category/n*100, digits=0), .groups="drop")
+                   
+table_temp_distr_degurba <- questMCF_temp %>% 
+ group_by(district, degurba) %>% 
+  dplyr::summarise(n=n(),
+                   categories = levels(guidelines),
+                   n_per_category=summary(guidelines, na.rm=TRUE),
+                   perc_per_category= round(n_per_category/n*100, digits=0), .groups="drop")
+
+```
+
+`r kable(print(table_temp), caption = "Temperature data categorization during school hours for classrooms")`
+`r kable(print(table_temp_distr_degurba), caption = "Temperature data categorization during school hours for classrooms - by district and degree of urbanization")`
+
+### 2.	Compare classrooms' relative humidity with ASHRAE guidelines and Harvard School of Public Health https://schools.forhealth.org/wp-content/uploads/sites/19/2020/11/Harvard-Healthy-Buildings-Program-COVID19-Risk-Reduction-in-Schools-Nov-2020.pdf (40-60%) - only school hours 
+
+```{r hum_class, echo=FALSE}
+rm(list=setdiff(ls(), c("questPA_1","questMCF_1")))
+
+
+questMCF_hum <- questMCF_1 %>% 
+  filter(name == "humidity") %>% 
+  filter(period_win !="no_school") %>%  
+  filter(location!="OD") %>%
+  mutate(guidelines = as.factor(case_when(value > 60 ~ ">60%",
+                                value < 40 ~ "<40%",
+                                TRUE ~ "40% - 60%")))
+
+#summary(questMCF_hum$guidelines)
+
+table_hum <- questMCF_hum %>% 
+  dplyr::summarise(n=n(),
+                   categories = levels(guidelines),
+                   n_per_category=summary(guidelines, na.rm=TRUE),
+                   perc_per_category= round(n_per_category/n*100, digits=0), .groups="drop")
+                   
+table_hum_distr_degurba <- questMCF_hum %>% 
+ group_by(district, degurba) %>% 
+  dplyr::summarise(n=n(),
+                   categories = levels(guidelines),
+                   n_per_category=summary(guidelines, na.rm=TRUE),
+                   perc_per_category= round(n_per_category/n*100, digits=0), .groups="drop")
+
+```
+
+`r kable(print(table_hum), caption = "Rel. humidity data categorization during school hours for classrooms")`
+`r kable(print(table_hum_distr_degurba), caption = "Rel. humidity data categorization during school hours for classrooms - by district and degree of urbanization")`
+
+### 3a.	Compare classrooms' C02 with European Performance of Buildings Directive (EPBD) guidelines - 1350 ppm for classrooms (category III), 800 ppm for classrooms (category II) - school hoors
+https://www.rehva.eu/rehva-journal/chapter/new-health-comfort-promoting-cen-standard 
+
+```{r co2_class_epbd, echo=FALSE}
+rm(list=setdiff(ls(), c("questPA_1","questMCF_1")))
+
+
+questMCF_co2 <- questMCF_1 %>% 
+  filter(name == "carbon_dioxide") %>% 
+  filter(period_win !="no_school") %>%  
+  filter(location!="OD") %>%
+  mutate(guidelines = as.factor(case_when(value > 1350 ~ ">1350 ppm",
+                                          value > 800 & value <= 1350 ~ "800-1350 ppm",
+                                TRUE ~ "<= 800 ppm")))
+
+#summary(questMCF_co2$guidelines)
+
+table_co2 <- questMCF_co2 %>% 
+  dplyr::summarise(n=n(),
+                   categories = levels(guidelines),
+                   n_per_category=summary(guidelines, na.rm=TRUE),
+                   perc_per_category= round(n_per_category/n*100, digits=0), .groups="drop")
+                   
+table_co2_distr_degurba <- questMCF_co2 %>% 
+ group_by(district, degurba) %>% 
+  dplyr::summarise(n=n(),
+                   categories = levels(guidelines),
+                   n_per_category=summary(guidelines, na.rm=TRUE),
+                   perc_per_category= round(n_per_category/n*100, digits=0), .groups="drop")
+
+```
+
+`r kable(print(table_co2), caption = "Carbon dioxide data categorization during school hours for classrooms - European Performance of Buildings Directive (EPBD) guidelines")`
+
+`r kable(print(table_co2_distr_degurba), caption = "Carbon dioxide data categorization during school hours for classrooms - European Performance of Buildings Directive (EPBD) guidelines - by district and degree of urbanization")`
+
+### 3b.	Compare classrooms' C02 with optimal CO2 based on average number of children, average classroom area and average OD CO2 - Harvard Health Buildings program - Steady State CO2 Method
+
+```{r co2_class_harvard, echo=FALSE}
+
+# https://schools.forhealth.org/wp-content/uploads/sites/19/2020/08/Harvard-Healthy-Buildings-program-How-to-assess-classroom-ventilation-08-28-2020.pdf
+# Step 3, Option D. Determine Outdoor Air Ventilation Rate using the Steady State CO2 Method
+
+# A. Average outdoor CO2 concentration
+questMCF_co2_OD <- questMCF_1 %>% 
+  filter(name == "carbon_dioxide") %>% 
+  filter(period_win !="no_school") %>%  
+  filter(location=="OD") %>%
+  dplyr::summarise(n=n(),
+                   mean=round(mean(value, na.rm=TRUE), digits=1),
+                   median=round(median(value, na.rm=TRUE), digits=1), .groups="drop")
+
+CO2_OD = questMCF_co2_OD$mean
+
+# B. Estimate the CO2 generation rate by multiplying the number of occupants in the classroom by their rate of CO2 exhalation (in CFM). 
+# The per person CO2 generation rate is dependent on age, gender, weight, and metabolic activity. For students 6-11 years old, consider an average generation rate of 0.0066 cfm per child, and for teenagers use 0.0087 cfm per teenager.
+#Multiply the corresponding generation rate times the number of kids in the classroom. For teachers (standing and speaking, average age 30-40) use 0.013 cfm.
+# • For a classroom with 14 teenage students and one teacher, the CO2 generation rate is 14*0.0087 cfm +1*0.013 cfm = 0.1348 cfm
+
+# Average number of children = 17 
+
+co2_generation_rate = (17*0.0066) + (1*0.013) 
+
+# co2_generation_rate = 0.1252 CFM
+
+# C. Estimate the target volumetric flow of outdoor air. Multiply the volume of the classroom (in cubic feet) times the target air changes per hour and divide by 60 minutes per hour.
+# • e.g., For a target of 4 ACH in a 5000 ft3 classroom, 5000*4/60 =333 cfm
+
+# Target = 4 air changes per hour
+# Average classroom area = 50 m2 = 12485.6 ft3, 
+# Average height of classroom = 2.5 m
+# classroom area * height = 125 m3 = 4414.33
+
+target_volumetric_flow = 4414.33*4/60
+
+# target_volumetric_flow = 294.29 cfm
+
+# D. . Estimate the steady state CO2 concentration using the following formula
+#𝐶𝑠𝑡𝑒𝑎𝑑𝑦−𝑠𝑡𝑎𝑡𝑒 = c02 𝑔𝑒𝑛𝑒𝑟𝑎𝑡𝑖𝑜𝑛 𝑟𝑎𝑡𝑒 + 𝑡𝑎𝑟𝑔𝑒𝑡 𝑣𝑜𝑙𝑢𝑚𝑒𝑡𝑟𝑖𝑐 𝑓𝑙𝑜𝑤 ∗ 𝑜𝑢𝑡𝑑𝑜𝑜𝑟 𝐶𝑂2∗ 1 ∗ 10−6 /(𝑡𝑎𝑟𝑔𝑒𝑡 𝑣𝑜𝑙𝑢𝑚𝑒𝑡𝑟𝑖𝑐 𝑓𝑙ow/  1 ∗ 10−6)
+# Continuing the example above, 𝐶𝑠𝑡𝑒𝑎𝑑𝑦−𝑠𝑡𝑎𝑡𝑒 = 0.1348 𝑐𝑓𝑚 + 333𝑐𝑓𝑚∗400𝑝𝑝𝑚∗1∗10−6/(333 𝑐fm/1∗10−6) = 804 ppm CO2
+
+C_steady_state = (co2_generation_rate + target_volumetric_flow * CO2_OD * 10^-6) / target_volumetric_flow*10^6
+
+# C_steady_state = 865.93 ppm
+
+questMCF_co2_harvard <- questMCF_co2 %>% 
+  mutate(guidelines_harvard = as.factor(case_when(value > C_steady_state ~ glue(">{round(C_steady_state, digits =0)} ppm") ,
+                                TRUE ~ glue("<={round(C_steady_state, digits =0)} ppm"))))
+
+#summary(questMCF_co2_harvard$guidelines_harvard)
+
+table_co2_harv <- questMCF_co2_harvard %>% 
+  dplyr::summarise(n=n(),
+                   categories = levels(guidelines_harvard),
+                   n_per_category=summary(guidelines_harvard, na.rm=TRUE),
+                   perc_per_category= round(n_per_category/n*100, digits=0), .groups="drop")
+                   
+table_co2_distr_degurba_harv <- questMCF_co2_harvard %>% 
+ group_by(district, degurba) %>% 
+  dplyr::summarise(n=n(),
+                   categories = levels(guidelines_harvard),
+                   n_per_category=summary(guidelines_harvard, na.rm=TRUE),
+                   perc_per_category= round(n_per_category/n*100, digits=0), .groups="drop")
+
+```
+
+`r kable(print(table_co2_harv), caption = "Carbon dioxide data categorization during school hours for classrooms - using the Steady State CO2 Method")`
+
+`r kable(print(table_co2_distr_degurba_harv), caption = "Carbon dioxide data categorization during school hours for classrooms - using the Steady State CO2 Method - by district and degree of urbanization")`
+
+## 4. PM2.5 (24h): 15 ug/m3 (WHO 2021 AQG, https://www.who.int/news-room/feature-stories/detail/what-are-the-who-air-quality-guidelines)
+
+```{r 24h_pm2_5, echo=FALSE}
+rm(list=setdiff(ls(), c("questPA_1","questMCF_1")))
+
+# read study log file
+Study_log_210510_DA_copy <- read_excel("rawData/Study_log_210510_DA_copy.xlsx") %>% 
+  clean_names() %>% 
+  dplyr::rename(SchoolID=school_id) %>% 
+  filter(SchoolID!= "S25")
+
+dataset_P_24h <- questPA_1 %>% 
+  dplyr::arrange(SchoolID, SensorID, EESTDateTime) %>% 
+  dplyr::group_by(SchoolID, SensorID) %>% 
+  dplyr::mutate(first_measurement_time=min(EESTDateTime)) %>%  
+  dplyr::mutate(time_hour_or=hour(first_measurement_time),
+         time_min=minute(first_measurement_time),
+         time_hm=hour(first_measurement_time)+(minute(first_measurement_time)/60),
+         date_ymd=date(first_measurement_time)) %>% 
+  dplyr::mutate(measurement_24h_after_first=first_measurement_time+hours(24)) %>% 
+  dplyr::mutate(within_24h=case_when(EESTDateTime>=min(EESTDateTime) & EESTDateTime<=min(EESTDateTime)+hours(24)~24,
+                              TRUE~0)) %>% 
+  ungroup() %>% 
+  filter(within_24h==24) %>%  
+ # pivot_longer(cols=c(name)) %>% 
+  group_by(SchoolID, SensorID, PM, date_ymd) %>% 
+  dplyr::summarise(mean_24h=mean(final_value, na.rm=TRUE))  %>% 
+  left_join(., select(Study_log_210510_DA_copy, SchoolID, district, degurba)) %>% 
+    dplyr::mutate(indoor_outdoor=case_when(str_detect(SensorID, "_OD_")~"outdoors",
+                                TRUE~"indoors"))
+
+
+
+questPA_pm2_5 <- dataset_P_24h %>% 
+  filter(PM == "pm2_5") %>% 
+  mutate(guidelines = as.factor(case_when(mean_24h > 15 ~ ">15 ug/m3",
+                                          mean_24h > 0 & mean_24h <= 15 ~ "<=15 ug/m3",
+                                TRUE ~ NA_character_))) %>% 
+  na.omit()
+
+#summary(questPA_pm2_5$guidelines)
+
+table_pm2_5 <- questPA_pm2_5 %>% 
+   group_by(indoor_outdoor) %>% 
+  dplyr::summarise(n=n(),
+                   categories = levels(guidelines),
+                   n_per_category=summary(guidelines, na.rm=TRUE),
+                   perc_per_category= round(n_per_category/n*100, digits=0), .groups="drop")
+                   
+table_pm2_5_distr <- questPA_pm2_5 %>% 
+     filter (indoor_outdoor == "indoors") %>% 
+group_by(district,degurba) %>% 
+  dplyr::summarise(n=n(),
+                   categories = levels(guidelines),
+                   n_per_category=summary(guidelines, na.rm=TRUE),
+                   perc_per_category= round(n_per_category/n*100, digits=0), .groups="drop")
+
+
+```
+
+`r kable(print(table_pm2_5), caption = "PM2.5 data categorization for 24-hour means - by location")`
+
+`r kable(print(table_pm2_5_distr), caption = "Indoor PM2.5 data categorization for 24-hour means - by district, degurba")`
+
+## 5A. PM10 (24h): 45 ug/m3 (WHO 2021 AQG, https://www.who.int/news-room/feature-stories/detail/what-are-the-who-air-quality-guidelines)
+
+```{r 24h_pm10, echo=FALSE}
+
+questPA_pm10 <- dataset_P_24h %>% 
+  filter(PM == "pm10_0") %>% 
+  mutate(guidelines = as.factor(case_when(mean_24h > 45 ~ ">45 ug/m3",
+                                          mean_24h > 0 & mean_24h <= 45 ~ "<=45 ug/m3",
+                                TRUE ~ NA_character_))) %>% 
+  na.omit()
+
+#summary(questPA_pm10$guidelines)
+
+table_pm10 <- questPA_pm10 %>% 
+   group_by(indoor_outdoor) %>% 
+  dplyr::summarise(n=n(),
+                   categories = levels(guidelines),
+                   n_per_category=summary(guidelines, na.rm=TRUE),
+                   perc_per_category= round(n_per_category/n*100, digits=0), .groups="drop")
+                   
+table_pm10_distr <- questPA_pm10 %>% 
+ group_by(district, degurba) %>% 
+      filter (indoor_outdoor == "indoors") %>% 
+  dplyr::summarise(n=n(),
+                   categories = levels(guidelines),
+                   n_per_category=summary(guidelines, na.rm=TRUE),
+                   perc_per_category= round(n_per_category/n*100, digits=0), .groups="drop")
+
+
+```
+
+`r kable(print(table_pm10), caption = "PM10 data categorization for 24-hour means - by location")`
+
+`r kable(print(table_pm10_distr), caption = "Indoor PM10 data categorization for 24-hour means - by district, degurba")`
+
+
+## 5B PM10 50 ug/m3 (https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:32008L0050&from=en)
+
+```{r 24h_pm10_eu, echo=FALSE}
+
+questPA_pm10_eu <- dataset_P_24h %>% 
+  filter(PM == "pm10_0") %>% 
+  mutate(guidelines = as.factor(case_when(mean_24h > 50 ~ ">50 ug/m3",
+                                          mean_24h > 0 & mean_24h <= 50 ~ "<=50 ug/m3",
+                                TRUE ~ NA_character_))) %>% 
+  na.omit()
+
+#summary(questPA_pm10_eu$guidelines)
+
+table_pm10_eu <- questPA_pm10_eu %>% 
+   group_by(indoor_outdoor) %>% 
+  dplyr::summarise(n=n(),
+                   categories = levels(guidelines),
+                   n_per_category=summary(guidelines, na.rm=TRUE),
+                   perc_per_category= round(n_per_category/n*100, digits=0), .groups="drop")
+                   
+table_pm10_distr_eu <- questPA_pm10_eu %>% 
+      filter (indoor_outdoor == "indoors") %>% 
+ group_by(district, degurba) %>% 
+  dplyr::summarise(n=n(),
+                   categories = levels(guidelines),
+                   n_per_category=summary(guidelines, na.rm=TRUE),
+                   perc_per_category= round(n_per_category/n*100, digits=0), .groups="drop")
+
+
+```
+
+`r kable(print(table_pm10_eu), caption = "PM10 data categorization for 24-hour means - by location")`
+
+`r kable(print(table_pm10_distr_eu), caption = "Indoor PM10 data categorization for 24-hour means - by district")`
+```{r plots, echo=FALSE}
+
+dataset_P_24h %>% 
+  ggplot() +
+  geom_point(aes(x=date_ymd, y=mean_24h, color=SchoolID)) +
+  facet_wrap(~PM, scales = "free")
+
+
+dataset_P_24h %>% 
+  ggplot() +
+  geom_point(aes(x=date_ymd, y=mean_24h, color=indoor_outdoor)) +
+  facet_wrap(~PM, scales = "free")
+
+```
+
+# Session Information
+
+```{r S9 }
+sessionInfo()
+```

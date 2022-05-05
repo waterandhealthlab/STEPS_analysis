@@ -1,0 +1,326 @@
+---
+title: 'STEPS Study: Objective 1'
+author: "C. Konstantinou and X. Andrianou @ Water and Health Laboratory, CII-CUT"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  rmdformats::downcute:
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    highlight: tango
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+```{r,  echo=FALSE, include=FALSE}
+rm(list=ls())
+
+
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg))
+    install.packages(new.pkg, dependencies = TRUE,
+                     repos = "http://cran.us.r-project.org")
+  sapply(pkg, require, character.only = TRUE)
+}
+
+# usage
+packages <- c("tidyverse","lubridate","officer", "rvg","glue", "patchwork","janitor",
+              "tableone", "readxl", "knitr")
+
+ipak(packages)
+```
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+# read PA and MCF data
+dataset_P_final <- readRDS("produced_data/dataset_P_final_forquestionnaires.rds", refhook = NULL) %>%   # this school needs to be excluded as classes and outdoor refer to 1st level and inclusion criteria were schools in ground floor 
+  filter(SchoolID != "S25")
+dataset_M_final <- readRDS("produced_data/dataset_M_final.rds", refhook = NULL) %>% 
+  mutate(indoor_outdoor=case_when(location =="OD" ~ "outdoors",
+                                  TRUE ~ "indoors")) %>% 
+  select (-exclusion) %>% 
+    # this school needs to be excluded as classes and outdoor refer to 1st level and inclusion criteria were schools in ground floor 
+  filter(SchoolID != "S25")
+
+# create exploratory table by creating new variables
+
+datamanagement<- read.csv("rawData/datamanagement_2.csv", header= TRUE) %>%
+  clean_names() %>%
+  dplyr::rename(SchoolID=1) %>%
+    filter(SchoolID != "S25") %>% 
+  mutate(samplingday1date=as.POSIXct(samplingday1_date, format="%d/%m/%Y"),
+         samplingday2date=as.POSIXct(samplingday2_date, format="%d/%m/%Y")) %>%
+  mutate(samplingdays = as.factor(case_when(samplingday2_date == "" ~ "1",
+                                  TRUE ~ "2")),
+         settings = as.factor(case_when(data_c1_p == "X" & data_c2_p == "X" & 
+                                data_od_p == "X" ~ "bothclasses_and_outdoor",
+                              data_c1_p == "X" & data_c2_p == "X" & 
+                                data_od_p != "X" ~ "bothclasses",
+                              data_c1_p != "X" & data_c2_p == "X" & 
+                                data_od_p != "X" ~ "oneclass",
+                              data_c1_p == "X" & data_c2_p != "X" & 
+                                data_od_p != "X" ~ "oneclass",
+                              data_c1_p != "X" & data_c2_p == "X" & 
+                                data_od_p == "X" ~ "oneclass_and_outdoor",
+                              data_c1_p == "X" & data_c2_p != "X" & 
+                                data_od_p == "X" ~ "oneclass_and_outdoor")),
+         sampling_month = as.factor(case_when(samplingday1date >= "2021-05-01" & 
+                                      samplingday1date < "2021-06-01" & 
+                                      samplingday2date >= "2021-06-01" & 
+                                      samplingday2date < "2021-07-01" ~ "May_June",
+                                    samplingday1date >= "2021-05-01" & 
+                                      samplingday1date < "2021-06-01" ~ "May",
+                                    samplingday1date >= "2021-06-01" & 
+                                      samplingday1date < "2021-07-01" ~ "June",
+                                    samplingday1date >= "2021-07-01" & 
+                                      samplingday1date < "2021-07-08" ~ "July"
+                                    ))) %>% 
+  select (-c(samplingday1_date,samplingday2_date))
+
+#create variable for duration of sampling in each school location in each date
+
+#duration <- questPA %>% 
+#  group_by(EESTDateTime, SchoolID, location, PM) %>%
+#  dplyr::summarise(duration = max(EESTDateTime) - min(EESTDateTime)) %>%
+#  group_by(SchoolID, location) %>%
+#  summarise(duration_S = sum(duration, na.rm = TRUE))
+
+```
+
+
+# Summary Tables
+
+`r kable(print(CreateTableOne(vars = c("samplingdays", "settings","sampling_month"), data = datamanagement)), caption="Schools data summary collection") `
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+table_PA_indooroutdoor <- dataset_P_final %>% 
+  group_by(indoor_outdoor, PM) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(final_value, na.rm=TRUE), digits=1),
+                   sd=round(sd(final_value, na.rm=TRUE), digits=1),
+                   min=round(min(final_value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(final_value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(final_value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(final_value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(final_value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_MCF_indooroutdoor <- dataset_M_final %>% 
+  group_by(indoor_outdoor, name) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(value, na.rm=TRUE), digits=1),
+                   sd=round(sd(value, na.rm=TRUE), digits=1),
+                   min=round(min(value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_PA_district_indooroutdoor <- dataset_P_final %>% 
+  group_by(district, indoor_outdoor, PM) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(final_value, na.rm=TRUE), digits=1),
+                   sd=round(sd(final_value, na.rm=TRUE), digits=1),
+                   min=round(min(final_value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(final_value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(final_value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(final_value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(final_value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_MCF_district_indooroutdoor <- dataset_M_final %>% 
+  group_by(district, indoor_outdoor, name) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(value, na.rm=TRUE), digits=1),
+                   sd=round(sd(value, na.rm=TRUE), digits=1),
+                   min=round(min(value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_PA_district_degurba_indooroutdoor <- dataset_P_final %>% 
+  group_by(district, degurba, indoor_outdoor, PM) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(final_value, na.rm=TRUE), digits=1),
+                   sd=round(sd(final_value, na.rm=TRUE), digits=1),
+                   min=round(min(final_value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(final_value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(final_value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(final_value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(final_value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_MCF_district_degurba_indooroutdoor <- dataset_M_final %>% 
+  group_by(district, degurba, name, indoor_outdoor) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(value, na.rm=TRUE), digits=1),
+                   sd=round(sd(value, na.rm=TRUE), digits=1),
+                   min=round(min(value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(value, na.rm=TRUE), digits=1), .groups="drop")
+            
+```
+
+`r DT::datatable(table_PA_indooroutdoor, caption="PA data (indoor-outdoor comparison)")`
+
+`r DT::datatable(table_MCF_indooroutdoor, caption = "MCF data (indoor-outdoor comparison)")`
+
+`r DT::datatable(table_PA_district_indooroutdoor, caption = "PA data (district, indoor-outdoor comparison)")`
+
+`r DT::datatable(table_MCF_district_indooroutdoor, caption = "MCF data (district, indoor-outdoor comparison)")`
+
+`r DT::datatable(table_PA_district_degurba_indooroutdoor, caption = "PA data (district,degurba indoor-outdoor comparison)")`
+
+`r DT::datatable(table_MCF_district_degurba_indooroutdoor, caption = "MCF data (district, degurba, indoor-outdoor comparison)")`
+
+# Plots - indoors vs outdoors 
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+# check the raw values plots 
+
+dataset_P_final %>% 
+  filter(PM == "pm1_0") %>%
+  ggplot() +
+  geom_point(aes(x=EESTDateTime, y=final_value, colour = location), shape = 21, alpha = 0.5, size = 2) +  facet_wrap(~indoor_outdoor, ncol=1) +
+  scale_color_brewer(palette="Dark2") +
+theme_minimal() +
+   theme(legend.position="bottom") +
+  labs(y = "PM1 (ug/m3)", x = "")
+
+dataset_P_final %>% 
+  filter(PM == "pm10_0") %>%
+  ggplot() +
+  geom_point(aes(x=EESTDateTime, y=final_value, colour = location), shape = 21, alpha = 0.5, size = 2) +  facet_wrap(~indoor_outdoor, ncol=1) +
+  scale_color_brewer(palette="Dark2") +
+theme_minimal() +
+   theme(legend.position="bottom") +
+  labs(y = "PM10 (ug/m3)", x = "Date")
+
+dataset_P_final %>% 
+  ggplot() +
+  geom_point(aes(x=EESTDateTime, y=final_value, colour = location), shape = 21, alpha = 0.5, size = 2) +  facet_wrap(~indoor_outdoor, ncol=1) +
+  scale_color_brewer(palette="Dark2") +
+theme_minimal() +
+   theme(legend.position="bottom") +
+  labs(y = "PM2.5 (ug/m3)", x = "Date")
+
+dataset_M_final %>% 
+    filter(name == "temperature") %>%
+  ggplot() +
+  geom_point(aes(x=time, y=value, colour = location), shape = 21, alpha = 0.5, size = 2) +  facet_wrap(~indoor_outdoor, ncol=1) +
+  scale_color_brewer(palette="Dark2") +
+theme_minimal() +
+   theme(legend.position="bottom") +
+  labs(y = "Temperature (C)", x = "Date")
+
+dataset_M_final %>% 
+    filter(name == "humidity") %>%
+  ggplot() +
+  geom_point(aes(x=time, y=value, colour = location), shape = 21, alpha = 0.5, size = 2) +  facet_wrap(~indoor_outdoor, ncol=1) +
+  scale_color_brewer(palette="Dark2") +
+theme_minimal() +
+   theme(legend.position="bottom") +
+  labs(y = "Rel.Humidity (%)", x = "Date")
+
+
+dataset_M_final %>% 
+    filter(name == "carbon_dioxide") %>%
+  ggplot() +
+  geom_point(aes(x=time, y=value, colour = location), shape = 21, alpha = 0.5, size = 2) +  facet_wrap(~indoor_outdoor, ncol=1) +
+  scale_color_brewer(palette="Dark2") +
+theme_minimal() +
+   theme(legend.position="bottom") +
+  labs(y = "Carbon dioxide (ppm)", x = "Date")
+
+
+dataset_M_final %>% 
+    filter(name == "b_voc") %>%
+  ggplot() +
+  geom_point(aes(x=time, y=value, colour = location), shape = 21, alpha = 0.5, size = 2) +  facet_wrap(~indoor_outdoor, ncol=1) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y = "VOCs (ppb)", x = "Date")
+
+```
+
+
+# Plots for each school - PA data
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+# for the PA data
+
+SchoolID_levels_PA <- levels(as.factor(dataset_P_final$SchoolID))
+
+for(i in 1:length(SchoolID_levels_PA)){
+  
+  temp_school <- dataset_P_final %>% 
+  filter(SchoolID==SchoolID_levels_PA[i]) 
+   
+  schoolplot <- ggplot(temp_school) +
+    geom_point(aes(x=EESTDateTime, y=final_value, colour = location), shape = 21, alpha = 0.5, size = 2) +
+    geom_smooth(aes(x=EESTDateTime, y=final_value, color=location), method="loess", span=0.1, se = F) +
+    scale_color_brewer(palette="Dark2") +
+    theme_bw() +
+     theme(legend.position="bottom") +
+    facet_wrap(~PM, ncol=1) +
+    labs(y = "PM (ug/m3)", x = NULL, 
+         caption = glue("PM (ug/m3) raw values indoors and outdoors in {SchoolID_levels_PA[i]}"))
+  
+  print(schoolplot)
+  rm(schoolplot, temp_school)
+  
+}
+
+rm(SchoolID_levels_PA)
+```
+
+# Plots for each school - MCF data
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+SchoolID_levels_MCF <- levels(as.factor(dataset_M_final$SchoolID))
+
+temp_M_forplots <- dataset_M_final%>%
+    filter(name!= "voc_loess") %>% 
+  mutate(label_for_plot=case_when(name=="b_voc"~"VOCs (ppb)",
+                                  name=="carbon_dioxide"~"CO2 (ppm)",
+                                  name=="humidity"~"Humidity (%)",
+                                  name=="temperature"~"Temperature (C)"))
+
+for(i in 1:length(SchoolID_levels_MCF)){
+  
+  temp_school <- temp_M_forplots %>% 
+  filter(SchoolID==SchoolID_levels_MCF[i]) 
+ 
+  
+  schoolplot <- ggplot(temp_school) +
+  geom_point(aes(x=time, y=value, colour = location), shape = 21, alpha = 0.5, size = 2) +
+  geom_smooth(aes(x=time, y=value, color=location), method="loess", span=0.1, se = F) +
+  scale_color_brewer(palette="Dark2") +
+    facet_wrap(~label_for_plot, ncol=1, scales = "free_y")+
+    theme_bw() +
+     theme(legend.position="bottom") +
+    labs(y = NULL, x = NULL, 
+         caption = glue("Raw values indoors and outdoors in {SchoolID_levels_MCF[i]}"))
+  
+  print(schoolplot)
+  rm(schoolplot, temp_school)
+  
+}
+
+```
+
+# Session Information
+
+```{r S3 }
+sessionInfo()
+```

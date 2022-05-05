@@ -1,0 +1,1252 @@
+---
+title: "STEPS Study: Headmasters and teachers questionnaires import and finalization"
+author: "C. Konstantinou and X. Andrianou @ Water and Health Laboratory, CII-CUT"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  rmdformats::downcute:
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    highlight: tango
+---
+
+
+```{r,  echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+Sys.setlocale(category = "LC_ALL", locale = "Greek")
+
+## Prepare workspace & install libraries
+rm(list = ls(all = TRUE))
+
+ipak <- function(pkg) {
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg)) {
+    install.packages(new.pkg, dependencies = TRUE)
+  }
+  sapply(pkg, require, character.only = TRUE)
+}
+
+# usage
+packages <- c(
+  "readr", "dplyr", "tidyverse", "stringr", "lubridate", "glue",
+  "janitor", "naniar", "tableone", "knitr", "compareDF", "readr", "readxl"
+)
+
+ipak(packages)
+
+```
+
+## Descriptives from the headmasters' questionnaire
+
+```{r,  echo=FALSE, message=FALSE, warning=FALSE}
+
+# read study log file
+Study_log_210510_DA_copy <- read_excel("rawData/Study_log_210510_DA_copy.xlsx") %>% 
+  clean_names() %>% 
+  dplyr::rename(SchoolID=school_id) %>% 
+  # this school needs to be excluded as classes and outdoor refer to 1st level and inclusion criteria were schools in ground floor 
+  filter(SchoolID != "S25")
+
+# Reading and cleaning the data from REDCap - headmasters questionnaire and teachers diaries
+
+### ~~~ NOTE: this alternative doesnt give all the warnings
+q_headmasters_0 <- read_delim("rawData/questionnaires_diaries/STEPS_DATA_HEADMASTERS_2021-08-02_1427.csv",
+  delim = ";", escape_double = FALSE, trim_ws = TRUE
+) %>%
+  clean_names() %>%
+  filter(form_1_timestamp != "[not completed]") %>% # delete non completed responses
+  mutate(DateTime_headmasters = as.POSIXct(form_1_timestamp, format = "%Y-%m-%d %H:%M:%OS")) %>%
+  filter(DateTime_headmasters >= "2021-05-12") %>% # keep responses after 12/05/2021
+  select(-c(form_1_timestamp, redcap_survey_identifier)) %>% 
+  dplyr::rename(prefabricated_classrooms="liomenes") 
+
+# revalue variables levels to their actual names based on codebook
+
+q_headmasters <- q_headmasters_0 %>%  
+  mutate(SchoolID = as.factor(case_when(
+    school_lim == 1 ~ "S27",
+    school_lim == 2 ~ "S24",
+    school_lim == 3 ~ "S26",
+    school_lim == 4 ~ "S25",
+    school_lim == 5 ~ "S28",
+    school_lim == 6 ~ "S23",
+    school_lim == 7 ~ "S32",
+    school_lim == 8 ~ "S30",
+    school_lim == 9 ~ "S29",
+    school_lim == 10 ~ "S31",
+    school_lim == 11 ~ "S37",
+    school_lim == 12 ~ "S40",
+    school_lim == 13 ~ "S41",
+    school_nic == 1 ~ "S09",
+    school_nic == 2 ~ "S14",
+    school_nic == 3 ~ "S11",
+    school_nic == 4 ~ "S13",
+    school_nic == 5 ~ "S10",
+    school_nic == 6 ~ "S12",
+    school_nic == 7 ~ "S17",
+    school_nic == 8 ~ "S22",
+    school_nic == 9 ~ "S19",
+    school_nic == 10 ~ "S15",
+    school_nic == 11 ~ "S16",
+    school_nic == 12 ~ "S18",
+    school_nic == 13 ~ "S20",
+    school_nic == 14 ~ "S21",
+    school_nic == 15 ~ "S39",
+    school_lar == 1 ~ "S05",
+    school_lar == 2 ~ "S04",
+    school_lar == 3 ~ "S03",
+    school_lar == 4 ~ "S06",
+    school_lar == 5 ~ "S07",
+    school_lar == 6 ~ "S08",
+    school_lar == 7 ~ "S38",
+    school_lar == 8 ~ "S42",
+    school_paf == 1 ~ "S36",
+    school_paf == 2 ~ "S33",
+    school_paf == 3 ~ "S35",
+    school_paf == 4 ~ "S34",
+    school_paf == 5 ~ "S43",
+    school_fam == 1 ~ "S01",
+    school_fam == 2 ~ "S02",
+    TRUE ~ "ΝΑ"
+  ))) %>%
+  select(-c(school_lim, school_lar, school_nic, school_paf, school_fam)) %>% 
+  mutate_at(c("chlorine_use", "paint"),
+    .funs = ~ case_when(
+      . == "1" ~ "Yes",
+      . == "2" ~ "No",
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  mutate(freq_clean = as.factor(case_when(
+    (freq_clean_1 == "1" & freq_clean_2 == "1" &
+      freq_clean_3 == "1" & freq_clean_4 == "1" &
+      freq_clean_5 == "1") ~ "School days",
+    TRUE ~ "Other"
+  ))) %>%
+  mutate(cleaning = as.factor(case_when(
+    cleaning_1 == "1" & cleaning_2 == "0" &
+      cleaning_3 == "0" ~ "Afternoon",
+    cleaning_2 == "1" & cleaning_1 == "0" &
+      cleaning_3 == "0" ~ "Morning",
+    cleaning_3 == "1" & cleaning_2 == "0" &
+      cleaning_1 == "0" ~ "Breaks",
+    cleaning_1 == "1" & cleaning_2 == "1" &
+      cleaning_3 == "0" ~ "Morning_Afternoon",
+    cleaning_1 == "1" & cleaning_2 == "1" &
+      cleaning_3 == "1" ~ "Morning_Afternoon_Breaks",
+    cleaning_1 == "1" & cleaning_2 == "0" &
+      cleaning_3 == "1" ~ "Morning_Breaks",
+    TRUE ~ "Other"
+  ))) %>%
+  mutate(pest_location = as.factor(case_when(
+    pest_location_1 == "1" & pest_location_2 == "0" &
+      pest_location_3 == "0" & pest_location_4 == "0" ~
+    "Outdoors",
+    pest_location_2 == "1" & pest_location_1 == "0" &
+      pest_location_3 == "0" & pest_location_4 == "0" ~
+    "Classrooms",
+    pest_location_3 == "1" & pest_location_2 == "0" &
+      pest_location_1 == "0" & pest_location_4 == "0" ~
+    "Other_indoor_areas",
+    pest_location_4 == "1" & pest_location_2 == "0" &
+      pest_location_3 == "0" & pest_location_1 == "0" ~
+    "Indoors_and_Outdoors",
+    pest_location_1 == "1" & pest_location_2 == "0" &
+      pest_location_3 == "1" & pest_location_4 == "0" ~
+    "Outdoors_Other_indoor_areas",
+    pest_location_1 == "0" & pest_location_2 == "1" &
+      pest_location_3 == "1" & pest_location_4 == "0" ~
+    "Indoors",
+    pest_location_1 == "0" & pest_location_2 == "1" &
+      pest_location_3 == "0" & pest_location_4 == "1" ~
+    "Indoors_and_Outdoors",
+    TRUE ~ as.character(NA)
+  ))) %>%
+  select(-c(
+    freq_clean_1, freq_clean_2, freq_clean_3, freq_clean_4, freq_clean_5,
+    pest_location_1, pest_location_2, pest_location_3, pest_location_4,
+    cleaning_1, cleaning_2, cleaning_3
+  )) %>%
+  mutate(
+    chlorium_2 = case_when(
+      chlorium_2 == "1" ~ "Once_week",
+      chlorium_2 == "2" ~ "Twice_week",
+      chlorium_2 == "3" ~ "Three times_week",
+      chlorium_2 == "5" ~ "Five times_week"
+    ),
+    pesticides = case_when(
+      pesticides == "1" ~ "Yes",
+      pesticides == "2" ~ "No",
+      pesticides == "3" ~ "Dont know"
+    ),
+    pest_freq = case_when(
+      pest_freq == "2" ~ "Every_month",
+      pest_freq == "3" ~ "Every_3_months",
+      pest_freq == "4" ~ "Every_6_months",
+      pest_freq == "5" ~ "Every_year",
+      pest_freq == "6" ~ "Less_than_once_a_year"
+    ),
+    paint_places = case_when(
+      paint_places == "1" ~ "Outdoors",
+      paint_places == "2" ~ "Indoors",
+      paint_places == "3" ~ "Indoors_and_Outdoors"
+    ),
+    city = case_when(
+      city == "1" ~ "Limassol",
+      city == "2" ~ "Nicosia",
+      city == "3" ~ "Larnaca",
+      city == "4" ~ "Pafos",
+      city == "5" ~ "Famagusta"
+    )
+  ) %>% 
+  right_join(., select(Study_log_210510_DA_copy, SchoolID, exclude, issue, district, degurba), by="SchoolID") %>% 
+  mutate(exclude_final=case_when(exclude=="C1_C2"~"school",
+                                 exclude=="C1"|exclude=="C2"~"one classroom",
+                                 TRUE~NA_character_),
+         degurba_classification=case_when(degurba=="1"~"Densely populated areas",
+                                          degurba=="2"~"Intermediate density areas"))
+
+
+
+schools_overview <- q_headmasters %>% 
+  group_by(district, city, degurba_classification, exclude, exclude_final, issue) %>% 
+  dplyr::summarise(n=n(), .groups = "drop") 
+
+schools_overview2 <- q_headmasters %>% 
+  group_by(district, degurba) %>% 
+  dplyr::summarise(n=n(),
+            year_contr=glue("[{round(min(year_constr), digits=0)}, {round(max(year_constr), digits=0)}]"), 
+            floors=glue("[{round(min(levels), digits=0)}, {round(max(levels), digits=0)}]"),
+            classrooms=glue("[{round(min(num_classes), digits=0)}, {round(max(num_classes), digits=0)}]"),
+            prefabr_classrooms=glue("[{round(min(prefabricated_classrooms), digits=0)}, {round(max(prefabricated_classrooms), digits=0)}]"),
+            .groups = "drop")
+
+q_headmasters$levels<-as.factor(q_headmasters$levels)
+
+
+```
+
+
+Total number of schools: `r n_distinct(q_headmasters$SchoolID)`
+
+
+Overview of the schools included in the study
+
+`r DT::datatable(schools_overview, caption="Overview of the schools included in the study")`
+
+`r DT::datatable(schools_overview2, caption = "Summary of basic school characteristics by district and degree of urbanization")`
+
+`r kable(print(CreateTableOne(vars = c("city", "year_constr", "levels", "num_classes", "prefabricated_classrooms", "paint", "paint_places", "chlorine_use", "chlorium_2", "pesticides", "pest_freq", "pest_location", "freq_clean", "cleaning"), data = q_headmasters), caption = "Schools characteristics"))`
+
+
+## Exploratory plots from the headmasters' questionnaire
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+hist(q_headmasters$year_constr, main = "Year of construction")
+
+
+ q_headmasters %>% 
+  group_by(district, city, degurba_classification, exclude, exclude_final, year_constr) %>% 
+  dplyr::summarise(n=n(), .groups = "drop") %>% 
+   ggplot() +
+  geom_col(aes(x=year_constr, y=n, color=degurba_classification, fill=district)) +
+   theme_bw()
+
+
+hist(q_headmasters_0$num_classes, main = "Number of classes")
+hist(q_headmasters_0$prefabricated_classrooms, main="Number of prefabricated classrooms")
+
+saveRDS(q_headmasters, "produced_data/q_headmasters.rds")
+
+```
+
+
+## Teachers' questionnaires - cleaning, renaming, summary tables
+
+```{r,  echo=FALSE, message=FALSE, warning=FALSE}
+q_teachers <- read.csv("rawData/questionnaires_diaries/STEPSTeachers_DATA_2021-08-05_1657.csv", sep = ";", header = TRUE, encoding = "UTF-8") %>%
+  clean_names() %>%
+  filter(form_1_timestamp != "[not completed]") %>% # delete non completed responses
+  mutate(DateTime_teachers = as.POSIXct(form_1_timestamp, format = "%Y-%m-%d %H:%M:%OS")) %>%
+  mutate(DateTime_teachers_2 = as.POSIXct(form_2_timestamp, format = "%Y-%m-%d %H:%M:%OS")) %>%
+  filter(DateTime_teachers >= "2021-05-13") %>% # keep responses after 13/05/2021
+  select(-c(form_1_timestamp, form_2_timestamp, redcap_survey_identifier)) %>%
+  filter(class_id != "TEST") %>% # delete record 'test' in class_id variable
+  mutate(type = "teachers") %>% # variable indicating the origin of the response
+  drop_na(city_t) %>% 
+  dplyr::rename_with(~ str_replace(.x, 
+                                     pattern = "anemistiras", 
+                                     replacement = "fan"), 
+              contains("anemistiras")) 
+
+q_internal <- read.csv("rawData/questionnaires_diaries/STEPSTeachersInterna_DATA_2021-08-05_1659.csv", sep = ";", header = TRUE, encoding = "UTF-8") %>%
+  clean_names() %>%
+  mutate(DateTime_teachers = as.POSIXct(form_1_internal_correct_timestamp, format = "%Y-%m-%d %H:%M:%OS")) %>%
+  mutate(DateTime_teachers_2 = as.POSIXct(form_2_internal_correct_timestamp, format = "%Y-%m-%d %H:%M:%OS")) %>%
+  select(-c(
+    form_1_internal_correct_timestamp,
+    form_2_internal_correct_timestamp, redcap_survey_identifier
+  )) %>%
+  mutate(type = "internal") %>% # variable indicating the origin of the response
+ # setNames(names(d_teachers)) ###~~~ why is that happening?
+  dplyr::rename_with(~ str_replace(.x, 
+                                     pattern = "anemistiras", 
+                                     replacement = "fan"), 
+              contains("anemistiras")) %>% 
+  dplyr::rename_with(~ str_replace(.x, 
+                                     pattern = "_internal_correct_complete", 
+                                     replacement = "_complete"), 
+              contains("_internal_correct_complete")) 
+
+
+# bind the teachers_original and teachers_internal data
+q_teachers_all <- bind_rows(q_teachers, q_internal)
+
+# Rename schools based on codebook and provide SchoolID
+
+d_teachers_all <- q_teachers_all %>%
+  mutate(SchoolID = as.factor(case_when(
+    school_lim == 1 ~ "S27",
+    school_lim == 2 ~ "S24",
+    school_lim == 3 ~ "S26",
+    school_lim == 4 ~ "S25",
+    school_lim == 5 ~ "S28",
+    school_lim == 6 ~ "S23",
+    school_lim == 7 ~ "S32",
+    school_lim == 8 ~ "S30",
+    school_lim == 9 ~ "S29",
+    school_lim == 10 ~ "S31",
+    school_lim == 11 ~ "S37",
+    school_lim == 12 ~ "S40",
+    school_lim == 13 ~ "S41",
+    school_nic == 1 ~ "S09",
+    school_nic == 2 ~ "S14",
+    school_nic == 3 ~ "S11",
+    school_nic == 4 ~ "S13",
+    school_nic == 5 ~ "S10",
+    school_nic == 6 ~ "S12",
+    school_nic == 7 ~ "S17",
+    school_nic == 8 ~ "S22",
+    school_nic == 9 ~ "S19",
+    school_nic == 10 ~ "S15",
+    school_nic == 11 ~ "S16",
+    school_nic == 12 ~ "S18",
+    school_nic == 13 ~ "S20",
+    school_nic == 14 ~ "S21",
+    school_nic == 15 ~ "S39",
+    school_lar == 1 ~ "S05",
+    school_lar == 2 ~ "S04",
+    school_lar == 3 ~ "S03",
+    school_lar == 4 ~ "S06",
+    school_lar == 5 ~ "S07",
+    school_lar == 6 ~ "S08",
+    school_lar == 7 ~ "S38",
+    school_lar == 8 ~ "S42",
+    school_paf == 1 ~ "S36",
+    school_paf == 2 ~ "S33",
+    school_paf == 3 ~ "S35",
+    school_paf == 4 ~ "S34",
+    school_paf == 5 ~ "S43",
+    school_fam == 1 ~ "S01",
+    school_fam == 2 ~ "S02",
+    TRUE ~ "ΝΑ"
+  ))) %>%
+  select(-c(school_lim, school_lar, school_nic, school_paf, school_fam, x_u_feff_record_id))
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+# check data management file and decide about duplicate records
+
+#summary(d_teachers_all$SchoolID)
+
+### ~~~ getting a list of the schools to be corrected below
+#data.frame(unlist(summary(d_teachers_all$SchoolID))) %>%
+#  rownames_to_column(var = "SchoolID") %>%
+#  rename("records" = 2) %>%
+#  arrange(records) %>%
+#  filter(records > 2) %>%
+#  arrange(SchoolID)
+
+### ~~~ Based on the summary and the study notes cleaning and keeping the
+### ~~~ correct records
+
+d_teachers_final0 <- d_teachers_all %>%
+  filter(!(SchoolID == "S05" & form_2_complete == "0")) %>% # keep records completed for both days
+  filter(!(SchoolID == "S10" & class_id == "Α'")) %>% # keep  records for classes B1 and B2
+  filter(!(SchoolID == "S18" & DateTime_teachers < "2021-06-15")) %>% # keep  records for 15/6
+  filter(!(SchoolID == "S20" & class_id == "A1" & type == "teachers")) %>% # keep internal record for A1
+  filter(!(SchoolID == "S24" & form_2_complete == "0")) %>% # keep records completed for both days
+  filter(!(SchoolID == "S25" & type == "teachers")) %>% # keep internal record for A1
+  filter(!(SchoolID == "S29" & class_id == "Στ1" & type == "teachers")) %>% # keep internal record for ST1
+  filter(!(SchoolID == "S30" & type == "teachers")) %>% # keep internal records
+  filter(!(SchoolID == "S31" & class_id == "Β1" & type == "teachers")) %>% # keep internal record for B1 - D1 has separate record for each day (20/05: day 1, 21/05: day 2)
+  filter(!(SchoolID == "S33" & DateTime_teachers < "2021-06-08")) %>% # keep  records for 10/6
+  filter(!(SchoolID == "S40" & type == "teachers")) %>% # keep internal records
+  filter(!(SchoolID == "S43" & type == "teachers")) # keep internal records
+
+
+### ~~~ getting a list of the schools to be corrected below
+#data.frame(unlist(summary(d_teachers_final0$SchoolID))) %>%
+#  rownames_to_column(var = "SchoolID") %>%
+#  rename("records" = 2) %>%
+#  arrange(records) %>%
+#  filter(records > 2) %>%
+#  arrange(SchoolID) ### ~~~ does the note on S31 explain why there are 3 records for this school?
+
+# summary(d_teachers_final$SchoolID)
+
+# replace_with_na_at(replace =list(309:608, 610))
+check <- data.frame(colnames(d_teachers_final0)) %>%
+  rownames_to_column(var = "var_num") %>%
+  mutate(var_num = as.numeric(var_num)) %>%
+  dplyr::rename(var_name = 2) %>%
+  filter((var_num >= 309 & var_num <= 607) | var_num == 610)
+
+
+d_teachers_varnames_day2 <- data.frame(colnames(d_teachers_final0)) %>%
+  rownames_to_column(var = "var_num") %>%
+  mutate(var_num = as.numeric(var_num)) %>%
+  dplyr::rename(var_name = 2) %>%
+  filter(var_name == "kids_num" |
+    str_detect(
+      var_name,
+      "air_condition_on_2|time_ac_on_2_\\d+"
+    ) |
+    str_detect(var_name, "^fan_on\\d?_2|time_fan_on\\d?_2_\\d+") |
+    str_detect(var_name, "w\\d+_d2_\\d+|d\\d+_d2_\\d+") |
+    var_name == "DateTime_teachers_2")
+
+# For schools with one sampling day there are values (zeros) in columns for second day so i convert these to NA
+### ~~~ Note were the info about which school has only day one comes from - is it the study log?
+### ~~~ CK: Yes, we have this info in the study log and in the data management file. i inserted here the datamanagement file so that it is more automatic  
+
+samplingdays<- read.csv("rawData/datamanagement.csv", header= TRUE) %>%
+  clean_names() %>%
+  dplyr::rename(SchoolID=1) %>%
+  mutate(samplingday_num = case_when(samplingday2_date == "" ~ 1,
+                                     TRUE ~ 2))
+
+d_teachers_final1 <- d_teachers_final0 %>% 
+left_join(., select(samplingdays, SchoolID, samplingday_num), by="SchoolID") 
+
+Schools1dayonly <- d_teachers_final1 %>%
+  filter(samplingday_num == "1") %>%
+  # replace_with_na_at(replace =list(309:608, 610))
+  mutate_at(.vars = vars(d_teachers_varnames_day2$var_num), ~NA) %>%
+  mutate(form_2_complete = 0)
+
+teachers_wo_Schools1dayonly <- d_teachers_final1 %>%
+  filter(samplingday_num == "2")
+
+# bind the correct records for schools with 1 sampling day with the rest of teachers data
+d_teachers_final <- rbind(teachers_wo_Schools1dayonly, Schools1dayonly) %>%
+  ### ~~~ moved up this step to allow for using the C1/C2 names for the classrooms when modifying the S31 school data
+  mutate(ClassID = as.factor(case_when(
+    (SchoolID == "S01" & class_id == "Β") |
+      (SchoolID == "S02" & class_id == "Γ1") |
+      (SchoolID == "S03" & class_id == "A3") |
+      (SchoolID == "S04" & class_id == "A1") |
+      (SchoolID == "S05" & class_id == "Β1") |
+      (SchoolID == "S06" & class_id == "A1") |
+      (SchoolID == "S07" & class_id == "Α") |
+      (SchoolID == "S08" & class_id == "Στ1") |
+      (SchoolID == "S09" & class_id == "A1") |
+      (SchoolID == "S10" & class_id == "B1") |
+      (SchoolID == "S11" & class_id == "Α1") |
+      (SchoolID == "S12" & class_id == "Γ") |
+      (SchoolID == "S13" & class_id == "Α2") |
+      (SchoolID == "S14" & class_id == "A1") |
+      (SchoolID == "S15" & class_id == "Γ1") |
+      (SchoolID == "S16" & class_id == "Α") |
+      (SchoolID == "S17" & class_id == "Δ3") |
+      (SchoolID == "S18" & class_id == "Β2") |
+      (SchoolID == "S19" & class_id == "A1") |
+      (SchoolID == "S20" & class_id == "A1") |
+      (SchoolID == "S21" & class_id == "A1") |
+      (SchoolID == "S22" & class_id == "Α1") |
+      (SchoolID == "S23" & class_id == "ΣΤ1") |
+      (SchoolID == "S24" & class_id == "Β2") |
+      (SchoolID == "S25" & class_id == "Δ1") |
+      (SchoolID == "S26" & class_id == "ΣΤ1") |
+      (SchoolID == "S27" & class_id == "Α1") |
+      (SchoolID == "S28" & class_id == "A2") |
+      (SchoolID == "S29" & class_id == "ΣΤ1") |
+      (SchoolID == "S30" & class_id == "Β1") |
+      (SchoolID == "S31" & class_id == "Β1") |
+      (SchoolID == "S32" & class_id == "B") |
+      (SchoolID == "S33" & class_id == "A") |
+      (SchoolID == "S34" & class_id == "B1") |
+      (SchoolID == "S35" & class_id == "A1") |
+      (SchoolID == "S36" & class_id == "A1") |
+      (SchoolID == "S37" & class_id == "Α") | # A1 & A2 in study log but A & A2 in csv
+      (SchoolID == "S38" & class_id == "A") |
+      (SchoolID == "S39" & class_id == "Β1") |
+      (SchoolID == "S40" & class_id == "A1") |
+      (SchoolID == "S41" & class_id == "A1") |
+      (SchoolID == "S42" & class_id == "Θ2") |
+      (SchoolID == "S43" & class_id == "A") ~ "C1",
+    TRUE ~ "C2"
+  )))
+
+#summary(d_teachers_final$SchoolID)
+
+
+### ~~~ getting a list of the schools to be corrected below
+check_schools <- data.frame(unlist(summary(as.factor(d_teachers_final$SchoolID)))) %>%
+  rownames_to_column(var = "SchoolID") %>%
+  dplyr::rename("records" = 2) %>%
+  arrange(records) %>%
+  filter(records > 2) %>%
+  arrange(SchoolID) 
+
+# for S31 class id c2 - teacher responded twice for day 1 in two different questionnaires that's why for this class there are two records for Day 1
+# this is fixed below
+# fix the 2 records for D1 class for S31 so that everything is in on one row
+teachers_wo_S31D1 <- d_teachers_final %>%
+  filter(!(SchoolID == "S31" & ClassID == "C2"))
+
+schoolS31D1_day2_tofix <- d_teachers_final %>%
+  filter(SchoolID == "S31" & ClassID == "C2") %>%
+  # add this to separate the second day (21.05) - first day is 20.05
+  filter(DateTime_teachers == "2021-05-21 13:28:50 +03") %>%
+  # select all variables of day 1 only (removing day 2) to use them and make day 2
+  select(
+    -c(d_teachers_varnames_day2$var_num), -form_2_complete,
+    -c(
+      SchoolID, class_id, surface, city_t, vent, air_condition,
+      fan_num, num_wind, num_doors, form_1_complete, type, DateTime_teachers, ClassID
+    )
+  )
+
+
+schoolS31D1_day1 <- d_teachers_final %>%
+  filter(SchoolID == "S31" & ClassID == "C2") %>%
+  # add this to separate the second day (21.05) - first day is 20.05
+  filter(DateTime_teachers == "2021-05-20 13:11:19") %>%
+  # select all variables of day 1 only (removing day 2) to use them and make day 2
+  select(-c(d_teachers_varnames_day2$var_num), -form_2_complete)
+
+
+schoolS31D1_day2_varnames_tofix <- data.frame(colnames(schoolS31D1_day2_tofix)) %>%
+  dplyr::rename(var_name = 1) %>%
+  mutate(tofix = "tofix")
+
+d_teachers_varnames_day2_add <- d_teachers_varnames_day2 %>%
+  mutate(
+    day2 = "day2",
+    day2_num = glue("day2_{var_num}")
+  )
+
+
+d_teachers_varnames_comparison <- data.frame(colnames(d_teachers_final0)) %>%
+  rownames_to_column(var = "var_num") %>%
+  mutate(var_num = as.numeric(var_num)) %>%
+  dplyr::rename(var_name = 2) %>%
+  as_tibble() %>%
+  left_join(., d_teachers_varnames_day2_add) %>%
+  left_join(., schoolS31D1_day2_varnames_tofix) %>%
+  mutate(underscores = str_count(var_name, "_")) %>%
+  separate(var_name,
+    into = c("first", "second", "third", "fourth", "fifth"),
+    sep = "_", remove = FALSE, extra = "merge", fill = "right"
+  ) %>%
+  mutate(new_name_forday2 = case_when(
+    first == "time" & second == "ac" & is.na(day2) ~ glue("time_ac_on_2_{fourth}"),
+    first == "time" & second == "fan" & is.na(day2) ~ glue("time_fan_{third}_2_{fourth}"),
+    str_detect(first, "^w\\d+") & is.na(day2) ~ glue("{first}_d2_{second}"),
+    str_detect(first, "^d\\d+") & is.na(day2) ~ glue("{first}_d2_{second}"),
+    var_name == "form_1_complete" ~ "form_2_complete",
+    var_name == "num_child" ~ "kids_num",
+    first == "fan" & str_detect(second, "^on") & is.na(day2) ~ glue("fan_{second}_2"),
+    first == "air" & second == "condition" & third == "on" & is.na(day2) ~ glue("air_condition_on_2")
+  )) %>%
+  mutate(fixed = case_when(tofix == "tofix" & !is.na(new_name_forday2) ~ "fixed"))
+
+
+schoolS31D1_day2_tofix_wide <- schoolS31D1_day2_tofix %>%
+  # mutate_all(.funs=~as.character(.)) %>%
+  mutate(SchoolID = "S31") %>%
+  pivot_longer(cols = -SchoolID, names_to = "var_name") %>%
+  left_join(., d_teachers_varnames_comparison) %>%
+  mutate(final_var_name = case_when(
+    !is.na(new_name_forday2) ~ new_name_forday2,
+    TRUE ~ var_name
+  )) %>%
+  select(SchoolID, value, final_var_name) %>%
+  pivot_wider(id_cols = SchoolID, names_from = final_var_name, values_from = value) %>%
+  mutate(
+    DateTime_teachers_2 = "2021-05-21 13:28:50",
+    form_2_complete = 2
+  )
+
+
+
+schoolS31D1_final <- left_join(schoolS31D1_day1, schoolS31D1_day2_tofix_wide)
+
+
+diff1<-setdiff(names(schoolS31D1_day1), names(schoolS31D1_day2_tofix_wide))
+
+diff2<-setdiff(names(schoolS31D1_day2_tofix_wide), names(schoolS31D1_day1))
+
+# bind the extra record with the rest of teachers data
+teachers_quest_data <- rbind(teachers_wo_S31D1, schoolS31D1_final) %>% 
+    # this school needs to be excluded as classes and outdoor refer to 1st level and inclusion criteria were schools in ground floor 
+  filter(SchoolID != "S25")
+
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+rm(list = setdiff(ls(), c("teachers_quest_data","Study_log_210510_DA_copy")))
+
+
+### ~~~ names in the mutate_at before
+# c("fan_on","fan_on1","fan_on2",
+# "fan_on2_2","fan_on1_2","air_condition_on_2",
+# "fan_on3", "air_condition_on"
+
+
+teachers_quest_data_0 <- teachers_quest_data %>%
+  mutate_at(
+    .vars = vars(starts_with("fan_on"), starts_with("air_condition_on")),
+    .funs = ~ case_when(
+      . == "1" ~ "Yes",
+      . == "2" ~ "No",
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  mutate(
+    vent = case_when(
+      vent == "1" ~ "Natural",
+      vent == "3" ~ "Natural_and_automatic"
+    ),
+    air_condition = case_when(
+      air_condition == "1" ~ "Fan",
+      air_condition == "2" ~ "AC",
+      air_condition == "3" ~ "None",
+      air_condition == "4" ~ "Fan_and_AC"
+    ),
+    city = case_when(
+      city_t == "1" ~ "Limassol",
+      city_t == "2" ~ "Nicosia",
+      city_t == "3" ~ "Larnaca",
+      city_t == "4" ~ "Pafos",
+      city_t == "5" ~ "Famagusta"
+    )
+  ) 
+
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+# read index file
+index_ac_fan <- read.csv("rawData/questionnaires_diaries/index_ac_fan.csv", sep = ",", header = TRUE) %>%
+  clean_names() %>%
+    #dplyr::rename("period"="i_period")  %>% #depending on encoding 
+  add_row(period = 18, period_type = "all_day") %>%
+  add_row(period = 19, period_type = "all_day_no_breaks") %>%
+  mutate(
+    period = as.character(period),
+    index = "ac_fan"
+  )
+
+index_win <- read.csv("rawData/questionnaires_diaries/index_windows_doors.csv", sep = ",", header = TRUE) %>%
+  clean_names() %>%
+    #dplyr::rename("period"="i_period")  %>% 
+  add_row(period = 11, period_type = "all_day_closed") %>%
+  mutate(
+    period = as.character(period),
+    index = "win_door"
+  )
+
+indeces <- bind_rows(index_win, index_ac_fan)
+
+# ac_fan
+# 1, 7:45 - 8:05 | 2, 8:06 - 8:25 | 3, 8:26 - 8:45 | 4, 8:46 - 9:05 | 5, 9:06 - 9:25 (1o Διάλειμμα) | 6, 9:26 - 9:45 | 7, 9:46 - 10:05 | 8, 10:06 - 10:25 | 9, 10:26 - 10:45 | 10, 10:46 - 10:55 (2ο Διάλειμμα) | 11, 10:56 - 11:15 | 12, 11:16 - 11:35 | 13, 11:36 - 11:55 | 14, 11:56 - 12:15 | 15, 12:16 - 12:25 (3ο Διάλειμμα) | 16, 12:26 - 12:45 | 17, 12:46 - 13:05 | 18, Όλη μέρα (και τα διαλείμματα) | 19, Όλη μέρα εκτός από τα διαλείμματα
+
+# win_door
+# 1, 7:45-8:25 | 2, 8:25-9:05 | 3, 9:05-9:25 (Δ) | 4, 9:25-10:05 | 5, 10:05-10:45 | 6, 10:45-10:55 (Δ) | 7, 10:55-11:35 | 8, 11:35-12:15 | 9, 12:15-12:25  (Δ) | 10, 12:25-13:00 | 11, Καθόλου ανοιχτό
+
+variable_names_teachers <- as_tibble_col(x = colnames(teachers_quest_data_0), column_name = "var_name") %>%
+  rowid_to_column(var = "var_num") %>%
+  separate(var_name,
+    into = c("first", "second", "third", "fourth", "fifth"),
+    sep = "_", remove = FALSE, extra = "merge", fill = "right"
+  ) %>%
+  mutate(
+    day = case_when(
+      str_detect(var_name, "^time_ac_on_\\d+$") ~ "day1",
+      str_detect(var_name, "^time_ac_on_2_\\d+$") ~ "day2",
+      str_detect(var_name, "^time_fan_on\\d?_\\d+$") ~ "day1",
+      str_detect(var_name, "^time_fan_on\\d?_2_\\d+$") ~ "day2",
+      str_detect(var_name, "^w\\d+_\\d+$") ~ "day1",
+      str_detect(var_name, "^w\\d+_d2_\\d+$") ~ "day2",
+      str_detect(var_name, "^d\\d+_\\d+$") ~ "day1",
+      str_detect(var_name, "^d\\d+_d2_\\d+$") ~ "day2"
+    ),
+    period = case_when(
+      str_detect(var_name, "^time_ac_on_\\d+$") ~ fourth,
+      str_detect(var_name, "^time_ac_on_2_\\d+$") ~ fifth,
+      str_detect(var_name, "^time_fan_on\\d?_\\d+$") ~ fourth,
+      str_detect(var_name, "^time_fan_on\\d?_2_\\d+$") ~ fifth,
+      str_detect(var_name, "^w\\d+_\\d+$") ~ second,
+      str_detect(var_name, "^w\\d+_d2_\\d+$") ~ third,
+      str_detect(var_name, "^d\\d+_\\d+$") ~ second,
+      str_detect(var_name, "^d\\d+_d2_\\d+$") ~ third
+    ),
+    index = case_when(
+      str_detect(var_name, "^time_ac_on_\\d+$") ~ "ac_fan",
+      str_detect(var_name, "^time_ac_on_2_\\d+$") ~ "ac_fan",
+      str_detect(var_name, "^time_fan_on\\d?_\\d+$") ~ "ac_fan",
+      str_detect(var_name, "^time_fan_on\\d??_2_\\d+$") ~ "ac_fan",
+      str_detect(var_name, "^w\\d+_\\d+$") ~ "win_door",
+      str_detect(var_name, "^w\\d+_d2_\\d+$") ~ "win_door",
+      str_detect(var_name, "^d\\d+_\\d+$") ~ "win_door",
+      str_detect(var_name, "^d\\d+_d2_\\d+$") ~ "win_door"
+    ),
+    ac_fan_win_door = case_when(
+      str_detect(var_name, "^time_ac_on_\\d+$") ~ "ac",
+      str_detect(var_name, "^time_ac_on_2_\\d+$") ~ "ac",
+      str_detect(var_name, "^time_fan_on\\d?_\\d+$") ~ "fan",
+      str_detect(var_name, "^time_fan_on\\d??_2_\\d+$") ~ "fan",
+      str_detect(var_name, "^w\\d+_\\d+$") ~ "win",
+      str_detect(var_name, "^w\\d+_d2_\\d+$") ~ "win",
+      str_detect(var_name, "^d\\d+_\\d+$") ~ "door",
+      str_detect(var_name, "^d\\d+_d2_\\d+$") ~ "door"
+    )
+  ) %>%
+  left_join(., indeces)
+
+teachers_quest_data_0_step1 <- teachers_quest_data_0 %>%
+  # ac day 1 - 18 to be transferred to 1-17
+  mutate_at(filter(
+    variable_names_teachers, 
+    ac_fan_win_door == "ac" & period_type %in% c("break", "class") & day == "day1")$var_name, 
+    # variables with ac 1-17 (all periods)
+    .funs = ~ case_when(time_ac_on_18 == 1 ~ 1, TRUE ~ as.double(.))) %>%
+  # ac day 1 - 19 to be transferred to 1-17 except 5, 10,15
+  mutate_at(filter(
+    variable_names_teachers, 
+    ac_fan_win_door == "ac" & period_type %in% c("class") & day == "day1")$var_name,
+    .funs = ~ case_when(time_ac_on_19 == 1 ~ 1, TRUE ~ as.double(.))) %>%
+  # ac day 2 - 18 to be transferred to 1-17
+  mutate_at(filter(
+    variable_names_teachers, 
+    ac_fan_win_door == "ac" & period_type %in% c("break", "class") & day == "day2")$var_name,
+    .funs = ~ case_when(time_ac_on_2_18 == 1 ~ 1, TRUE ~ as.double(.))) %>%
+  # ac day 2 - 19 to be transferred to 1-17, except 5, 10, 15
+  mutate_at(filter(
+    variable_names_teachers, 
+    ac_fan_win_door == "ac" & period_type %in% c("class") & day == "day2")$var_name,
+    .funs = ~ case_when(time_ac_on_2_19 == 1 ~ 1, TRUE ~ as.double(.))) 
+
+
+teachers_quest_data_0_step2 <- teachers_quest_data_0_step1 %>% 
+  mutate_if(.predicate = is.integer, .funs = as.numeric) %>% 
+  # number of fans on on each day
+  mutate(
+    
+  # if the response to the number of fans was 1 the variable filled first was 
+  # fan_on and fan_on_2 for day 1 and day 2, respectively
+  # "moving" these responses to the variables fan_on1 and fan_on1_2
+  # that indicate the first of multiple fans
+    ### For Day 1
+    fan_on1 = case_when(fan_on=="Yes" ~ "Yes", TRUE ~ fan_on1),
+    ### For Day 3
+    fan_on1_2 = case_when(fan_on_2=="Yes" ~ "Yes", TRUE ~ fan_on1_2)) %>%  
+  select(-fan_on, -fan_on_2) %>% 
+  # if the response to the number of fans was 1 the variables filled were of the format
+  # time_fan_on_\\d+ for day 1 and time_fan_on_2_\\d+ for day 2
+  # the values of these variables have to be moved to the corresponding variables that refer
+  # to the 1st fan as it is done for classrooms where there are more than 1 fans,
+  # i.e., time_fan_on1_\\d+ for day 1 and time_fan_on1_2_\\d+ for day 2
+  # the change is made and then the variables are dropped
+  mutate(
+    ### For Day 1
+    time_fan_on1_1 = case_when(time_fan_on_1==1 ~ 1, TRUE ~ time_fan_on1_1), 
+    time_fan_on1_2 = case_when(time_fan_on_2==1 ~ 1, TRUE ~ time_fan_on1_2), 
+    time_fan_on1_3 = case_when(time_fan_on_3==1 ~ 1, TRUE ~ time_fan_on1_3),  
+    time_fan_on1_4 = case_when(time_fan_on_4==1 ~ 1, TRUE ~ time_fan_on1_4),
+    time_fan_on1_5 = case_when(time_fan_on_5==1 ~ 1, TRUE ~ time_fan_on1_5), 
+    time_fan_on1_6 = case_when(time_fan_on_6==1 ~ 1, TRUE ~ time_fan_on1_6), 
+    time_fan_on1_7 = case_when(time_fan_on_7==1 ~ 1, TRUE ~ time_fan_on1_7),  
+    time_fan_on1_8 = case_when(time_fan_on_8==1 ~ 1, TRUE ~ time_fan_on1_8),
+    time_fan_on1_9 = case_when(time_fan_on_9==1 ~ 1, TRUE ~ time_fan_on1_9), 
+    time_fan_on1_10 = case_when(time_fan_on_10==1 ~ 1, TRUE ~ time_fan_on1_10),  
+    time_fan_on1_11 = case_when(time_fan_on_11==1 ~ 1, TRUE ~ time_fan_on1_11), 
+    time_fan_on1_12 = case_when(time_fan_on_12==1 ~ 1, TRUE ~ time_fan_on1_12),  
+    time_fan_on1_13 = case_when(time_fan_on_13==1 ~ 1, TRUE ~ time_fan_on1_13), 
+    time_fan_on1_14 = case_when(time_fan_on_14==1 ~ 1, TRUE ~ time_fan_on1_14),  
+    time_fan_on1_15 = case_when(time_fan_on_15==1 ~ 1, TRUE ~ time_fan_on1_15), 
+    time_fan_on1_16 = case_when(time_fan_on_16==1 ~ 1, TRUE ~ time_fan_on1_16),  
+    time_fan_on1_17 = case_when(time_fan_on_17==1 ~ 1, TRUE ~ time_fan_on1_17), 
+    time_fan_on1_18 = case_when(time_fan_on_18==1 ~ 1, TRUE ~ time_fan_on1_18),  
+    time_fan_on1_19 = case_when(time_fan_on_19==1 ~ 1, TRUE ~ time_fan_on1_19),
+    ### For day 2
+    time_fan_on1_2_1 = case_when(time_fan_on_2_1==1 ~ 1, TRUE ~ time_fan_on1_2_1), 
+    time_fan_on1_2_2 = case_when(time_fan_on_2_2==1 ~ 1, TRUE ~ time_fan_on1_2_2),
+    time_fan_on1_2_3 = case_when(time_fan_on_2_3==1 ~ 1, TRUE ~ time_fan_on1_2_3),
+    time_fan_on1_2_4 = case_when(time_fan_on_2_4==1 ~ 1, TRUE ~ time_fan_on1_2_4),
+    time_fan_on1_2_5 = case_when(time_fan_on_2_5==1 ~ 1, TRUE ~ time_fan_on1_2_5),  
+    time_fan_on1_2_6 = case_when(time_fan_on_2_6==1 ~ 1, TRUE ~ time_fan_on1_2_6),
+    time_fan_on1_2_7 = case_when(time_fan_on_2_7==1 ~ 1, TRUE ~ time_fan_on1_2_7),  
+    time_fan_on1_2_8 = case_when(time_fan_on_2_8==1 ~ 1, TRUE ~ time_fan_on1_2_8),
+    time_fan_on1_2_9 = case_when(time_fan_on_2_9==1 ~ 1, TRUE ~ time_fan_on1_2_9),  
+    time_fan_on1_2_10 = case_when(time_fan_on_2_10==1 ~ 1, TRUE ~ time_fan_on1_2_10),  
+    time_fan_on1_2_11 = case_when(time_fan_on_2_11==1 ~ 1, TRUE ~ time_fan_on1_2_11),  
+    time_fan_on1_2_12 = case_when(time_fan_on_2_12==1 ~ 1, TRUE ~ time_fan_on1_2_12),  
+    time_fan_on1_2_13 = case_when(time_fan_on_2_13==1 ~ 1, TRUE ~ time_fan_on1_2_13),
+    time_fan_on1_2_14 = case_when(time_fan_on_2_14==1 ~ 1, TRUE ~ time_fan_on1_2_14),
+    time_fan_on1_2_15 = case_when(time_fan_on_2_15==1 ~ 1, TRUE ~ time_fan_on1_2_15),
+    time_fan_on1_2_16 = case_when(time_fan_on_2_16==1 ~ 1, TRUE ~ time_fan_on1_2_16),
+    time_fan_on1_2_17 = case_when(time_fan_on_2_17==1 ~ 1, TRUE ~ time_fan_on1_2_17),
+    time_fan_on1_2_18 = case_when(time_fan_on_2_18==1 ~ 1, TRUE ~ time_fan_on1_2_18),
+    time_fan_on1_2_19 = case_when(time_fan_on_2_19==1 ~ 1, TRUE ~ time_fan_on1_2_19)) %>% 
+  # fan 1 day 1 - 18 to be transferred to 1-17
+  mutate_at(filter(
+    variable_names_teachers,
+    ac_fan_win_door == "fan" & str_detect(var_name, "_on1_") & period_type %in% c("break", "class") & day   == "day1")$var_name,
+    .funs = ~ case_when(time_fan_on1_18 == 1 ~ 1, TRUE ~ as.double(.))) %>%
+    # fan 1 day 1 - 19 to be transferred to 1-17, except 5,10,15
+    mutate_at(filter(
+      variable_names_teachers, 
+      ac_fan_win_door == "fan" & str_detect(var_name, "_on1_") & period_type %in% c("class") & day ==  "day1")$var_name, 
+      .funs = ~ case_when(time_fan_on1_19 == 1 ~ 1, TRUE ~ as.double(.))) %>%
+    # fan 2 day 1 - 18 to be transferred to 1-17
+    mutate_at(filter(
+      variable_names_teachers, 
+      ac_fan_win_door == "fan" & str_detect(var_name, "_on2_") & period_type %in% c("break", "class") & day == "day1")$var_name, 
+      .funs = ~ case_when(time_fan_on2_18 == 1 ~ 1, TRUE ~ as.double(.))) %>%
+    # fan 2 day 1 - 19 to be transferred to 1-17, except 5,10,15
+    mutate_at(filter(
+      variable_names_teachers, 
+      ac_fan_win_door == "fan" & str_detect(var_name, "_on2_") & period_type %in% c("class") & day == "day1")$var_name, 
+      .funs = ~ case_when(time_fan_on2_19 == 1 ~ 1, TRUE ~ as.double(.))) %>%
+    # fan 3 day 1 - 18 to be transferred to 1-17
+    mutate_at(filter(
+      variable_names_teachers, ac_fan_win_door == "fan" & str_detect(var_name, "_on3_") & period_type %in% c("break", "class") & day == "day1")$var_name, 
+      .funs = ~ case_when(time_fan_on3_18 == 1 ~ 1, TRUE ~ as.double(.))) %>%
+    # fan 3 day 1 - 19 to be transferred to 1-17, except 5,10,15
+    mutate_at(filter(
+      variable_names_teachers, 
+      ac_fan_win_door == "fan" & str_detect(var_name, "_on3_") & period_type %in% c("class") & day ==  "day1")$var_name, 
+      .funs = ~ case_when(time_fan_on3_19 == 1 ~ 1, TRUE ~ as.double(.))) %>%
+    # fan 1 day 2 - 18 to be transferred to 1-17
+    mutate_at(filter(
+      variable_names_teachers, 
+      ac_fan_win_door == "fan" & str_detect(var_name, "_on1_") & period_type %in% c("break", "class") & day == "day2")$var_name, .funs = ~ case_when(
+      time_fan_on1_2_18 == 1 ~ 1, TRUE ~ as.double(.))) %>%
+    # fan 1 day 2 - 19 to be transferred to 1-17, except 5,10,15
+    mutate_at(filter(
+      variable_names_teachers, 
+      ac_fan_win_door == "fan" & str_detect(var_name, "_on1_") & period_type %in% c("class") & day ==  "day2")$var_name, 
+      .funs = ~ case_when(time_fan_on1_2_19 == 1 ~ 1, TRUE ~ as.double(.))) %>%
+    # fan 2 day 2 - 18 to be transferred to 1-17
+    mutate_at(filter(
+      variable_names_teachers, 
+      ac_fan_win_door == "fan" & str_detect(var_name, "_on2_") & period_type %in% c("break", "class") & day == "day2")$var_name, .funs = ~ case_when(
+      time_fan_on2_2_18 == 1 ~ 1, TRUE ~ as.double(.))) %>%
+    # fan 2 day 2 - 19 to be transferred to 1-17, except 5,10,15
+    mutate_at(filter(
+      variable_names_teachers, 
+      ac_fan_win_door == "fan" & str_detect(var_name, "_on2_") & period_type %in% c("class") & day ==  "day2")$var_name, 
+      .funs = ~ case_when(time_fan_on2_2_19 == 1 ~ 1, TRUE ~ as.double(.))) %>%
+    # fan 3 day 2 - 18 to be transferred to 1-17
+    mutate_at(filter(
+      variable_names_teachers, 
+      ac_fan_win_door == "fan" & str_detect(var_name, "_on3_") & period_type %in% c("break", "class") & day == "day2")$var_name, 
+      .funs = ~ case_when(time_fan_on3_2_18 == 1 ~ 1, TRUE ~ as.double(.))) %>%
+    # fan 3 day 2 - 19 to be transferred to 1-17, except 5,10,15
+    mutate_at(filter(
+      variable_names_teachers, 
+      ac_fan_win_door == "fan" & str_detect(var_name, "_on3_") & period_type %in% c("class") & day == "day2")$var_name, 
+      .funs = ~ case_when(time_fan_on3_2_19 == 1 ~ 1, TRUE ~ as.double(.))) # %>% 
+### add number of open fans 
+
+
+completequest_data <- teachers_quest_data_0_step2 %>%
+  # removing the variables 18 and 19 that were recoded to the other periods
+  # and variables that were recoded to fan n.1
+  select(-ends_with("_18"), -ends_with("_19"), -matches("time_fan_on_\\d+$"),  -matches("time_fan_on_2_\\d+$"))
+#, time_ac_on_2_18, time_ac_on_2_19,
+#           time_fan_on_18, time_fan_on_19,
+#           time_fan_on1_18, time_fan_on1_19,
+#           time_fan_on2_18, time_fan_on2_19,
+#           time_fan_on3_18, time_fan_on3_19,
+#           time_fan_on_2_18, time_fan_on_2_19,
+#           time_fan_on1_2_18, time_fan_on1_2_19,
+#           time_fan_on2_2_18, time_fan_on2_2_19,
+#           time_fan_on3_2_18, time_fan_on3_2_19,
+#           all_of(fan_only1_day1)))
+
+# delete columns that contain only NA - only 1 column
+db_final <- completequest_data[, colSums(is.na(completequest_data)) < nrow(completequest_data)]
+
+# delete columns that contain only zeroes - not sure if we should do it or not
+# data1 <- data[, !apply(data == 0, 2, all)]
+
+#original_data <- readRDS("data_S2_before_rev.rds") %>% 
+#  mutate_if(.predicate = is.factor, .funs=as.character) %>% 
+#  mutate_if(.predicate = is.integer, .funs=as.numeric) 
+#
+#diff_res <- diffdf::diffdf(base = original_data, compare = db_final)
+#
+#original_data2_75 <- original_data %>%
+#  slice(2) %>%
+#  select(SchoolID, class_id, ClassID, starts_with("time_ac_on_2_")) %>%
+#  mutate(db = "base") 
+#
+#db_final2_75 <- db_final %>%
+#  slice(2) %>%
+#  select(SchoolID, class_id, ClassID, starts_with("time_ac_on_2_")) %>%
+#  mutate(db = "compare") 
+#
+#teachers <- teachers_quest_data %>%
+#  filter(time_fan_on1_18 == "1" | time_fan_on1_19 == "1" | SchoolID == "S10") %>%
+#  select(SchoolID, class_id, starts_with("time_fan_on1")) %>%
+#  mutate(db = "compare")
+#
+#
+#teachers_original <- original_data %>%
+#  filter(time_fan_on1_18 == "1" | time_fan_on1_19 == "1" | SchoolID == "S10") %>%
+#  select(SchoolID, class_id, starts_with("time_fan_on1")) %>%
+#  mutate(db = "base")
+#
+#
+#
+#
+#
+#diffdf::diffdf(base = teachers_original, compare = teachers)
+#
+#diff_res2_75 <- diffdf::diffdf(base = original_data2_75, compare = db_final2_75)
+#
+#comp_df <- bind_rows(original_data2_75, db_final2_75)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# read quest wide datasets for descriptives
+
+# str(data, list.len=ncol(data))
+selectionDescr_class <- c(
+  "num_child", "surface", "vent", "air_condition",
+  "air_condition_on", "fan_num",
+  "fan_on1", "fan_on2", "fan_on3",
+  "num_wind", "num_doors", "kids_num", "air_condition_on_2",
+  "fan_on1_2", "fan_on2_2", "fan_on3_2",
+  "form_2_complete"
+)
+
+categorvarDescr_class <- c(
+  "vent", "num_doors","air_condition",
+  "air_condition_on",
+  "fan_on1", "fan_on2", "fan_on3",
+  "air_condition_on_2",
+  "fan_on1_2", "fan_on2_2", "fan_on3_2",
+  "form_2_complete"
+)
+
+
+limassolschools <- db_final %>%
+  filter(city == "Limassol") %>%
+  select(!(starts_with("w"))) %>%
+  select(!(contains("time"))) %>%
+  select(!(starts_with("d1"))) %>%
+  select(!(starts_with("d2"))) %>%
+  select(!(starts_with("freq_clean"))) %>%
+  select(!(starts_with("pest_loc"))) %>%
+  select(!(ends_with(".y")))# %>%
+  #select(-c(record_id, type, city_t, class_id))
+
+# write.csv(limassolschools, "limassolschools_alt.csv")
+
+hist(db_final$num_child)
+hist(db_final$kids_num)
+hist(db_final$num_doors)
+hist(db_final$num_wind)
+hist(db_final$surface)
+
+# childnum <- data %>% select(SchoolID, ClassID, num_child, kids_num)
+
+# wrong input from teacher - assumption that number is wrong and should be around 20 something
+# checked class photo and 21 seats are shown and number of kids for same class on second day (19) - so replace with 19
+db_final$num_child[db_final$num_child == 54] <- 19
+
+hist(db_final$num_child)
+
+#exluded classses variable
+db_final_exc <- db_final %>% 
+   right_join(., select(Study_log_210510_DA_copy, SchoolID, exclude, issue, district, degurba), by="SchoolID") %>% 
+  mutate(normal_prob = case_when(exclude == "C1" & ClassID == "C1" ~ "prob",
+                                 exclude == "C2" & ClassID == "C2" ~ "prob",
+                                 exclude == "C1_C2" ~ "prob",
+                                 TRUE ~ "normal"))
+  
+# Subset normal classes
+db_final_norm <- db_final_exc %>% 
+  filter(normal_prob == "normal")
+
+# Subset problematic classes
+db_final_prob <- db_final_exc %>% 
+  filter(normal_prob == "prob")
+
+```
+
+ `r kable(print(CreateTableOne(selectionDescr_class, data = db_final, factorVars = categorvarDescr_class, strata = "ClassID", addOverall=TRUE, test = F)), caption = "Classes characteristics")`
+ 
+  
+    `r kable(print(CreateTableOne(selectionDescr_class, data = db_final_exc, factorVars = categorvarDescr_class, strata = "normal_prob", addOverall=TRUE, test = F)), caption = "Classes characteristics - normal vs problematic")`
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+# rm(completequest_data)
+# transform dataset into long - 1 variable 1 day at a time
+
+# ac data day 1
+acdata <- db_final %>%
+  select(SchoolID, ClassID, filter(variable_names_teachers, ac_fan_win_door == "ac" & period_type %in% c("break", "class") & day == "day1")$var_name)
+
+aclong <- acdata %>%
+  pivot_longer(
+    cols = starts_with("time_ac_on"),
+    values_to = "open_closed"
+  ) %>%
+  separate(name, into = c(
+    "remove", "class_characteristic",
+    "remove2",
+    "period"
+  ), sep = "_") %>%
+  mutate(samplingday = "1") %>%
+  select(-c(remove, remove2))
+
+# merge aclong and index file by period
+aclong_in <- right_join(aclong, filter(index_ac_fan, !is.na(period_start)), by = "period")
+
+# ac data day 2
+acdata2 <- db_final %>%
+  select(SchoolID, ClassID, filter(variable_names_teachers, ac_fan_win_door == "ac" & period_type %in% c("break", "class") & day == "day2")$var_name)
+
+aclong2 <- acdata2 %>%
+  pivot_longer(
+    cols = starts_with("time_ac_on"),
+    values_to = "open_closed"
+  ) %>%
+  separate(name, into = c(
+    "remove", "class_characteristic",
+    "remove2", "samplingday",
+    "period"
+  ), sep = "_") %>%
+  select(-c(remove, remove2))
+
+# merge aclong and index file by period
+aclong2_in <- right_join(aclong2, filter(index_ac_fan, !is.na(period_start)), by = "period")
+
+# fans day 1
+fandata <- db_final %>%
+  select(
+    SchoolID, ClassID,
+    filter(variable_names_teachers, ac_fan_win_door == "fan" & str_detect(var_name, "_on3_|_on2_|_on1_") & period_type %in% c("break", "class") & day == "day1")$var_name
+  )
+
+fanlong <- fandata %>%
+  pivot_longer(
+    cols = starts_with("time"),
+    values_to = "open_closed"
+  ) %>%
+  separate(name, into = c(
+    "remove", "remove2",
+    "class_characteristic", "period"
+  ), sep = "_") %>%
+  mutate(class_characteristic = str_replace_all(
+    string = class_characteristic, pattern = c("on"),
+    replacement = c("fan")
+  )) %>%
+  select(-c(remove, remove2)) %>%
+  mutate(samplingday = "1")
+
+# merge fanlong and index file by period
+fanlong_in <- right_join(fanlong, filter(index_ac_fan, !is.na(period_start)), by = "period")
+
+# fans day 2
+fandata2 <- db_final %>%
+  select(
+    SchoolID, ClassID,
+    filter(variable_names_teachers, ac_fan_win_door == "fan" & str_detect(var_name, "_on3_|_on2_|_on1_") & period_type %in% c("break", "class") & day == "day2")$var_name
+  )
+
+fanlong2 <- fandata2 %>%
+  pivot_longer(
+    cols = starts_with("time"),
+    values_to = "open_closed"
+  ) %>%
+  separate(name, into = c(
+    "remove", "remove2",
+    "class_characteristic", "samplingday", "period"
+  ), sep = "_") %>%
+  mutate(class_characteristic = str_replace_all(
+    string = class_characteristic, pattern = c("on"),
+    replacement = c("fan")
+  )) %>%
+  select(-c(remove, remove2))
+
+# merge fanlong and index file by period
+fanlong2_in <- right_join(fanlong2, filter(index_ac_fan, !is.na(period_start)), by = "period")
+
+wdata <- db_final %>%
+  select(
+    SchoolID, ClassID,
+    filter(variable_names_teachers, ac_fan_win_door == "win" & period_type %in% c("break", "class") & day == "day1")$var_name
+  )
+
+wlong <- wdata %>%
+  pivot_longer(
+    cols = starts_with("w"),
+    values_to = "open_closed"
+  ) %>%
+  mutate(samplingday = "d1") %>%
+  separate(name, into = c("class_characteristic", "period"), sep = "_")
+
+
+# merge windowlong and index file by period
+wlong_in <- right_join(wlong, filter(index_win, !is.na(period_start)), by = "period")
+
+wdata2 <- db_final %>%
+  select(
+    SchoolID, ClassID,
+    filter(variable_names_teachers, ac_fan_win_door == "win" & period_type %in% c("break", "class") & day == "day2")$var_name
+  )
+
+wlong2 <- wdata2 %>%
+  pivot_longer(
+    cols = starts_with("w"),
+    values_to = "open_closed"
+  ) %>%
+  separate(name, into = c("class_characteristic", "samplingday", "period"), sep = "_")
+
+# merge windowlong and index file by period
+wlong2_in <- right_join(wlong2, filter(index_win, !is.na(period_start)), by = "period")
+
+ddata <- db_final %>%
+  select(
+    SchoolID, ClassID,
+    filter(variable_names_teachers, ac_fan_win_door == "door" & period_type %in% c("break", "class") & day == "day1")$var_name
+  )
+
+dlong <- ddata %>%
+  pivot_longer(
+    cols = starts_with("d"),
+    values_to = "open_closed"
+  ) %>%
+  mutate(samplingday = "d1") %>%
+  separate(name, into = c("class_characteristic", "period"), sep = "_")
+
+# merge doorlong and index file by period
+dlong_in <- right_join(dlong, filter(index_win, !is.na(period_start)), by = "period")
+
+
+ddata2 <- db_final %>%
+  select(
+    SchoolID, ClassID,
+    filter(variable_names_teachers, ac_fan_win_door == "door" & period_type %in% c("break", "class") & day == "day2")$var_name
+  )
+
+dlong2 <- ddata2 %>%
+  pivot_longer(
+    cols = starts_with("d"),
+    values_to = "open_closed"
+  ) %>%
+  separate(name, into = c("class_characteristic", "samplingday", "period"), sep = "_")
+
+# merge doorlong and index file by period
+dlong2_in <- dlong2 %>% right_join(index_win, by = "period")
+
+# rbind ac and fan data to create a long dataset
+acfan <- bind_rows(
+  aclong_in, aclong2_in,
+  fanlong_in, fanlong2_in
+)
+windowsdoors <- bind_rows(
+  wlong_in, wlong2_in,
+  dlong_in, dlong2_in
+)
+
+wd <- windowsdoors %>%
+  group_by(SchoolID, ClassID, samplingday) %>%
+  dplyr::summarize(n = n())
+
+windowsdoorssum <- windowsdoors %>%
+  mutate(class_venttype = case_when(
+    str_detect(class_characteristic, "w") ~ "window",
+    str_detect(class_characteristic, "d") ~ "door"
+  )) %>%
+  group_by(SchoolID, ClassID, samplingday, period, period_start, period_end, class_venttype) %>%
+  dplyr::summarise(open_closed_sum = sum(as.numeric(open_closed)))
+
+acfansum <- acfan %>%
+  mutate(class_venttype = case_when(
+    str_detect(class_characteristic, "ac") ~ "air-condition",
+    str_detect(class_characteristic, "fan") ~ "fan"
+  )) %>%
+  group_by(SchoolID, ClassID, samplingday, period, period_start, period_end, class_venttype) %>%
+  dplyr::summarize(open_closed_sum = sum(as.numeric(open_closed)))
+
+class_vent <- rbind.data.frame(windowsdoorssum, acfansum)
+
+# rm(list=setdiff(ls(), c("data","windowsdoors",
+#                      "windowsdoorssum","acfan",
+#                      "acfansum","acfanall","class_vent")))
+
+# i want to create a dataset which will include all summarized date for acfans and the rest variables that were in the previous dataset
+# i tried all types of joins but they dont work...
+acfanall <- left_join(acfansum, acfan,
+  by = c("SchoolID", "ClassID", "samplingday", "period", "period_start", "period_end")
+)
+
+# then i tried to ungroup but i get warning when i add .groups="drop"
+TEST <- windowsdoors %>%
+  mutate(class_venttype = case_when(
+    str_detect(class_characteristic, "w") ~ "window",
+    str_detect(class_characteristic, "d") ~ "door"
+  )) %>%
+  group_by(SchoolID, ClassID, samplingday, period, period_start, period_end, class_venttype) %>%
+  dplyr::summarise(open_closed_sum = sum(as.numeric(open_closed), na.rm = TRUE)) %>%
+  ungroup() %>%
+  left_join(acfan,
+    by = c("SchoolID", "ClassID", "samplingday", "period", "period_start", "period_end")
+  )
+
+## CK: we need to also add the total number of windows/doors/fans in these datasets so that we will be able to create a variable with the % open windows/doors/fans.
+
+windowsdoorssum_1<- windowsdoorssum %>% 
+  left_join(., select(db_final, num_wind, num_doors, SchoolID, ClassID), by=c("SchoolID","ClassID")) %>% 
+  mutate(percent_open = case_when(class_venttype == "window" ~ open_closed_sum/num_wind*100,
+                                      class_venttype == "door" ~ open_closed_sum/num_doors*100))
+
+acfansum_1<- acfansum %>% 
+  left_join(., select(db_final, fan_num, SchoolID, ClassID), by=c("SchoolID","ClassID")) %>% 
+  mutate(percent_open = case_when(class_venttype == "fan" ~ open_closed_sum/fan_num*100))
+
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+rm(list = setdiff(ls(), c("windowsdoors","windowsdoorssum","windowsdoorssum_1",
+                          "acfan","acfansum","acfansum_1","db_final")))
+
+# save wide and long dataframes
+saveRDS(windowsdoors, file = "produced_data/windows_doors_dataset_alt.rds")
+saveRDS(acfan, file = "produced_data/ac_fans_dataset_alt.rds")
+saveRDS(windowsdoorssum, file = "produced_data/windows_doors_sum_alt.rds")
+saveRDS(acfansum, file = "produced_data/ac_fans_sum_alt.rds")
+saveRDS(db_final, file = "produced_data/quest_wide_dataset_alt.rds")
+saveRDS(windowsdoorssum_1, file = "produced_data/windows_doors_sum_1.rds")
+saveRDS(acfansum_1, file = "produced_data/ac_fans_sum_1.rds")
+
+
+```
+
+ 
+# Session Information
+
+```{r S2 }
+sessionInfo()
+```

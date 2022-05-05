@@ -1,0 +1,121 @@
+---
+title: "STEPS Study: O2 Comparison indoors and outdoors (corellations)"
+author: "C. Konstantinou and X. Andrianou @ Water and Health Laboratory, CII-CUT"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  rmdformats::downcute:
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    highlight: tango
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r packages,  echo=FALSE, include=FALSE}
+rm(list=ls())
+
+
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg))
+    install.packages(new.pkg, dependencies = TRUE,
+                     repos = "http://cran.us.r-project.org")
+  sapply(pkg, require, character.only = TRUE)
+}
+
+# usage
+packages <- c("tidyverse","lubridate","officer", "rvg","glue", "patchwork","janitor",
+              "tableone","dplyr","lme4","readxl","scales","readr", "lubridate",
+              "tidyr","ggpubr","corrplot","PerformanceAnalytics")
+
+ipak(packages)
+```
+
+
+```{r readdata, echo=FALSE, message=FALSE, warning=FALSE}
+
+# read questionnaire_sensor files excluding problematic classes
+dataset_final_regression_all <- readRDS("produced_data/dataset_final_regression_all.rds", refhook = NULL)
+dataset_final_regression_all_M <- readRDS("produced_data/dataset_final_regression_all_M.rds", refhook = NULL)
+
+```
+
+```{r dataprep, echo=FALSE, message=FALSE, warning=FALSE}
+
+# make dataset wide
+dataset_wide_P_in <- dataset_final_regression_all %>% 
+  select(name, SchoolID, location, samplingdate, hour, mean_indoors) %>%
+  pivot_wider(id_cols = c(SchoolID,location, samplingdate, hour),
+              names_from = name, values_from = mean_indoors, names_prefix = "in_") 
+
+dataset_wide_P_od <- dataset_final_regression_all %>% 
+  select(name, SchoolID, location, samplingdate, hour, mean_outdoors) %>%
+  pivot_wider(id_cols = c(SchoolID,location, samplingdate, hour),
+              names_from = name, values_from = mean_outdoors, names_prefix = "od_")  
+
+# bind outdoor and indoor hourly means
+dataset_wide_P <- left_join(dataset_wide_P_in, dataset_wide_P_od)
+
+# select only variables for correlation indoor-outdoors
+cor_data_P <- dataset_wide_P %>% 
+  select(contains("_"))
+
+# make dataset wide
+dataset_wide_M_in <- dataset_final_regression_all_M %>% 
+  select(name, SchoolID, location, samplingdate, hour, mean_indoors) %>%
+  pivot_wider(id_cols = c(SchoolID,location, samplingdate, hour),
+              names_from = name, values_from = mean_indoors, names_prefix = "in_") 
+
+dataset_wide_M_od <- dataset_final_regression_all_M %>% 
+  select(name, SchoolID, location, samplingdate, hour, mean_outdoors) %>%
+  pivot_wider(id_cols = c(SchoolID,location, samplingdate, hour),
+              names_from = name, values_from = mean_outdoors, names_prefix = "od_")  
+
+# bind outdoor and indoor hourly means
+dataset_wide_M <- left_join(dataset_wide_M_in, dataset_wide_M_od)
+
+# select only variables for correlation indoor-outdoors
+cor_data_M <- dataset_wide_M %>% 
+  select(contains("_"))
+
+# bind indoor data from PA and MCF 
+cor_data_MP <- left_join(dataset_wide_P_in, dataset_wide_M_in) %>% 
+  select(contains("_"))
+
+```
+
+
+```{r correlations, echo=FALSE, message=FALSE, warning=FALSE}
+
+cor_P <- cor(cor_data_P, method = "spearman", use = "complete.obs")
+
+corrplot(cor_P, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+chart.Correlation(cor_P, histogram=TRUE, pch=19)
+
+
+cor_M <- cor(cor_data_M, method = "spearman", use = "complete.obs")
+
+corrplot(cor_M, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+chart.Correlation(cor_M, histogram=TRUE, pch=19)
+
+cor_MP <- cor(cor_data_MP, method = "spearman", use = "complete.obs")
+
+corrplot(cor_MP, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+chart.Correlation(cor_MP, histogram=TRUE, pch=19)
+
+```
+
+# Session Information
+
+```{r S6 }
+sessionInfo()
+```

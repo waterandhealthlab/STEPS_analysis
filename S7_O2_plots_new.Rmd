@@ -1,0 +1,848 @@
+---
+title: "STEPS Study: O2 Exploratory Plots"
+author: "C. Konstantinou and X. Andrianou @ Water and Health Laboratory, CII-CUT"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  rmdformats::downcute:
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    highlight: tango
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+```{r packages,  echo=FALSE, include=FALSE}
+rm(list=ls())
+
+
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg))
+    install.packages(new.pkg, dependencies = TRUE,
+                     repos = "http://cran.us.r-project.org")
+  sapply(pkg, require, character.only = TRUE)
+}
+
+# usage
+packages <- c("tidyverse","lubridate","officer", "rvg","glue", "patchwork","janitor",
+              "tableone","dplyr","lme4","readxl","scales","readr", "lubridate", 
+              "patchwork")
+
+ipak(packages)
+```
+
+
+
+```{r readdata, echo=FALSE, message=FALSE, warning=FALSE}
+
+# read questionnaire_sensor files
+questPA_1 <- readRDS("produced_data/questPA_1.rds", refhook = NULL)
+questMCF_1 <- readRDS("produced_data/questMCF_1.rds", refhook = NULL)
+
+dataset_final_regression <- readRDS("produced_data/dataset_final_regression.rds", refhook = NULL)
+dataset_final_regression_M <- readRDS("produced_data/dataset_final_regression_M.rds", refhook = NULL)
+
+dataset_final_regression_all <- readRDS("produced_data/dataset_final_regression_all.rds", refhook = NULL)
+dataset_final_regression_all_M <- readRDS("produced_data/dataset_final_regression_all_M.rds", refhook = NULL)
+
+dataset_final_regression_probandnorm <- readRDS("produced_data/dataset_final_regression_probandnorm.rds") %>% 
+   mutate(class_type = as.factor(class_type))
+dataset_final_regression_M_probandnorm <- readRDS("produced_data/dataset_final_regression_M_probandnorm.rds")
+```
+
+
+# Main text 
+
+## Raw data without dates including classes hours (7:45-13:05) and time before and after classes hours (7:00 - 07:45 and 13:05 - 15:00) - all classrooms
+
+```{r plots, echo=FALSE, message=FALSE, warning=FALSE}
+
+# samplingtime" used for plots in S7 is dependent on S5. So, if S5 is re-run, then the date changes and date needs to be replaced here e.g. use the search and replace all function on top left side 
+
+questPA_1 %>%
+  group_by(name) %>% 
+  filter(period_new !="no_school") %>%
+  filter(final_value<quantile(final_value, probs=0.99, na.rm=TRUE)) %>%
+  summarise(max=max(final_value, na.rm = T))
+
+PA_params_plot <- questPA_1 %>%
+  group_by(name) %>% 
+  filter(period_new !="no_school") %>%
+  filter(final_value<quantile(final_value, probs=0.99, na.rm=TRUE)) %>% 
+  mutate(label_for_plot=case_when(name=="pm1_0"~"PM1 (ug/m3)",
+                                  name=="pm2_5"~"PM2.5 (ug/m3)",
+                                  name=="pm10_0"~"PM10 (ug/m3)")) %>%
+  ggplot() +
+   geom_point(aes(x=samplingtime, y=final_value, colour=indoor_outdoor),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 20, alpha = 0.1, size = 0.2) +
+   geom_smooth(aes(x=samplingtime, y=final_value, colour=indoor_outdoor), size = 2, method="loess", span=0.1,se = F) +
+  scale_color_manual(values = RColorBrewer::brewer.pal(n = 6, "Set2")[1:2])+
+   #annotate break times 09:05-09:25, 10:45-10:55, 12:15-12:25
+   annotate("rect", 
+            xmin=as.POSIXct("2020-01-01 09:05:00"), xmax=as.POSIXct("2020-01-01 09:25:00"),
+           ymin=min(questPA_1$final_value, na.rm = T), ymax=Inf, alpha=0.1, fill="yellow") +
+   annotate("rect", 
+            xmin=as.POSIXct("2020-01-01 10:45:00"), xmax=as.POSIXct("2020-01-01 10:55:00"),
+            ymin=min(questPA_1$final_value, na.rm = T), ymax=Inf, alpha=0.1, fill="yellow") +
+      annotate("rect", 
+            xmin=as.POSIXct("2020-01-01 12:15:00"), xmax=as.POSIXct("2020-01-01 12:25:00"),
+            ymin=min(questPA_1$final_value, na.rm = T), ymax=Inf, alpha=0.1, fill="yellow") +
+    #annotate classes starting time 07:45
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 07:45:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[3]) + 
+    #annotate classes stopping time before classes begin13:05
+  geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 13:05:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[3]) +
+    #annotate school opening time 07:00 -  cleaning staff, teachers arrive
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 07:00:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4]) +
+    #annotate school closing time 15:00 -  cleaning staff leave
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 15:00:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4]) +
+    labs(y= NULL, x = NULL) +
+  facet_wrap(~label_for_plot, ncol = 1, scales="free_y") +
+   theme_bw() +
+   theme(legend.position = "bottom",
+         legend.title = element_blank())
+  
+       # only school, before and after - 7:00-15:00
+   
+
+questMCF_1 %>%
+  group_by(name) %>% 
+  filter(period_new !="no_school") %>%
+  filter(final_value<quantile(final_value, probs=0.99, na.rm=TRUE)) %>%
+  summarise(max=max(final_value, na.rm = T))
+
+MCF_params_plot <- questMCF_1 %>%
+  group_by(name) %>% 
+  filter(period_new !="no_school") %>% 
+  mutate(label_for_plot=case_when(name=="b_voc"~"VOCs (ppb)",
+                                  name=="carbon_dioxide"~"CO2 (ppm)",
+                                  name=="humidity"~"Humidity (%)",
+                                  name=="temperature"~"Temperature (C)")) %>%
+  filter(final_value<quantile(final_value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=samplingtime, y=final_value, colour=indoor_outdoor),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 20, alpha = 0.1, size = 0.2) +
+   geom_smooth(aes(x=samplingtime, y=final_value, colour=indoor_outdoor), size = 2, method="loess", span=0.1,se = F) +
+  scale_color_manual(values = RColorBrewer::brewer.pal(n = 6, "Set2")[1:2])+
+   #annotate break times 09:05-09:25, 10:45-10:55, 12:15-12:25
+   annotate("rect", 
+            xmin=as.POSIXct("2020-01-01 09:05:00"), xmax=as.POSIXct("2020-01-01 09:25:00"),
+           ymin=min(questMCF_1$final_value, na.rm = T), ymax=Inf, alpha=0.1, fill="yellow") +
+   annotate("rect", 
+            xmin=as.POSIXct("2020-01-01 10:45:00"), xmax=as.POSIXct("2020-01-01 10:55:00"),
+            ymin=min(questMCF_1$final_value, na.rm = T), ymax=Inf, alpha=0.1, fill="yellow") +
+      annotate("rect", 
+            xmin=as.POSIXct("2020-01-01 12:15:00"), xmax=as.POSIXct("2020-01-01 12:25:00"),
+            ymin=min(questMCF_1$final_value, na.rm = T), ymax=Inf, alpha=0.1, fill="yellow") +
+    #annotate classes starting time 07:45
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 07:45:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[3]) +
+    #annotate classes stopping time before classes begin13:05
+  geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 13:05:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[3]) +
+    #annotate school opening time 07:00 -  cleaning staff, teachers arrive
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 07:00:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4]) +
+    #annotate school closing time 15:00 -  cleaning staff leave
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 15:00:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4]) +
+    labs(y= NULL, x = NULL) +
+  facet_wrap(~label_for_plot, ncol = 1, scales="free_y") +
+   theme_bw() +
+   theme(legend.position = "bottom",
+         legend.title = element_blank())
+  
+fig1 <- PA_params_plot + MCF_params_plot  + plot_layout(guides = "collect") & theme(legend.position = 'bottom')
+
+fig1
+
+ggsave(filename = "plots/Figure1.png", plot=fig1, dpi=300)
+```
+
+# Supplementary 
+
+## Period means for all schools - comparison of normal and problematic classrooms
+
+Periods: 
+
++ 1-10 = school periods from classes start time (7:45) to classes end time (13:05) e.g. 1 = 07:45 - 08:25
++ bef_classes = period from 7:00-7:45 
++ bef_classes = period from 7:00-7:45 
++ after_classes = period from 13:05-15:00 
+
+
++ 95th -ile
+
+```{r plots_periodmean_normprob, echo = FALSE, message=FALSE, warning=FALSE}
+
+ # only school hours 
+dataset_final_regression_probandnorm %>%
+   filter(name=="pm10_0") %>%
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,colour=class_type), 
+              position=position_jitter(h=0.1, w=0.1)) + 
+   theme_minimal() +
+    labs(y= "PM10 (ug/m3)")
+
+ # only school hours 
+dataset_final_regression_probandnorm %>%
+   filter(name=="pm1_0") %>%
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,colour=class_type), 
+              position=position_jitter(h=0.1, w=0.1)) + 
+   theme_minimal() +
+    labs(y= "PM1 (ug/m3)")
+
+ # only school hours 
+dataset_final_regression_probandnorm %>%
+   filter(name=="pm2_5") %>%
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,colour=class_type), 
+              position=position_jitter(h=0.1, w=0.1)) + 
+   theme_minimal() +
+    labs(y= "PM2.5 (ug/m3)")
+
+ # only school hours 
+dataset_final_regression_M_probandnorm %>%
+   filter(name=="temperature") %>%
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,colour=class_type), 
+              position=position_jitter(h=0.1, w=0.1)) + 
+   theme_minimal() +
+    labs(y= "Temperature (C)")
+
+# only school hours 
+dataset_final_regression_M_probandnorm %>%
+   filter(name=="humidity") %>%
+     filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,colour=class_type), 
+              position=position_jitter(h=0.1, w=0.1)) + 
+   theme_minimal() +
+    labs(y= "Rel. Humidity")
+
+# only school hours 
+dataset_final_regression_M_probandnorm %>%
+   filter(name=="carbon_dioxide") %>%
+      filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,colour=class_type), 
+              position=position_jitter(h=0.1, w=0.1)) + 
+   theme_minimal() +
+    labs(y= "CO2 (ppm)")
+
+# only school hours 
+dataset_final_regression_M_probandnorm %>%
+   filter(name=="b_voc") %>%
+     filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,colour=class_type), 
+              position=position_jitter(h=0.1, w=0.1)) + 
+   theme_minimal() +
+    labs(y= "VOCs (ppb)")
+
+
+
+ # only school hours 
+dataset_final_regression_probandnorm %>%
+   filter(name=="pm10_0") %>%
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_boxplot(aes(y=mean_indoors, x=period_new,fill=class_type)) + 
+   theme_minimal() +
+    labs(y= "PM10 (ug/m3)")
+
+ # only school hours 
+dataset_final_regression_probandnorm %>%
+   filter(name=="pm1_0") %>%
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_boxplot(aes(y=mean_indoors, x=period_new,fill=class_type)) + 
+   theme_minimal() +
+    labs(y= "PM1 (ug/m3)")
+
+ # only school hours 
+dataset_final_regression_probandnorm %>%
+   filter(name=="pm2_5") %>%
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_boxplot(aes(y=mean_indoors, x=period_new,fill=class_type)) + 
+   theme_minimal() +
+    labs(y= "PM2.5 (ug/m3)")
+
+ # only school hours 
+dataset_final_regression_M_probandnorm %>%
+   filter(name=="temperature") %>%
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_boxplot(aes(y=mean_indoors, x=period_new,fill=class_type)) + 
+   theme_minimal() +
+    labs(y= "Temperature (C)")
+
+# only school hours 
+dataset_final_regression_M_probandnorm %>%
+   filter(name=="humidity") %>%
+     filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_boxplot(aes(y=mean_indoors, x=period_new,fill=class_type)) + 
+   theme_minimal() +
+    labs(y= "Rel. Humidity")
+
+# only school hours 
+dataset_final_regression_M_probandnorm %>%
+   filter(name=="carbon_dioxide") %>%
+      filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_boxplot(aes(y=mean_indoors, x=period_new,fill=class_type)) + 
+   theme_minimal() +
+    labs(y= "CO2 (ppm)")
+
+# only school hours 
+dataset_final_regression_M_probandnorm %>%
+   filter(name=="b_voc") %>%
+     filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_boxplot(aes(y=mean_indoors, x=period_new,fill=class_type)) + 
+   theme_minimal() +
+    labs(y= "VOCs (ppb)")
+
+
+
+```
+
+## Period means for all schools (incl. problematic classrooms)
+
+Periods: 
+
++ 1-10 = school periods from classes start time (7:45) to classes end time (13:05) e.g. 1 = 07:45 - 08:25
++ bef_classes = period from 7:00-7:45 
++ after_classes = period from 13:05-15:00 
+
+
++ 95th -ile
+
+```{r plots_periodmean_time, echo = FALSE, message=FALSE, warning=FALSE}
+
+ # only school hours 
+dataset_final_regression %>%
+   filter(name=="pm10_0") %>%
+   filter(time_type != "bef_classes") %>% 
+   filter(time_type != "after_classes") %>% 
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_start_time,  colour="indoors", shape = time_type),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 21, alpha = 0.5, size = 2) +
+   geom_point(aes(y=mean_outdoors, x=period_start_time,  colour="outdoors", shape = time_type),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 21, alpha = 0.5, size = 2) +
+   geom_smooth(aes(x=period_start_time, y=mean_indoors, colour="indoors"), method="loess", span=0.1, se = F)+
+      geom_smooth(aes(x=period_start_time, y=mean_outdoors, colour="outdoors"), method="loess", span=0.1, se = F)+
+     #scale_x_datetime(labels = function(x) format(x, format = "%H:%M")) +
+     #scale_x_datetime(date_label = "%H:%M") +
+     #scale_x_datetime(date_breaks = "1 hour", labels = date_format("%H:%M"),
+   #              timezone = "America/Toronto") +
+   theme_minimal() +
+   #annotate break times 09:05-09:25, 10:45-10:55, 12:15-12:25
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 09:05:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 10:45:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+      geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 12:15:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+    labs(y= "PM10 (ug/m3)", x = "",
+         title = "Mean PM10 values per school period",
+         caption = "Purple colour: school break periods")
+
+dataset_final_regression %>%
+   filter(name=="pm1_0") %>%
+   filter(time_type != "bef_classes") %>% 
+   filter(time_type != "after_classes") %>% 
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_start_time,  colour="indoors", shape = time_type),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 21, alpha = 0.5, size = 2) +
+   geom_point(aes(y=mean_outdoors, x=period_start_time,  colour="outdoors", shape = time_type),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 21, alpha = 0.5, size = 2) +
+   geom_smooth(aes(x=period_start_time, y=mean_indoors, colour="indoors"), method="loess", span=0.1, se = F)+
+      geom_smooth(aes(x=period_start_time, y=mean_outdoors, colour="outdoors"), method="loess", span=0.1, se = F)+
+     #scale_x_datetime(labels = function(x) format(x, format = "%H:%M")) +
+     #scale_x_datetime(date_label = "%H:%M") +
+     #scale_x_datetime(date_breaks = "1 hour", labels = date_format("%H:%M"),
+   #              timezone = "America/Toronto") +
+   theme_minimal() +
+   #annotate break times 09:05-09:25, 10:45-10:55, 12:15-12:25
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 09:05:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 10:45:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+      geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 12:15:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+    labs(y= "PM1 (ug/m3)", x = "",
+         title = "Mean PM1 values per school period",
+         caption = "Purple colour: school break periods")
+
+dataset_final_regression %>%
+   filter(name=="pm2_5") %>%
+   filter(time_type != "bef_classes") %>% 
+   filter(time_type != "after_classes") %>% 
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+      geom_point(aes(y=mean_indoors, x=period_start_time,  colour="indoors", shape = time_type),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 21, alpha = 0.5, size = 2) +
+   geom_point(aes(y=mean_outdoors, x=period_start_time,  colour="outdoors", shape = time_type),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 21, alpha = 0.5, size = 2) +
+   geom_smooth(aes(x=period_start_time, y=mean_indoors, colour="indoors"), method="loess", span=0.1, se = F)+
+      geom_smooth(aes(x=period_start_time, y=mean_outdoors, colour="outdoors"), method="loess", span=0.1, se = F)+
+     #scale_x_datetime(labels = function(x) format(x, format = "%H:%M")) +
+     #scale_x_datetime(date_label = "%H:%M") +
+     #scale_x_datetime(date_breaks = "1 hour", labels = date_format("%H:%M"),
+   #              timezone = "America/Toronto") +
+   theme_minimal() +
+   #annotate break times 09:05-09:25, 10:45-10:55, 12:15-12:25
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 09:05:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 10:45:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+      geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 12:15:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+    labs(y= "PM2.5 (ug/m3)", x = "",
+         title = "Mean PM2.5 values per school period",
+         caption = "Purple colour: school break periods")
+
+
+dataset_final_regression_M %>%
+   filter(name=="temperature") %>%
+   filter(time_type != "bef_classes") %>% 
+   filter(time_type != "after_classes") %>% 
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+      geom_point(aes(y=mean_indoors, x=period_start_time,  colour="indoors", shape = time_type),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 21, alpha = 0.5, size = 2) +
+   geom_point(aes(y=mean_outdoors, x=period_start_time,  colour="outdoors", shape = time_type),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 21, alpha = 0.5, size = 2) +
+   geom_smooth(aes(x=period_start_time, y=mean_indoors, colour="indoors"), method="loess", span=0.1, se = F)+
+      geom_smooth(aes(x=period_start_time, y=mean_outdoors, colour="outdoors"), method="loess", span=0.1, se = F)+
+     #scale_x_datetime(labels = function(x) format(x, format = "%H:%M")) +
+     #scale_x_datetime(date_label = "%H:%M") +
+     #scale_x_datetime(date_breaks = "1 hour", labels = date_format("%H:%M"),
+   #              timezone = "America/Toronto") +
+   theme_minimal() +
+   #annotate break times 09:05-09:25, 10:45-10:55, 12:15-12:25
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 09:05:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 10:45:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+      geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 12:15:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+    labs(y= "Temperature (C)", x = "",
+         title = "Mean Temperature values per school period",
+         caption = "Purple colour: school break periods")
+ 
+dataset_final_regression_M %>%
+   filter(name=="humidity") %>%
+   filter(time_type != "bef_classes") %>% 
+   filter(time_type != "after_classes") %>% 
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+      geom_point(aes(y=mean_indoors, x=period_start_time,  colour="indoors", shape = time_type),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 21, alpha = 0.5, size = 2) +
+   geom_point(aes(y=mean_outdoors, x=period_start_time,  colour="outdoors", shape = time_type),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 21, alpha = 0.5, size = 2) +
+   geom_smooth(aes(x=period_start_time, y=mean_indoors, colour="indoors"), method="loess", span=0.1, se = F)+
+      geom_smooth(aes(x=period_start_time, y=mean_outdoors, colour="outdoors"), method="loess", span=0.1, se = F)+
+     #scale_x_datetime(labels = function(x) format(x, format = "%H:%M")) +
+     #scale_x_datetime(date_label = "%H:%M") +
+     #scale_x_datetime(date_breaks = "1 hour", labels = date_format("%H:%M"),
+   #              timezone = "America/Toronto") +
+   theme_minimal() +
+   #annotate break times 09:05-09:25, 10:45-10:55, 12:15-12:25
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 09:05:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 10:45:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+      geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 12:15:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+    labs(y= "Rel. Humidity (%)", x = "",
+         title = "Mean Humidity values per school period",
+         caption = "Purple colour: school break periods")
+
+dataset_final_regression_M %>%
+   filter(name=="carbon_dioxide") %>%
+   filter(time_type != "bef_classes") %>% 
+   filter(time_type != "after_classes") %>% 
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+      geom_point(aes(y=mean_indoors, x=period_start_time,  colour="indoors", shape = time_type),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 21, alpha = 0.5, size = 2) +
+   geom_point(aes(y=mean_outdoors, x=period_start_time,  colour="outdoors", shape = time_type),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 21, alpha = 0.5, size = 2) +
+   geom_smooth(aes(x=period_start_time, y=mean_indoors, colour="indoors"), method="loess", span=0.1, se = F)+
+      geom_smooth(aes(x=period_start_time, y=mean_outdoors, colour="outdoors"), method="loess", span=0.1, se = F)+
+     #scale_x_datetime(labels = function(x) format(x, format = "%H:%M")) +
+     #scale_x_datetime(date_label = "%H:%M") +
+     #scale_x_datetime(date_breaks = "1 hour", labels = date_format("%H:%M"),
+   #              timezone = "America/Toronto") +
+   theme_minimal() +
+   #annotate break times 09:05-09:25, 10:45-10:55, 12:15-12:25
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 09:05:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 10:45:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+      geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 12:15:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+    labs(y= "C02 (ppm)", x = "",
+         title = "Mean CO2 values per school period",
+         caption = "Purple colour: school break periods")
+
+dataset_final_regression_M %>%
+   filter(name=="b_voc") %>%
+   filter(time_type != "bef_classes") %>% 
+   filter(time_type != "after_classes") %>% 
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+      geom_point(aes(y=mean_indoors, x=period_start_time,  colour="indoors", shape = time_type),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 21, alpha = 0.5, size = 2) +
+   geom_point(aes(y=mean_outdoors, x=period_start_time,  colour="outdoors", shape = time_type),
+              position=position_jitter(h=0.1, w=0.1),
+             shape = 21, alpha = 0.5, size = 2) +
+   geom_smooth(aes(x=period_start_time, y=mean_indoors, colour="indoors"), method="loess", span=0.1, se = F)+
+      geom_smooth(aes(x=period_start_time, y=mean_outdoors, colour="outdoors"), method="loess", span=0.1, se = F)+
+     #scale_x_datetime(labels = function(x) format(x, format = "%H:%M")) +
+     #scale_x_datetime(date_label = "%H:%M") +
+     #scale_x_datetime(date_breaks = "1 hour", labels = date_format("%H:%M"),
+   #              timezone = "America/Toronto") +
+   theme_minimal() +
+   #annotate break times 09:05-09:25, 10:45-10:55, 12:15-12:25
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 09:05:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+   geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 10:45:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+      geom_vline(xintercept = as.numeric(as.POSIXct("2020-01-01 12:15:00")), color=RColorBrewer::brewer.pal(n = 6, "Set2")[4], size = 4, alpha=0.1) +
+    labs(y= "VOCs (ppb)", x = "",
+         title = "Mean VOC values per school period",
+         caption = "Purple colour: school break periods")
+```
+
+```{r plots_periodmean, echo = FALSE, message=FALSE, warning=FALSE}
+
+# only school hours 
+
+dataset_final_regression %>%
+   filter(name=="pm10_0") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,  colour=location)) +
+      theme_minimal() +
+ labs(y= "PM10 (ug/m3)", x = "period")
+
+dataset_final_regression %>%
+   filter(name=="pm1_0") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,  colour=location)) +
+      theme_minimal() +
+ labs(y= "PM1 (ug/m3)", x = "period")
+
+ # only school hours 
+dataset_final_regression %>%
+   filter(name=="pm2_5") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,  colour=location)) +
+      theme_minimal() +
+ labs(y= "PM2.5 (ug/m3)")
+
+ # only school hours 
+dataset_final_regression_M %>%
+   filter(name=="temperature") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,  colour=location)) +
+       theme_minimal() +
+labs(y= "Temperature (C)", x = "period")
+
+# only school hours 
+dataset_final_regression_M %>%
+   filter(name=="humidity") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,  colour=location)) +
+      theme_minimal() +
+ labs(y= "Rel. Humidity (%)", x = "period")
+
+# only school hours 
+dataset_final_regression_M %>%
+   filter(name=="carbon_dioxide") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,  colour=location)) +
+      theme_minimal() +
+ labs(y= "CO2 (ppm)", x = "period")
+
+# only school hours 
+dataset_final_regression_M %>%
+   filter(name=="b_voc") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,  colour=location)) +
+      theme_minimal() +
+ labs(y= "VOCs (ppb)", x = "period")
+
+ # only school hours 
+dataset_final_regression %>%
+   filter(name=="pm10_0") %>%
+   filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   filter(mean_outdoors<quantile(mean_outdoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,  colour="mean_indoors")) +
+   geom_point(aes(y=mean_outdoors, x=period_new,  colour="mean_outdoors")) +
+      theme_minimal() +
+    labs(y= "PM10 (ug/m3) 95th %ile", x = "period")
+
+ # only school hours 
+dataset_final_regression %>%
+   filter(name=="pm1_0") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   filter(mean_outdoors<quantile(mean_outdoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,  colour="mean_indoors")) +
+   geom_point(aes(y=mean_outdoors, x=period_new,  colour="mean_outdoors")) +
+      theme_minimal() +
+    labs(y= "PM1 (ug/m3)", x = "period")
+
+ # only school hours 
+dataset_final_regression %>%
+   filter(name=="pm2_5") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   filter(mean_outdoors<quantile(mean_outdoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,  colour="mean_indoors")) +
+   geom_point(aes(y=mean_outdoors, x=period_new,  colour="mean_outdoors")) +
+      theme_minimal() +
+    labs(y= "PM2.5 (ug/m3)", x = "period")
+
+ # only school hours 
+dataset_final_regression_M %>%
+   filter(name=="temperature") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   filter(mean_outdoors<quantile(mean_outdoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,  colour="mean_indoors")) +
+   geom_point(aes(y=mean_outdoors, x=period_new,  colour="mean_outdoors")) +
+      theme_minimal() +
+    labs(y= "Temperature (C)", x = "period")
+
+# only school hours 
+dataset_final_regression_M %>%
+   filter(name=="humidity") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   filter(mean_outdoors<quantile(mean_outdoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,  colour="mean_indoors")) +
+   geom_point(aes(y=mean_outdoors, x=period_new,  colour="mean_outdoors")) +
+      theme_minimal() +
+    labs(y= "Rel. Humidity (%)", x = "period")
+
+# only school hours 
+dataset_final_regression_M %>%
+   filter(name=="carbon_dioxide") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   filter(mean_outdoors<quantile(mean_outdoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+  geom_point(aes(y=mean_indoors, x=period_new,  colour="mean_indoors")) +
+   geom_point(aes(y=mean_outdoors, x=period_new,  colour="mean_outdoors")) +
+      theme_minimal() +
+    labs(y= "CO2 (ppm)", x = "period")
+
+# only school hours 
+dataset_final_regression_M %>%
+   filter(name=="b_voc") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   filter(mean_outdoors<quantile(mean_outdoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=period_new,  colour="mean_indoors")) +
+   geom_point(aes(y=mean_outdoors, x=period_new,  colour="mean_outdoors")) +
+      theme_minimal() +
+    labs(y= "VOCs (ppb)", x = "period")
+
+```
+
+## Hourly means for all classrooms (incl. problematic classrooms) - all data
+
+Periods: 
+
++ 1-24 = hours of day starting from 00:00 until 23:59 e.g. 1 = 00:00 - 00:59
+
+
++ 95th -ile
+
+```{r plots_hourmean, echo = FALSE, message=FALSE, warning=FALSE}
+
+dataset_final_regression_all <- dataset_final_regression_all %>% 
+   mutate(hour=as.numeric(hour))
+
+
+dataset_final_regression_all %>%
+   filter(name=="pm10_0") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=hour,  colour=location)) +
+   geom_smooth(aes(x=hour, y=mean_indoors, colour=location), size = 1, method="loess", span=0.1,se = F) +
+      theme_minimal() +
+ labs(y= "PM10 (ug/m3)")
+
+ # only school hours 
+dataset_final_regression_all %>%
+   filter(name=="pm1_0") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=hour,  colour=location)) +
+      geom_smooth(aes(x=hour, y=mean_indoors, colour=location), size = 1, method="loess", span=0.1,se = F) +
+     theme_minimal() +
+  labs(y= "PM1 (ug/m3)")
+
+ # only school hours 
+dataset_final_regression_all %>%
+   filter(name=="pm2_5") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=hour,  colour=location)) +
+      geom_smooth(aes(x=hour, y=mean_indoors, colour=location), size = 1, method="loess", span=0.1,se = F) +
+       theme_minimal() +
+labs(y= "PM2.5 (ug/m3)")
+
+ # only school hours 
+dataset_final_regression_all_M %>%
+   filter(name=="temperature") %>%
+      filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=hour, color=location)) +
+      geom_smooth(aes(x=hour, y=mean_indoors, colour=location), size = 1, method="loess", span=0.1,se = F) +
+      theme_minimal() +
+ labs(y= "Temperature (C)")
+
+# only school hours 
+dataset_final_regression_all_M %>%
+   filter(name=="humidity") %>%
+      filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=hour,  colour=location)) +
+      geom_smooth(aes(x=hour, y=mean_indoors, colour=location), size = 1, method="loess", span=0.1,se = F) +
+      theme_minimal() +
+ labs(y= "Rel. Humidity")
+
+# only school hours 
+dataset_final_regression_all_M %>%
+   filter(name=="carbon_dioxide") %>%
+      filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=hour,  colour=location)) +
+      geom_smooth(aes(x=hour, y=mean_indoors, colour=location), size = 1, method="loess", span=0.1,se = F) +
+     theme_minimal() +
+  labs(y= "CO2 (ppm)")
+
+# only school hours 
+dataset_final_regression_all_M %>%
+   filter(name=="b_voc") %>%
+      filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=hour,  colour=location)) +
+      geom_smooth(aes(x=hour, y=mean_indoors, colour=location), size = 1, method="loess", span=0.1,se = F) +
+       theme_minimal() +
+labs(y= "VOCs (ppb)")
+
+
+
+dataset_final_regression_all %>%
+   filter(name=="pm10_0") %>%
+ filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   filter(mean_outdoors<quantile(mean_outdoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=hour,  colour="indoors")) +
+   geom_smooth(aes(x=hour, y=mean_indoors, colour="indoors"), size = 1, method="loess", span=0.1,se = F)+
+   geom_point(aes(y=mean_outdoors, x=hour,  colour="outdoors")) +
+   geom_smooth(aes(x=hour, y=mean_outdoors, colour="outdoors"), size = 1, method="loess", span=0.1,se = F)+
+      theme_minimal() +
+ labs(y= "PM10 (ug/m3)")
+
+ # only school hours 
+dataset_final_regression_all %>%
+   filter(name=="pm1_0") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   filter(mean_outdoors<quantile(mean_outdoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=hour,  colour="indoors")) +
+   geom_smooth(aes(x=hour, y=mean_indoors, colour="indoors"), size = 1, method="loess", span=0.1,se = F)+
+   geom_point(aes(y=mean_outdoors, x=hour,  colour="outdoors")) +
+   geom_smooth(aes(x=hour, y=mean_outdoors, colour="outdoors"), size = 1, method="loess", span=0.1,se = F)+
+      theme_minimal() +
+ labs(y= "PM1 (ug/m3)")
+
+ # only school hours 
+dataset_final_regression_all %>%
+   filter(name=="pm2_5") %>%
+    filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   filter(mean_outdoors<quantile(mean_outdoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=hour,  colour="indoors")) +
+   geom_smooth(aes(x=hour, y=mean_indoors, colour="indoors"), size = 1, method="loess", span=0.1,se = F)+
+   geom_point(aes(y=mean_outdoors, x=hour,  colour="outdoors")) +
+   geom_smooth(aes(x=hour, y=mean_outdoors, colour="outdoors"), size = 1, method="loess", span=0.1,se = F)+
+      theme_minimal() +
+ labs(y= "PM2.5 (ug/m3)")
+
+ # only school hours 
+dataset_final_regression_all_M %>%
+   filter(name=="temperature") %>%
+      filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   filter(mean_outdoors<quantile(mean_outdoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=hour,  colour="indoors")) +
+   geom_smooth(aes(x=hour, y=mean_indoors, colour="indoors"), size = 1, method="loess", span=0.1,se = F)+
+   geom_point(aes(y=mean_outdoors, x=hour,  colour="outdoors")) +
+   geom_smooth(aes(x=hour, y=mean_outdoors, colour="outdoors"), size = 1, method="loess", span=0.1,se = F)+
+      theme_minimal() +
+ labs(y= "Temperature (C)")
+
+# only school hours 
+dataset_final_regression_all_M %>%
+   filter(name=="humidity") %>%
+      filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   filter(mean_outdoors<quantile(mean_outdoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=hour,  colour="indoors")) +
+   geom_smooth(aes(x=hour, y=mean_indoors, colour="indoors"), size = 1, method="loess", span=0.1,se = F)+
+   geom_point(aes(y=mean_outdoors, x=hour,  colour="outdoors")) +
+   geom_smooth(aes(x=hour, y=mean_outdoors, colour="outdoors"), size = 1, method="loess", span=0.1,se = F)+
+   theme_minimal() +
+    labs(y= "Rel. Humidity")
+
+# only school hours 
+dataset_final_regression_all_M %>%
+   filter(name=="carbon_dioxide") %>%
+      filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   filter(mean_outdoors<quantile(mean_outdoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=hour,  colour="indoors")) +
+   geom_smooth(aes(x=hour, y=mean_indoors, colour="indoors"), size = 1, method="loess", span=0.1,se = F)+
+   geom_point(aes(y=mean_outdoors, x=hour,  colour="outdoors")) +
+   geom_smooth(aes(x=hour, y=mean_outdoors, colour="outdoors"), size = 1, method="loess", span=0.1,se = F)+
+      theme_minimal() +
+ labs(y= "CO2 (ppm)")
+
+# only school hours 
+dataset_final_regression_all_M %>%
+   filter(name=="b_voc") %>%
+      filter(mean_indoors<quantile(mean_indoors, probs=0.95, na.rm=TRUE)) %>%
+   filter(mean_outdoors<quantile(mean_outdoors, probs=0.95, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(y=mean_indoors, x=hour,  colour="indoors")) +
+   geom_smooth(aes(x=hour, y=mean_indoors, colour="indoors"), size = 1, method="loess", span=0.1,se = F)+
+   geom_point(aes(y=mean_outdoors, x=hour,  colour="outdoors")) +
+   geom_smooth(aes(x=hour, y=mean_outdoors, colour="outdoors"), size = 1, method="loess", span=0.1,se = F)+
+   theme_minimal() +
+    labs(y= "VOCs (ppb)")
+```
+
+# Session Information
+
+```{r S7 }
+sessionInfo()
+```

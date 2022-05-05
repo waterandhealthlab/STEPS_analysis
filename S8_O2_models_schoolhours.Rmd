@@ -1,0 +1,310 @@
+---
+title: " STEPS Study: Objective 2 - Comparison indoors and outdoors (regression analysis)"
+author: "C. Konstantinou and X. Andrianou @ Water and Health Laboratory, CII-CUT"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  rmdformats::downcute:
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    highlight: tango
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r packages,  echo=FALSE, include=FALSE}
+rm(list=ls())
+
+
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg))
+    install.packages(new.pkg, dependencies = TRUE,
+                     repos = "http://cran.us.r-project.org")
+  sapply(pkg, require, character.only = TRUE)
+}
+
+# usage
+packages <- c("tidyverse","lubridate","officer", "rvg","glue", "patchwork","janitor",
+              "tableone","dplyr","lme4","readxl","scales","sjPlot","sjmisc")
+
+ipak(packages)
+```
+
+```{r readdata, echo=FALSE, message=FALSE, warning=FALSE}
+
+# read data
+
+# period mean - only school
+dataset_final_regression_onlysch <- readRDS("produced_data/dataset_final_regression_onlysch.rds", refhook = NULL) %>% 
+  mutate(period=as.numeric(period_new)) %>% 
+droplevels() 
+
+dataset_final_regression_excl_onlysch <- readRDS("produced_data/dataset_final_regression_excl_onlysch.rds", refhook = NULL) %>% 
+  droplevels() %>% 
+  mutate(period=as.numeric(period_new))
+
+dataset_final_regression_onlysch_M <- readRDS("produced_data/dataset_final_regression_onlysch_M.rds", refhook = NULL) %>% 
+  droplevels() %>% 
+  mutate(period=as.numeric(period_new))
+
+dataset_final_regression_onlysch_excl_M <- readRDS("produced_data/dataset_final_regression_excl_onlysch_M.rds", refhook = NULL) %>% 
+  droplevels() %>% 
+  mutate(period=as.numeric(period_new))
+
+```
+
+
+```{r regression_datasets, echo = FALSE, message=FALSE, warning=FALSE}
+
+#EXCLUSIONS DATASET
+
+# final dataset for PM1
+dataset_PM1_final_regression_excl <- dataset_final_regression_excl_onlysch %>% 
+  filter(name=="pm1_0") %>% 
+  dplyr::rename(pm1_mean_indoors=mean_indoors,
+                pm1_mean_outdoors=mean_outdoors)
+
+# final dataset for PM2.5
+dataset_PM2_5_final_regression_excl <- dataset_final_regression_excl_onlysch %>% 
+  filter(name=="pm2_5") %>% 
+  dplyr::rename(pm2_5_mean_indoors=mean_indoors,
+                pm2_5_mean_outdoors=mean_outdoors)
+
+# final dataset for PM10
+dataset_PM10_final_regression_excl <- dataset_final_regression_excl_onlysch %>% 
+  filter(name=="pm10_0") %>% 
+    dplyr::rename(pm10_mean_indoors=mean_indoors,
+                pm10_mean_outdoors=mean_outdoors)
+
+# final dataset for temperature
+dataset_temp_final_regression_excl <- dataset_final_regression_onlysch_excl_M %>% 
+  filter(name=="temperature") %>% 
+    dplyr::rename(temp_mean_indoors=mean_indoors,
+                temp_mean_outdoors=mean_outdoors) 
+
+# final dataset for rel. humidity
+dataset_hum_final_regression_excl <- dataset_final_regression_onlysch_excl_M %>% 
+  filter(name=="humidity") %>% 
+  dplyr::rename(hum_mean_indoors=mean_indoors,
+                hum_mean_outdoors=mean_outdoors) 
+
+# dataset for temperature including humidity indoor
+dataset_hum_excl <- dataset_hum_final_regression_excl %>% 
+select(hum_mean_indoors,hum_mean_outdoors, SchoolID, location, samplingdate, period_new)
+
+dataset_temp_hum_excl <- dataset_temp_final_regression_excl %>% 
+  left_join(., select(dataset_hum_excl, hum_mean_indoors,hum_mean_outdoors, SchoolID, location, samplingdate, period_new))
+
+# dataset combining PM data and humidity, temperature data
+dataset_pm10_excl <- dataset_PM10_final_regression_excl %>% 
+select(pm10_mean_indoors,pm10_mean_outdoors, SchoolID, location, samplingdate, period_new)
+
+dataset_pm1_excl <- dataset_PM1_final_regression_excl  %>% 
+select(pm1_mean_indoors,pm1_mean_outdoors, SchoolID, location, samplingdate, period_new)
+
+dataset_pm_temp_excl <- dataset_PM2_5_final_regression_excl %>% 
+  left_join(., select(dataset_pm10_excl, pm10_mean_indoors, pm10_mean_outdoors, SchoolID, location, samplingdate, period_new)) %>% 
+  left_join(., select(dataset_pm1_excl, pm1_mean_indoors, pm1_mean_outdoors, SchoolID, location, samplingdate, period_new)) %>% 
+  left_join(., select(dataset_temp_hum_excl, hum_mean_indoors, hum_mean_outdoors, 
+                      temp_mean_indoors, temp_mean_outdoors,SchoolID, 
+                      location, samplingdate, period_new))
+
+# final dataset for CO2
+dataset_CO2_final_regression_excl <- dataset_final_regression_onlysch_excl_M %>% 
+  filter(name=="carbon_dioxide") %>% 
+   dplyr::rename(CO2_mean_indoors=mean_indoors,
+                CO2_mean_outdoors=mean_outdoors)
+
+# final dataset for VOC
+dataset_VOC_final_regression_excl <- dataset_final_regression_onlysch_excl_M %>% 
+  filter(name=="b_voc") %>% 
+   dplyr::rename(VOCs_mean_indoors=mean_indoors,
+                VOCs_mean_outdoors=mean_outdoors)
+
+```
+
+# Main Analysis
+
+## Only school hours (excluding problematic classes)
+
+Parameter (indoor) ~ Parameter (outdoor) + time_type (class as reference) + period + %windows_open + no of open fans + no of open doors + (1|SchoolID/location) 
+
+```{r models_1_excL, echo = FALSE, message=FALSE, warning=FALSE}
+
+PM1_model_ex <- lmer(formula = pm1_mean_indoors ~ pm1_mean_outdoors + temp_mean_indoors + hum_mean_indoors + time_type + period + percent_open_new + percent_open_new_fans + percent_open_new_doors + paint_indoors + chlorinefreq + (1|SchoolID:location), data=dataset_pm_temp_excl)
+
+PM2_5_model_ex <- lmer(formula = pm2_5_mean_indoors ~ pm2_5_mean_outdoors + temp_mean_indoors + hum_mean_indoors + time_type + period + percent_open_new + percent_open_new_fans + percent_open_new_doors + paint_indoors + chlorinefreq + (1|SchoolID:location), data=dataset_pm_temp_excl)
+
+PM10_model_ex <- lmer(formula = pm10_mean_indoors ~ pm10_mean_outdoors + temp_mean_indoors + hum_mean_indoors + time_type + period + percent_open_new + percent_open_new_fans + percent_open_new_doors + paint_indoors + chlorinefreq + (1|SchoolID:location), data=dataset_pm_temp_excl)
+
+sjPlot::tab_model(PM1_model_ex, PM2_5_model_ex,PM10_model_ex, title ="PM (school hours excl. probl. classes)", p.style = "stars",digits = 3, collapse.ci = TRUE)
+
+sjPlot::tab_model(PM1_model_ex, PM2_5_model_ex,PM10_model_ex, title ="PM (school hours excl. probl. classes)", collapse.ci = TRUE, p.style = "stars",digits = 3)
+
+temp_model_ex <- lmer(formula = temp_mean_indoors ~ temp_mean_outdoors + hum_mean_indoors + time_type + period + percent_open_new + percent_open_new_fans + percent_open_new_doors + paint_indoors + chlorinefreq + (1|SchoolID:location), data=dataset_temp_hum_excl)
+
+hum_model_ex <- lmer(formula = hum_mean_indoors ~ hum_mean_outdoors + temp_mean_indoors + time_type + period + percent_open_new + percent_open_new_fans + percent_open_new_doors + paint_indoors + chlorinefreq + (1|SchoolID:location), data=dataset_temp_hum_excl)
+
+CO2_log_model_ex <- lmer(formula = log(CO2_mean_indoors) ~ log(CO2_mean_outdoors) + time_type + period + percent_open_new + percent_open_new_fans + percent_open_new_doors + paint_indoors + chlorinefreq + (1|SchoolID:location), data=dataset_CO2_final_regression_excl)
+
+VOC_log_model_ex <- lmer(formula = log(VOCs_mean_indoors) ~ log(VOCs_mean_outdoors) + time_type + period + percent_open_new + percent_open_new_fans + percent_open_new_doors + paint_indoors + chlorinefreq + (1|SchoolID:location), data=dataset_VOC_final_regression_excl)
+
+sjPlot::tab_model(temp_model_ex, hum_model_ex, CO2_log_model_ex, VOC_log_model_ex, title ="MCF outcomes (school hours excl. probl. classes)", p.style = "stars",digits = 3, collapse.ci = TRUE)
+
+
+```
+
+## Simple models - comparison of indoors and outdoors
+
+### Only school hours (excluding problematic classes)
+Parameter (indoor) ~ Parameter (outdoor) + (1|SchoolID/location) 
+
+```{r models_1_excL_simple, echo = FALSE, message=FALSE, warning=FALSE}
+
+PM1_model_ex_s <- lmer(formula = pm1_mean_indoors ~ pm1_mean_outdoors + (1|SchoolID:location), data=dataset_PM1_final_regression_excl)
+
+PM2_5_model_ex_s <- lmer(formula = pm2_5_mean_indoors ~ pm2_5_mean_outdoors + (1|SchoolID:location), data=dataset_PM2_5_final_regression_excl)
+
+PM10_model_ex_s <- lmer(formula = pm10_mean_indoors ~ pm10_mean_outdoors + (1|SchoolID:location), data=dataset_PM10_final_regression_excl)
+
+
+sjPlot::tab_model(PM1_model_ex_s, PM2_5_model_ex_s, PM10_model_ex_s, title ="PM (school hours excl. probl. classes)", p.style = "stars",digits = 3, collapse.ci = TRUE)
+
+
+
+temp_model_ex_s <- lmer(formula = temp_mean_indoors ~ temp_mean_outdoors + (1|SchoolID:location), data=dataset_temp_final_regression_excl)
+
+hum_model_ex_s <- lmer(formula = hum_mean_indoors ~ hum_mean_outdoors + (1|SchoolID:location), data=dataset_hum_final_regression_excl)
+
+CO2_log_model_ex_s <- lmer(formula = log(CO2_mean_indoors) ~ log(CO2_mean_outdoors) + (1|SchoolID:location), data=dataset_CO2_final_regression_excl)
+
+VOC_log_model_ex_s <- lmer(formula = log(VOCs_mean_indoors) ~ log(VOCs_mean_outdoors) + (1|SchoolID:location), data=dataset_VOC_final_regression_excl)
+
+sjPlot::tab_model(temp_model_ex_s,hum_model_ex_s,CO2_log_model_ex_s,VOC_log_model_ex_s, title ="MCF (school hours excl. probl. classes)", p.style = "stars",digits = 3, collapse.ci = TRUE)
+
+
+```
+
+# Sensitivity analysis
+
+```{r regression_datasets_sensitiv, echo = FALSE, message=FALSE, warning=FALSE}
+
+rm(list = setdiff(ls(), c("packages","ipak")))
+
+dataset_final_regression_probandnorm <- readRDS("produced_data/dataset_final_regression_probandnorm.rds", refhook = NULL) %>% 
+  filter(period_new!="bef_classes") %>% 
+  filter(period_new!="after_classes") %>% 
+    filter(class_type=="problematic") %>% 
+  mutate(period=as.numeric(period_new)) %>% 
+  droplevels() 
+
+dataset_final_regression_M_probandnorm <- readRDS("produced_data/dataset_final_regression_M_probandnorm.rds", refhook = NULL) %>% 
+  filter(period_new!="bef_classes") %>% 
+  filter(period_new!="after_classes") %>% 
+  filter(class_type=="problematic") %>% 
+  mutate(period=as.numeric(period_new)) %>% 
+  droplevels() 
+
+# final dataset for PM1
+dataset_PM1_final_regression_prob <- dataset_final_regression_probandnorm %>% 
+  filter(name=="pm1_0") %>% 
+  dplyr::rename(pm1_mean_indoors=mean_indoors,
+                pm1_mean_outdoors=mean_outdoors) 
+
+# final dataset for PM2.5
+dataset_PM2_5_final_regression_prob <- dataset_final_regression_probandnorm %>% 
+  filter(name=="pm2_5") %>% 
+  dplyr::rename(pm2_5_mean_indoors=mean_indoors,
+                pm2_5_mean_outdoors=mean_outdoors)
+
+# final dataset for PM10
+dataset_PM10_final_regression_prob <- dataset_final_regression_probandnorm %>% 
+  filter(name=="pm10_0") %>% 
+  dplyr::rename(pm10_mean_indoors=mean_indoors,
+                pm10_mean_outdoors=mean_outdoors)
+
+# final dataset for temperature
+dataset_temp_final_regression_prob <- dataset_final_regression_M_probandnorm %>% 
+  filter(name=="temperature") %>%
+  dplyr::rename(temp_mean_indoors=mean_indoors,
+                temp_mean_outdoors=mean_outdoors)
+
+# final dataset for rel. humidity
+dataset_hum_final_regression_prob <- dataset_final_regression_M_probandnorm %>% 
+  filter(name=="humidity") %>% 
+  dplyr::rename(hum_mean_indoors=mean_indoors,
+                hum_mean_outdoors=mean_outdoors)
+
+# dataset for temperature including humidity indoor
+dataset_hum_prob <- dataset_hum_final_regression_prob  %>% 
+select(hum_mean_indoors,hum_mean_outdoors, SchoolID, location, samplingdate, period_new)
+
+dataset_temp_hum_prob <- dataset_temp_final_regression_prob  %>% 
+  left_join(., select(dataset_hum_prob, hum_mean_indoors,hum_mean_outdoors, SchoolID, location, samplingdate, period_new))
+
+# dataset combining PM data and humidity, temperature data
+dataset_pm10_prob <- dataset_PM10_final_regression_prob  %>% 
+select(pm10_mean_indoors,pm10_mean_outdoors, SchoolID, location, samplingdate, period_new)
+
+dataset_pm1_prob <- dataset_PM1_final_regression_prob %>% 
+select(pm1_mean_indoors,pm1_mean_outdoors, SchoolID, location, samplingdate, period_new)
+
+dataset_pm_temp_prob <- dataset_PM2_5_final_regression_prob  %>% 
+  left_join(., select(dataset_pm10_prob, pm10_mean_indoors, pm10_mean_outdoors, SchoolID, location, samplingdate, period_new)) %>% 
+  left_join(., select(dataset_pm1_prob, pm1_mean_indoors, pm1_mean_outdoors, SchoolID, location, samplingdate, period_new)) %>% 
+  left_join(., select(dataset_temp_hum_prob, hum_mean_indoors, hum_mean_outdoors, 
+                      temp_mean_indoors, temp_mean_outdoors,SchoolID, 
+                      location, samplingdate, period_new))
+
+# final dataset for CO2
+dataset_CO2_final_regression_prob <- dataset_final_regression_M_probandnorm %>% 
+  filter(name=="carbon_dioxide") %>% 
+  dplyr::rename(CO2_mean_indoors=mean_indoors,
+                CO2_mean_outdoors=mean_outdoors)
+
+# final dataset for bVOC
+dataset_VOC_final_regression_prob <- dataset_final_regression_M_probandnorm %>% 
+  filter(name=="b_voc") %>% 
+  dplyr::rename(VOCs_mean_indoors=mean_indoors,
+                VOCs_mean_outdoors=mean_outdoors)
+
+```
+
+## Only school hours (only problematic classes)
+
+Parameter (indoor) ~ Parameter (outdoor) + time_type (class as reference) + period + %windows_open + no of open fans + no of open doors + (1|SchoolID/location) 
+
+```{r models_onlyschhours, echo = FALSE, message=FALSE, warning=FALSE}
+
+PM1_model_prob <- lmer(formula = pm1_mean_indoors ~ pm1_mean_outdoors + temp_mean_indoors + hum_mean_indoors + time_type + period + percent_open_new + percent_open_new_fans + percent_open_new_doors + paint_indoors + chlorinefreq + (1|SchoolID:location), data=dataset_pm_temp_prob )
+
+PM2_5_model_prob <- lmer(formula = pm2_5_mean_indoors ~ pm2_5_mean_outdoors + temp_mean_indoors + hum_mean_indoors + time_type + period + percent_open_new + percent_open_new_fans + percent_open_new_doors + paint_indoors + chlorinefreq + (1|SchoolID:location), data=dataset_pm_temp_prob )
+
+PM10_model_prob <- lmer(formula = pm10_mean_indoors ~ pm10_mean_outdoors + temp_mean_indoors + hum_mean_indoors + time_type + period + percent_open_new + percent_open_new_fans + percent_open_new_doors + paint_indoors + chlorinefreq + (1|SchoolID:location), data=dataset_pm_temp_prob )
+
+
+sjPlot::tab_model(PM1_model_prob,PM2_5_model_prob,PM10_model_prob, title ="PM (school hours) - only problematic classes", p.style = "stars",digits = 3, collapse.ci = TRUE)
+
+
+
+temp_model_prob <- lmer(formula = temp_mean_indoors ~ temp_mean_outdoors + hum_mean_indoors + time_type + period + percent_open_new + percent_open_new_fans + percent_open_new_doors + paint_indoors + chlorinefreq + (1|SchoolID:location), data=dataset_temp_hum_prob)
+
+hum_model_prob <- lmer(formula = hum_mean_indoors ~ hum_mean_outdoors + temp_mean_indoors + time_type + period + percent_open_new + percent_open_new_fans + percent_open_new_doors + paint_indoors + chlorinefreq + (1|SchoolID:location), data=dataset_temp_hum_prob )
+
+CO2_log_model_prob <- lmer(formula = log(CO2_mean_indoors) ~ log(CO2_mean_outdoors) + time_type + period + percent_open_new + percent_open_new_fans + percent_open_new_doors + paint_indoors + chlorinefreq + (1|SchoolID:location), data=dataset_CO2_final_regression_prob )
+
+VOC_log_model_prob <- lmer(formula = log(VOCs_mean_indoors) ~ log(VOCs_mean_outdoors) + time_type + period + percent_open_new + percent_open_new_fans + percent_open_new_doors + paint_indoors + chlorinefreq + (1|SchoolID:location), data=dataset_VOC_final_regression_prob)
+
+sjPlot::tab_model(temp_model_prob,hum_model_prob,CO2_log_model_prob,VOC_log_model_prob, title ="MCF outcomes (school hours) - only problematic classes", p.style = "stars",digits = 3, collapse.ci = TRUE)
+
+
+```
+
+# Session Information
+
+```{r S8 }
+sessionInfo()
+```

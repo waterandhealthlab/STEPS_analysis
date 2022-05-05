@@ -1,0 +1,444 @@
+R tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.082 2021/07/01T00:10:00z: DS3231
+ 0h00:03.097 2021/07/01T00:10:00z: BME280 (0x76)
+ 0h00:03.111 2021/07/01T00:10:00z: 50:2:91:e5:36:6e
+ 0h00:03.113 2021/07/01T00:10:00z: SSID: ARRIS-A013
+ 0h00:03.118 2021/07/01T00:10:00z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.055 2021/07/01T00:29:56z: DS3231
+ 0h00:03.071 2021/07/01T00:29:56z: BME280 (0x76)
+ 0h00:03.085 2021/07/01T00:29:56z: 50:2:91:e5:36:6e
+ 0h00:03.086 2021/07/01T00:29:56z: SSID: ARRIS-A013
+ 0h00:03.092 2021/07/01T00:29:56z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.064 2021/07/01T00:49:52z: DS3231
+ 0h00:03.079 2021/07/01T00:49:52z: BME280 (0x76)
+ 0h00:03.093 2021/07/01T00:49:52z: 50:2:91:e5:36:6e
+ 0h00:03.095 2021/07/01T00:49:52z: SSID: ARRIS-A013
+ 0h00:03.100 2021/07/01T00:49:52z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.052 2021/07/01T01:09:49z: DS3231
+ 0h00:03.068 2021/07/01T01:09:49z: BME280 (0x76)
+ 0h00:03.082 2021/07/01T01:09:49z: 50:2:91:e5:36:6e
+ 0h00:03.083 2021/07/01T01:09:49z: SSID: ARRIS-A013
+ 0h00:03.089 2021/07/01T01:09:49z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.056 2021/07/01T01:29:45z: DS3231
+ 0h00:03.072 2021/07/01T01:29:45z: BME280 (0x76)
+ 0h00:03.086 2021/07/01T01:29:45z: 50:2:91:e5:36:6e
+ 0h00:03.087 2021/07/01T01:29:45z: SSID: ARRIS-A013
+ 0h00:03.093 2021/07/01T01:29:45z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.057 2021/07/01T01:49:41z: DS3231
+ 0h00:03.072 2021/07/01T01:49:41z: BME280 (0x76)
+ 0h00:03.086 2021/07/01T01:49:41z: 50:2:91:e5:36:6e
+ 0h00:03.088 2021/07/01T01:49:41z: SSID: ARRIS-A013
+ 0h00:03.093 2021/07/01T01:49:41z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.074 2021/07/01T02:09:38z: DS3231
+ 0h00:03.089 2021/07/01T02:09:38z: BME280 (0x76)
+ 0h00:03.103 2021/07/01T02:09:38z: 50:2:91:e5:36:6e
+ 0h00:03.105 2021/07/01T02:09:38z: SSID: ARRIS-A013
+ 0h00:03.110 2021/07/01T02:09:38z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.081 2021/07/01T02:29:35z: DS3231
+ 0h00:03.096 2021/07/01T02:29:35z: BME280 (0x76)
+ 0h00:03.110 2021/07/01T02:29:35z: 50:2:91:e5:36:6e
+ 0h00:03.112 2021/07/01T02:29:35z: SSID: ARRIS-A013
+ 0h00:03.117 2021/07/01T02:29:35z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.084 2021/07/01T02:49:31z: DS3231
+ 0h00:03.100 2021/07/01T02:49:32z: BME280 (0x76)
+ 0h00:03.114 2021/07/01T02:49:32z: 50:2:91:e5:36:6e
+ 0h00:03.116 2021/07/01T02:49:32z: SSID: ARRIS-A013
+ 0h00:03.121 2021/07/01T02:49:32z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.062 2021/07/01T03:09:28z: DS3231
+ 0h00:03.077 2021/07/01T03:09:28z: BME280 (0x76)
+ 0h00:03.091 2021/07/01T03:09:28z: 50:2:91:e5:36:6e
+ 0h00:03.093 2021/07/01T03:09:28z: SSID: ARRIS-A013
+ 0h00:03.098 2021/07/01T03:09:28z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.063 2021/07/01T03:29:24z: DS3231
+ 0h00:03.079 2021/07/01T03:29:24z: BME280 (0x76)
+ 0h00:03.093 2021/07/01T03:29:24z: 50:2:91:e5:36:6e
+ 0h00:03.095 2021/07/01T03:29:24z: SSID: ARRIS-A013
+ 0h00:03.100 2021/07/01T03:29:24z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.061 2021/07/01T03:49:20z: DS3231
+ 0h00:03.077 2021/07/01T03:49:20z: BME280 (0x76)
+ 0h00:03.091 2021/07/01T03:49:20z: 50:2:91:e5:36:6e
+ 0h00:03.093 2021/07/01T03:49:20z: SSID: ARRIS-A013
+ 0h00:03.098 2021/07/01T03:49:20z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.064 2021/07/01T04:09:16z: DS3231
+ 0h00:03.079 2021/07/01T04:09:16z: BME280 (0x76)
+ 0h00:03.093 2021/07/01T04:09:16z: 50:2:91:e5:36:6e
+ 0h00:03.095 2021/07/01T04:09:16z: SSID: ARRIS-A013
+ 0h00:03.100 2021/07/01T04:09:16z: AP_STAR tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.068 2021/07/01T05:05:13z: DS3231
+ 0h00:03.083 2021/07/01T05:05:13z: BME280 (0x76)
+ 0h00:03.097 2021/07/01T05:05:13z: 50:2:91:e5:36:6e
+ 0h00:03.099 2021/07/01T05:05:13z: SSID: ARRIS-A013
+ 0h00:03.104 2021/07/01T05:05:13z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.067 2021/07/01T05:27:44z: DS3231
+ 0h00:03.083 2021/07/01T05:27:44z: BME280 (0x76)
+ 0h00:03.097 2021/07/01T05:27:44z: 50:2:91:e5:36:6e
+ 0h00:03.098 2021/07/01T05:27:44z: SSID: PurpleAir-aff9
+ 0h00:03.104 2021/07/01T05:27:44z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.098 2021/07/01T05:48:22z: DS3231
+ 0h00:03.113 2021/07/01T05:48:22z: BME280 (0x76)
+ 0h00:03.127 2021/07/01T05:48:22z: 50:2:91:e5:36:6e
+ 0h00:03.129 2021/07/01T05:48:22z: SSID: PurpleAir-aff9
+ 0h00:03.134 2021/07/01T05:48:22z: AP_STAR tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.063 2021/07/01T06:53:06z: DS3231
+ 0h00:03.078 2021/07/01T06:53:06z: BME280 (0x76)
+ 0h00:03.092 2021/07/01T06:53:06z: 50:2:91:e5:36:6e
+ 0h00:03.094 2021/07/01T06:53:06z: SSID: PurpleAir-aff9
+ 0h00:03.099 2021/07/01T06:53:06z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.081 2021/07/01T07:13:43z: DS3231
+ 0h00:03.097 2021/07/01T07:13:43z: BME280 (0x76)
+ 0h00:03.111 2021/07/01T07:13:43z: 50:2:91:e5:36:6e
+ 0h00:03.112 2021/07/01T07:13:43z: SSID: PurpleAir-aff9
+ 0h00:03.118 2021/07/01T07:13:43z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.083 2021/07/01T07:34:21z: DS3231
+ 0h00:03.098 2021/07/01T07:34:21z: BME280 (0x76)
+ 0h00:03.113 2021/07/01T07:34:21z: 50:2:91:e5:36:6e
+ 0h00:03.114 2021/07/01T07:34:21z: SSID: PurpleAir-aff9
+ 0h00:03.119 2021/07/01T07:34:21z: AP_STAR tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.066 2021/07/01T08:55:06z: DS3231
+ 0h00:03.081 2021/07/01T08:55:06z: BME280 (0x76)
+ 0h00:03.095 2021/07/01T08:55:06z: 50:2:91:e5:36:6e
+ 0h00:03.097 2021/07/01T08:55:06z: SSID: PurpleAir-aff9
+ 0h00:03.102 2021/07/01T08:55:06z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.084 2021/07/01T09:15:43z: DS3231
+ 0h00:03.099 2021/07/01T09:15:43z: BME280 (0x76)
+ 0h00:03.113 2021/07/01T09:15:43z: 50:2:91:e5:36:6e
+ 0h00:03.115 2021/07/01T09:15:43z: SSID: PurpleAir-aff9
+ 0h00:03.120 2021/07/01T09:15:43z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.064 2021/07/01T09:36:20z: DS3231
+ 0h00:03.079 2021/07/01T09:36:20z: BME280 (0x76)
+ 0h00:03.093 2021/07/01T09:36:20z: 50:2:91:e5:36:6e
+ 0h00:03.095 2021/07/01T09:36:20z: SSID: PurpleAir-aff9
+ 0h00:03.100 2021/07/01T09:36:20z: AP_STAR tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr connected clients
+R tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.066 2021/07/01T10:06:57z: DS3231
+ 0h00:03.081 2021/07/01T10:06:57z: BME280 (0x76)
+ 0h00:03.095 2021/07/01T10:06:57z: 50:2:91:e5:36:6e
+ 0h00:03.097 2021/07/01T10:06:57z: SSID: PurpleAir-aff9
+ 0h00:03.102 2021/07/01T10:06:57z: AP_STA

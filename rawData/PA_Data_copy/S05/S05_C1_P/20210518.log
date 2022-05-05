@@ -1,0 +1,1169 @@
+R tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.039 2021/05/18T00:02:07z: DS3231
+ 0h00:03.054 2021/05/18T00:02:07z: BME280 (0x76)
+ 0h00:03.068 2021/05/18T00:02:07z: 10:52:1c:4c:86:4
+ 0h00:03.070 2021/05/18T00:02:07z: SSID: Apollonia Students Halls
+ 0h00:03.075 2021/05/18T00:02:07z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.040 2021/05/18T00:22:03z: DS3231
+ 0h00:03.056 2021/05/18T00:22:03z: BME280 (0x76)
+ 0h00:03.070 2021/05/18T00:22:03z: 10:52:1c:4c:86:4
+ 0h00:03.072 2021/05/18T00:22:03z: SSID: Apollonia Students Halls
+ 0h00:03.077 2021/05/18T00:22:03z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.047 2021/05/18T00:41:59z: DS3231
+ 0h00:03.063 2021/05/18T00:41:59z: BME280 (0x76)
+ 0h00:03.077 2021/05/18T00:41:59z: 10:52:1c:4c:86:4
+ 0h00:03.078 2021/05/18T00:41:59z: SSID: Apollonia Students Halls
+ 0h00:03.084 2021/05/18T00:41:59z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.041 2021/05/18T01:01:54z: DS3231
+ 0h00:03.056 2021/05/18T01:01:54z: BME280 (0x76)
+ 0h00:03.070 2021/05/18T01:01:54z: 10:52:1c:4c:86:4
+ 0h00:03.072 2021/05/18T01:01:54z: SSID: Apollonia Students Halls
+ 0h00:03.077 2021/05/18T01:01:54z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.054 2021/05/18T01:21:50z: DS3231
+ 0h00:03.069 2021/05/18T01:21:50z: BME280 (0x76)
+ 0h00:03.083 2021/05/18T01:21:50z: 10:52:1c:4c:86:4
+ 0h00:03.085 2021/05/18T01:21:50z: SSID: Apollonia Students Halls
+ 0h00:03.090 2021/05/18T01:21:50z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.057 2021/05/18T01:41:47z: DS3231
+ 0h00:03.072 2021/05/18T01:41:47z: BME280 (0x76)
+ 0h00:03.086 2021/05/18T01:41:47z: 10:52:1c:4c:86:4
+ 0h00:03.088 2021/05/18T01:41:47z: SSID: Apollonia Students Halls
+ 0h00:03.093 2021/05/18T01:41:47z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.074 2021/05/18T02:01:43z: DS3231
+ 0h00:03.089 2021/05/18T02:01:43z: BME280 (0x76)
+ 0h00:03.103 2021/05/18T02:01:43z: 10:52:1c:4c:86:4
+ 0h00:03.105 2021/05/18T02:01:43z: SSID: Apollonia Students Halls
+ 0h00:03.110 2021/05/18T02:01:43z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.035 2021/05/18T02:21:39z: DS3231
+ 0h00:03.050 2021/05/18T02:21:39z: BME280 (0x76)
+ 0h00:03.064 2021/05/18T02:21:39z: 10:52:1c:4c:86:4
+ 0h00:03.066 2021/05/18T02:21:39z: SSID: Apollonia Students Halls
+ 0h00:03.071 2021/05/18T02:21:39z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.037 2021/05/18T02:41:36z: DS3231
+ 0h00:03.052 2021/05/18T02:41:36z: BME280 (0x76)
+ 0h00:03.066 2021/05/18T02:41:36z: 10:52:1c:4c:86:4
+ 0h00:03.068 2021/05/18T02:41:36z: SSID: Apollonia Students Halls
+ 0h00:03.073 2021/05/18T02:41:36z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.042 2021/05/18T03:01:32z: DS3231
+ 0h00:03.057 2021/05/18T03:01:32z: BME280 (0x76)
+ 0h00:03.071 2021/05/18T03:01:32z: 10:52:1c:4c:86:4
+ 0h00:03.073 2021/05/18T03:01:32z: SSID: Apollonia Students Halls
+ 0h00:03.078 2021/05/18T03:01:32z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.044 2021/05/18T03:21:28z: DS3231
+ 0h00:03.059 2021/05/18T03:21:28z: BME280 (0x76)
+ 0h00:03.074 2021/05/18T03:21:28z: 10:52:1c:4c:86:4
+ 0h00:03.075 2021/05/18T03:21:28z: SSID: Apollonia Students Halls
+ 0h00:03.080 2021/05/18T03:21:28z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.032 2021/05/18T03:41:25z: DS3231
+ 0h00:03.047 2021/05/18T03:41:25z: BME280 (0x76)
+ 0h00:03.062 2021/05/18T03:41:25z: 10:52:1c:4c:86:4
+ 0h00:03.063 2021/05/18T03:41:25z: SSID: Apollonia Students Halls
+ 0h00:03.068 2021/05/18T03:41:25z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.055 2021/05/18T04:01:21z: DS3231
+ 0h00:03.070 2021/05/18T04:01:21z: BME280 (0x76)
+ 0h00:03.084 2021/05/18T04:01:21z: 10:52:1c:4c:86:4
+ 0h00:03.086 2021/05/18T04:01:21z: SSID: Apollonia Students Halls
+ 0h00:03.091 2021/05/18T04:01:21z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.057 2021/05/18T04:21:18z: DS3231
+ 0h00:03.072 2021/05/18T04:21:18z: BME280 (0x76)
+ 0h00:03.086 2021/05/18T04:21:18z: 10:52:1c:4c:86:4
+ 0h00:03.088 2021/05/18T04:21:18z: SSID: Apollonia Students Halls
+ 0h00:03.093 2021/05/18T04:21:18z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.072 2021/05/18T04:41:14z: DS3231
+ 0h00:03.087 2021/05/18T04:41:14z: BME280 (0x76)
+ 0h00:03.101 2021/05/18T04:41:14z: 10:52:1c:4c:86:4
+ 0h00:03.103 2021/05/18T04:41:14z: SSID: Apollonia Students Halls
+ 0h00:03.108 2021/05/18T04:41:14z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.050 2021/05/18T05:01:10z: DS3231
+ 0h00:03.065 2021/05/18T05:01:10z: BME280 (0x76)
+ 0h00:03.079 2021/05/18T05:01:10z: 10:52:1c:4c:86:4
+ 0h00:03.081 2021/05/18T05:01:10z: SSID: Apollonia Students Halls
+ 0h00:03.086 2021/05/18T05:01:10z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.040 2021/05/18T05:21:06z: DS3231
+ 0h00:03.055 2021/05/18T05:21:06z: BME280 (0x76)
+ 0h00:03.069 2021/05/18T05:21:06z: 10:52:1c:4c:86:4
+ 0h00:03.071 2021/05/18T05:21:06z: SSID: Apollonia Students Halls
+ 0h00:03.076 2021/05/18T05:21:06z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.045 2021/05/18T05:41:02z: DS3231
+ 0h00:03.061 2021/05/18T05:41:02z: BME280 (0x76)
+ 0h00:03.075 2021/05/18T05:41:02z: 10:52:1c:4c:86:4
+ 0h00:03.076 2021/05/18T05:41:02z: SSID: Apollonia Students Halls
+ 0h00:03.082 2021/05/18T05:41:02z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.044 2021/05/18T06:00:59z: DS3231
+ 0h00:03.060 2021/05/18T06:00:59z: BME280 (0x76)
+ 0h00:03.074 2021/05/18T06:00:59z: 10:52:1c:4c:86:4
+ 0h00:03.075 2021/05/18T06:00:59z: SSID: Apollonia Students Halls
+ 0h00:03.081 2021/05/18T06:00:59z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.041 2021/05/18T06:20:55z: DS3231
+ 0h00:03.056 2021/05/18T06:20:55z: BME280 (0x76)
+ 0h00:03.071 2021/05/18T06:20:55z: 10:52:1c:4c:86:4
+ 0h00:03.072 2021/05/18T06:20:55z: SSID: Apollonia Students Halls
+ 0h00:03.077 2021/05/18T06:20:55z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.054 2021/05/18T06:40:51z: DS3231
+ 0h00:03.069 2021/05/18T06:40:51z: BME280 (0x76)
+ 0h00:03.083 2021/05/18T06:40:51z: 10:52:1c:4c:86:4
+ 0h00:03.085 2021/05/18T06:40:51z: SSID: Apollonia Students Halls
+ 0h00:03.090 2021/05/18T06:40:51z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.057 2021/05/18T07:00:48z: DS3231
+ 0h00:03.072 2021/05/18T07:00:48z: BME280 (0x76)
+ 0h00:03.087 2021/05/18T07:00:48z: 10:52:1c:4c:86:4
+ 0h00:03.088 2021/05/18T07:00:48z: SSID: Apollonia Students Halls
+ 0h00:03.093 2021/05/18T07:00:48z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.069 2021/05/18T07:20:43z: DS3231
+ 0h00:03.085 2021/05/18T07:20:43z: BME280 (0x76)
+ 0h00:03.099 2021/05/18T07:20:43z: 10:52:1c:4c:86:4
+ 0h00:03.101 2021/05/18T07:20:43z: SSID: Apollonia Students Halls
+ 0h00:03.106 2021/05/18T07:20:43z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.039 2021/05/18T07:40:40z: DS3231
+ 0h00:03.055 2021/05/18T07:40:40z: BME280 (0x76)
+ 0h00:03.069 2021/05/18T07:40:40z: 10:52:1c:4c:86:4
+ 0h00:03.071 2021/05/18T07:40:40z: SSID: Apollonia Students Halls
+ 0h00:03.076 2021/05/18T07:40:40z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.048 2021/05/18T08:00:37z: DS3231
+ 0h00:03.063 2021/05/18T08:00:37z: BME280 (0x76)
+ 0h00:03.077 2021/05/18T08:00:37z: 10:52:1c:4c:86:4
+ 0h00:03.079 2021/05/18T08:00:37z: SSID: Apollonia Students Halls
+ 0h00:03.084 2021/05/18T08:00:37z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.057 2021/05/18T08:20:34z: DS3231
+ 0h00:03.073 2021/05/18T08:20:34z: BME280 (0x76)
+ 0h00:03.087 2021/05/18T08:20:34z: 10:52:1c:4c:86:4
+ 0h00:03.088 2021/05/18T08:20:34z: SSID: Apollonia Students Halls
+ 0h00:03.094 2021/05/18T08:20:34z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.066 2021/05/18T08:40:30z: DS3231
+ 0h00:03.081 2021/05/18T08:40:30z: BME280 (0x76)
+ 0h00:03.095 2021/05/18T08:40:30z: 10:52:1c:4c:86:4
+ 0h00:03.097 2021/05/18T08:40:30z: SSID: Apollonia Students Halls
+ 0h00:03.102 2021/05/18T08:40:30z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.041 2021/05/18T09:00:26z: DS3231
+ 0h00:03.056 2021/05/18T09:00:26z: BME280 (0x76)
+ 0h00:03.070 2021/05/18T09:00:26z: 10:52:1c:4c:86:4
+ 0h00:03.072 2021/05/18T09:00:26z: SSID: Apollonia Students Halls
+ 0h00:03.077 2021/05/18T09:00:26z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.038 2021/05/18T09:20:22z: DS3231
+ 0h00:03.053 2021/05/18T09:20:22z: BME280 (0x76)
+ 0h00:03.067 2021/05/18T09:20:22z: 10:52:1c:4c:86:4
+ 0h00:03.069 2021/05/18T09:20:22z: SSID: Apollonia Students Halls
+ 0h00:03.074 2021/05/18T09:20:22z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.043 2021/05/18T09:40:19z: DS3231
+ 0h00:03.059 2021/05/18T09:40:19z: BME280 (0x76)
+ 0h00:03.073 2021/05/18T09:40:19z: 10:52:1c:4c:86:4
+ 0h00:03.075 2021/05/18T09:40:19z: SSID: Apollonia Students Halls
+ 0h00:03.080 2021/05/18T09:40:19z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.040 2021/05/18T10:00:15z: DS3231
+ 0h00:03.056 2021/05/18T10:00:15z: BME280 (0x76)
+ 0h00:03.070 2021/05/18T10:00:15z: 10:52:1c:4c:86:4
+ 0h00:03.071 2021/05/18T10:00:15z: SSID: Apollonia Students Halls
+ 0h00:03.077 2021/05/18T10:00:15z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.041 2021/05/18T10:20:12z: DS3231
+ 0h00:03.057 2021/05/18T10:20:12z: BME280 (0x76)
+ 0h00:03.071 2021/05/18T10:20:12z: 10:52:1c:4c:86:4
+ 0h00:03.072 2021/05/18T10:20:12z: SSID: Apollonia Students Halls
+ 0h00:03.078 2021/05/18T10:20:12z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.053 2021/05/18T10:40:07z: DS3231
+ 0h00:03.068 2021/05/18T10:40:07z: BME280 (0x76)
+ 0h00:03.082 2021/05/18T10:40:07z: 10:52:1c:4c:86:4
+ 0h00:03.084 2021/05/18T10:40:07z: SSID: Apollonia Students Halls
+ 0h00:03.089 2021/05/18T10:40:07z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.051 2021/05/18T11:00:04z: DS3231
+ 0h00:03.067 2021/05/18T11:00:04z: BME280 (0x76)
+ 0h00:03.081 2021/05/18T11:00:04z: 10:52:1c:4c:86:4
+ 0h00:03.082 2021/05/18T11:00:04z: SSID: Apollonia Students Halls
+ 0h00:03.088 2021/05/18T11:00:04z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.064 2021/05/18T11:20:00z: DS3231
+ 0h00:03.079 2021/05/18T11:20:00z: BME280 (0x76)
+ 0h00:03.094 2021/05/18T11:20:00z: 10:52:1c:4c:86:4
+ 0h00:03.095 2021/05/18T11:20:00z: SSID: Apollonia Students Halls
+ 0h00:03.100 2021/05/18T11:20:00z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.040 2021/05/18T11:39:56z: DS3231
+ 0h00:03.055 2021/05/18T11:39:56z: BME280 (0x76)
+ 0h00:03.069 2021/05/18T11:39:57z: 10:52:1c:4c:86:4
+ 0h00:03.071 2021/05/18T11:39:57z: SSID: Apollonia Students Halls
+ 0h00:03.076 2021/05/18T11:39:57z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.038 2021/05/18T11:59:53z: DS3231
+ 0h00:03.053 2021/05/18T11:59:53z: BME280 (0x76)
+ 0h00:03.067 2021/05/18T11:59:53z: 10:52:1c:4c:86:4
+ 0h00:03.069 2021/05/18T11:59:53z: SSID: Apollonia Students Halls
+ 0h00:03.074 2021/05/18T11:59:53z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.036 2021/05/18T12:19:49z: DS3231
+ 0h00:03.051 2021/05/18T12:19:49z: BME280 (0x76)
+ 0h00:03.065 2021/05/18T12:19:49z: 10:52:1c:4c:86:4
+ 0h00:03.067 2021/05/18T12:19:49z: SSID: Apollonia Students Halls
+ 0h00:03.072 2021/05/18T12:19:49z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.033 2021/05/18T12:39:45z: DS3231
+ 0h00:03.048 2021/05/18T12:39:45z: BME280 (0x76)
+ 0h00:03.062 2021/05/18T12:39:45z: 10:52:1c:4c:86:4
+ 0h00:03.064 2021/05/18T12:39:45z: SSID: Apollonia Students Halls
+ 0h00:03.069 2021/05/18T12:39:45z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.045 2021/05/18T12:59:41z: DS3231
+ 0h00:03.060 2021/05/18T12:59:41z: BME280 (0x76)
+ 0h00:03.074 2021/05/18T12:59:41z: 10:52:1c:4c:86:4
+ 0h00:03.076 2021/05/18T12:59:41z: SSID: Apollonia Students Halls
+ 0h00:03.081 2021/05/18T12:59:41z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.057 2021/05/18T13:19:38z: DS3231
+ 0h00:03.072 2021/05/18T13:19:38z: BME280 (0x76)
+ 0h00:03.086 2021/05/18T13:19:38z: 10:52:1c:4c:86:4
+ 0h00:03.088 2021/05/18T13:19:38z: SSID: Apollonia Students Halls
+ 0h00:03.093 2021/05/18T13:19:38z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.061 2021/05/18T13:39:34z: DS3231
+ 0h00:03.076 2021/05/18T13:39:34z: BME280 (0x76)
+ 0h00:03.091 2021/05/18T13:39:35z: 10:52:1c:4c:86:4
+ 0h00:03.092 2021/05/18T13:39:35z: SSID: Apollonia Students Halls
+ 0h00:03.097 2021/05/18T13:39:35z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.065 2021/05/18T13:59:31z: DS3231
+ 0h00:03.080 2021/05/18T13:59:31z: BME280 (0x76)
+ 0h00:03.094 2021/05/18T13:59:31z: 10:52:1c:4c:86:4
+ 0h00:03.096 2021/05/18T13:59:31z: SSID: Apollonia Students Halls
+ 0h00:03.101 2021/05/18T13:59:31z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.036 2021/05/18T14:19:27z: DS3231
+ 0h00:03.051 2021/05/18T14:19:28z: BME280 (0x76)
+ 0h00:03.065 2021/05/18T14:19:28z: 10:52:1c:4c:86:4
+ 0h00:03.067 2021/05/18T14:19:28z: SSID: Apollonia Students Halls
+ 0h00:03.072 2021/05/18T14:19:28z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.041 2021/05/18T14:39:24z: DS3231
+ 0h00:03.056 2021/05/18T14:39:24z: BME280 (0x76)
+ 0h00:03.070 2021/05/18T14:39:24z: 10:52:1c:4c:86:4
+ 0h00:03.072 2021/05/18T14:39:24z: SSID: Apollonia Students Halls
+ 0h00:03.077 2021/05/18T14:39:24z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.042 2021/05/18T14:59:20z: DS3231
+ 0h00:03.057 2021/05/18T14:59:20z: BME280 (0x76)
+ 0h00:03.071 2021/05/18T14:59:20z: 10:52:1c:4c:86:4
+ 0h00:03.073 2021/05/18T14:59:20z: SSID: Apollonia Students Halls
+ 0h00:03.078 2021/05/18T14:59:20z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.070 2021/05/18T15:19:17z: DS3231
+ 0h00:03.085 2021/05/18T15:19:17z: BME280 (0x76)
+ 0h00:03.099 2021/05/18T15:19:17z: 10:52:1c:4c:86:4
+ 0h00:03.101 2021/05/18T15:19:17z: SSID: Apollonia Students Halls
+ 0h00:03.106 2021/05/18T15:19:17z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.055 2021/05/18T15:39:13z: DS3231
+ 0h00:03.070 2021/05/18T15:39:13z: BME280 (0x76)
+ 0h00:03.084 2021/05/18T15:39:13z: 10:52:1c:4c:86:4
+ 0h00:03.086 2021/05/18T15:39:13z: SSID: Apollonia Students Halls
+ 0h00:03.091 2021/05/18T15:39:13z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.066 2021/05/18T15:59:09z: DS3231
+ 0h00:03.081 2021/05/18T15:59:09z: BME280 (0x76)
+ 0h00:03.095 2021/05/18T15:59:09z: 10:52:1c:4c:86:4
+ 0h00:03.097 2021/05/18T15:59:09z: SSID: Apollonia Students Halls
+ 0h00:03.102 2021/05/18T15:59:09z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.047 2021/05/18T16:19:05z: DS3231
+ 0h00:03.062 2021/05/18T16:19:05z: BME280 (0x76)
+ 0h00:03.076 2021/05/18T16:19:05z: 10:52:1c:4c:86:4
+ 0h00:03.078 2021/05/18T16:19:05z: SSID: Apollonia Students Halls
+ 0h00:03.083 2021/05/18T16:19:05z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.051 2021/05/18T16:39:01z: DS3231
+ 0h00:03.066 2021/05/18T16:39:01z: BME280 (0x76)
+ 0h00:03.080 2021/05/18T16:39:01z: 10:52:1c:4c:86:4
+ 0h00:03.082 2021/05/18T16:39:01z: SSID: Apollonia Students Halls
+ 0h00:03.087 2021/05/18T16:39:01z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.038 2021/05/18T16:58:58z: DS3231
+ 0h00:03.054 2021/05/18T16:58:58z: BME280 (0x76)
+ 0h00:03.068 2021/05/18T16:58:58z: 10:52:1c:4c:86:4
+ 0h00:03.069 2021/05/18T16:58:58z: SSID: Apollonia Students Halls
+ 0h00:03.075 2021/05/18T16:58:58z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.046 2021/05/18T17:18:55z: DS3231
+ 0h00:03.061 2021/05/18T17:18:55z: BME280 (0x76)
+ 0h00:03.075 2021/05/18T17:18:55z: 10:52:1c:4c:86:4
+ 0h00:03.077 2021/05/18T17:18:55z: SSID: Apollonia Students Halls
+ 0h00:03.082 2021/05/18T17:18:55z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.044 2021/05/18T17:38:51z: DS3231
+ 0h00:03.060 2021/05/18T17:38:51z: BME280 (0x76)
+ 0h00:03.074 2021/05/18T17:38:51z: 10:52:1c:4c:86:4
+ 0h00:03.076 2021/05/18T17:38:51z: SSID: Apollonia Students Halls
+ 0h00:03.081 2021/05/18T17:38:51z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.060 2021/05/18T17:58:47z: DS3231
+ 0h00:03.075 2021/05/18T17:58:47z: BME280 (0x76)
+ 0h00:03.089 2021/05/18T17:58:47z: 10:52:1c:4c:86:4
+ 0h00:03.091 2021/05/18T17:58:47z: SSID: Apollonia Students Halls
+ 0h00:03.096 2021/05/18T17:58:47z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.061 2021/05/18T18:18:43z: DS3231
+ 0h00:03.077 2021/05/18T18:18:43z: BME280 (0x76)
+ 0h00:03.091 2021/05/18T18:18:43z: 10:52:1c:4c:86:4
+ 0h00:03.093 2021/05/18T18:18:43z: SSID: Apollonia Students Halls
+ 0h00:03.098 2021/05/18T18:18:43z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.067 2021/05/18T18:38:39z: DS3231
+ 0h00:03.082 2021/05/18T18:38:39z: BME280 (0x76)
+ 0h00:03.096 2021/05/18T18:38:39z: 10:52:1c:4c:86:4
+ 0h00:03.098 2021/05/18T18:38:39z: SSID: Apollonia Students Halls
+ 0h00:03.103 2021/05/18T18:38:39z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.044 2021/05/18T18:58:35z: DS3231
+ 0h00:03.059 2021/05/18T18:58:35z: BME280 (0x76)
+ 0h00:03.073 2021/05/18T18:58:35z: 10:52:1c:4c:86:4
+ 0h00:03.075 2021/05/18T18:58:35z: SSID: Apollonia Students Halls
+ 0h00:03.080 2021/05/18T18:58:35z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.047 2021/05/18T19:18:31z: DS3231
+ 0h00:03.063 2021/05/18T19:18:31z: BME280 (0x76)
+ 0h00:03.077 2021/05/18T19:18:31z: 10:52:1c:4c:86:4
+ 0h00:03.079 2021/05/18T19:18:31z: SSID: Apollonia Students Halls
+ 0h00:03.084 2021/05/18T19:18:31z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.048 2021/05/18T19:38:28z: DS3231
+ 0h00:03.063 2021/05/18T19:38:28z: BME280 (0x76)
+ 0h00:03.078 2021/05/18T19:38:28z: 10:52:1c:4c:86:4
+ 0h00:03.079 2021/05/18T19:38:28z: SSID: Apollonia Students Halls
+ 0h00:03.084 2021/05/18T19:38:28z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.051 2021/05/18T19:58:23z: DS3231
+ 0h00:03.066 2021/05/18T19:58:23z: BME280 (0x76)
+ 0h00:03.080 2021/05/18T19:58:23z: 10:52:1c:4c:86:4
+ 0h00:03.082 2021/05/18T19:58:23z: SSID: Apollonia Students Halls
+ 0h00:03.087 2021/05/18T19:58:23z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.048 2021/05/18T20:18:19z: DS3231
+ 0h00:03.063 2021/05/18T20:18:19z: BME280 (0x76)
+ 0h00:03.077 2021/05/18T20:18:19z: 10:52:1c:4c:86:4
+ 0h00:03.079 2021/05/18T20:18:19z: SSID: Apollonia Students Halls
+ 0h00:03.084 2021/05/18T20:18:19z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.058 2021/05/18T20:38:16z: DS3231
+ 0h00:03.073 2021/05/18T20:38:16z: BME280 (0x76)
+ 0h00:03.087 2021/05/18T20:38:16z: 10:52:1c:4c:86:4
+ 0h00:03.089 2021/05/18T20:38:16z: SSID: Apollonia Students Halls
+ 0h00:03.094 2021/05/18T20:38:16z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.067 2021/05/18T20:58:12z: DS3231
+ 0h00:03.083 2021/05/18T20:58:12z: BME280 (0x76)
+ 0h00:03.097 2021/05/18T20:58:12z: 10:52:1c:4c:86:4
+ 0h00:03.098 2021/05/18T20:58:12z: SSID: Apollonia Students Halls
+ 0h00:03.104 2021/05/18T20:58:12z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.075 2021/05/18T21:18:09z: DS3231
+ 0h00:03.091 2021/05/18T21:18:09z: BME280 (0x76)
+ 0h00:03.105 2021/05/18T21:18:09z: 10:52:1c:4c:86:4
+ 0h00:03.106 2021/05/18T21:18:09z: SSID: Apollonia Students Halls
+ 0h00:03.112 2021/05/18T21:18:09z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.049 2021/05/18T21:38:06z: DS3231
+ 0h00:03.065 2021/05/18T21:38:06z: BME280 (0x76)
+ 0h00:03.079 2021/05/18T21:38:06z: 10:52:1c:4c:86:4
+ 0h00:03.080 2021/05/18T21:38:06z: SSID: Apollonia Students Halls
+ 0h00:03.086 2021/05/18T21:38:06z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.043 2021/05/18T21:58:02z: DS3231
+ 0h00:03.058 2021/05/18T21:58:02z: BME280 (0x76)
+ 0h00:03.072 2021/05/18T21:58:02z: 10:52:1c:4c:86:4
+ 0h00:03.074 2021/05/18T21:58:02z: SSID: Apollonia Students Halls
+ 0h00:03.079 2021/05/18T21:58:02z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.043 2021/05/18T22:17:58z: DS3231
+ 0h00:03.058 2021/05/18T22:17:58z: BME280 (0x76)
+ 0h00:03.072 2021/05/18T22:17:58z: 10:52:1c:4c:86:4
+ 0h00:03.074 2021/05/18T22:17:58z: SSID: Apollonia Students Halls
+ 0h00:03.079 2021/05/18T22:17:58z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.050 2021/05/18T22:37:54z: DS3231
+ 0h00:03.065 2021/05/18T22:37:54z: BME280 (0x76)
+ 0h00:03.079 2021/05/18T22:37:54z: 10:52:1c:4c:86:4
+ 0h00:03.081 2021/05/18T22:37:54z: SSID: Apollonia Students Halls
+ 0h00:03.086 2021/05/18T22:37:54z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.046 2021/05/18T22:57:51z: DS3231
+ 0h00:03.061 2021/05/18T22:57:51z: BME280 (0x76)
+ 0h00:03.075 2021/05/18T22:57:51z: 10:52:1c:4c:86:4
+ 0h00:03.077 2021/05/18T22:57:51z: SSID: Apollonia Students Halls
+ 0h00:03.082 2021/05/18T22:57:51z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.066 2021/05/18T23:17:47z: DS3231
+ 0h00:03.081 2021/05/18T23:17:47z: BME280 (0x76)
+ 0h00:03.095 2021/05/18T23:17:47z: 10:52:1c:4c:86:4
+ 0h00:03.097 2021/05/18T23:17:47z: SSID: Apollonia Students Halls
+ 0h00:03.102 2021/05/18T23:17:47z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.066 2021/05/18T23:37:43z: DS3231
+ 0h00:03.081 2021/05/18T23:37:43z: BME280 (0x76)
+ 0h00:03.095 2021/05/18T23:37:43z: 10:52:1c:4c:86:4
+ 0h00:03.097 2021/05/18T23:37:43z: SSID: Apollonia Students Halls
+ 0h00:03.102 2021/05/18T23:37:43z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.073 2021/05/18T23:57:39z: DS3231
+ 0h00:03.089 2021/05/18T23:57:39z: BME280 (0x76)
+ 0h00:03.103 2021/05/18T23:57:39z: 10:52:1c:4c:86:4
+ 0h00:03.104 2021/05/18T23:57:39z: SSID: Apollonia Students Halls
+ 0h00:03.110 2021/05/18T23:57:39z: AP_STA

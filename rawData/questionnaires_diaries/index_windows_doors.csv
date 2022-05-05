@@ -1,0 +1,11 @@
+﻿period,period_start,period_end,period_type
+1,7:45,8:25,class
+2,8:26,9:05,class
+3,9:06,9:25,break
+4,9:26,10:05,class
+5,10:06,10:45,class
+6,10:46,10:55,break
+7,10:56,11:35,class
+8,11:36,12:15,class
+9,12:16,12:25,break
+10,12:26,13:05,class

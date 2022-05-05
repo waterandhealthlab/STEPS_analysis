@@ -1,0 +1,625 @@
+R tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.027 2021/06/02T11:18:16z: DS3231
+ 0h00:03.043 2021/06/02T11:18:16z: BME280 (0x76)
+ 0h00:03.057 2021/06/02T11:18:16z: 10:52:1c:41:b0:6b
+ 0h00:03.059 2021/06/02T11:18:16z: SSID: purpleAir-aa9c
+ 0h00:03.064 2021/06/02T11:18:16z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.021 2021/06/02T11:38:12z: DS3231
+ 0h00:03.036 2021/06/02T11:38:12z: BME280 (0x76)
+ 0h00:03.050 2021/06/02T11:38:12z: 10:52:1c:41:b0:6b
+ 0h00:03.052 2021/06/02T11:38:12z: SSID: purpleAir-aa9c
+ 0h00:03.057 2021/06/02T11:38:12z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.020 2021/06/02T11:58:08z: DS3231
+ 0h00:03.035 2021/06/02T11:58:08z: BME280 (0x76)
+ 0h00:03.050 2021/06/02T11:58:08z: 10:52:1c:41:b0:6b
+ 0h00:03.051 2021/06/02T11:58:08z: SSID: purpleAir-aa9c
+ 0h00:03.056 2021/06/02T11:58:08z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.031 2021/06/02T12:18:04z: DS3231
+ 0h00:03.047 2021/06/02T12:18:04z: BME280 (0x76)
+ 0h00:03.061 2021/06/02T12:18:04z: 10:52:1c:41:b0:6b
+ 0h00:03.063 2021/06/02T12:18:04z: SSID: purpleAir-aa9c
+ 0h00:03.068 2021/06/02T12:18:04z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.037 2021/06/02T12:38:01z: DS3231
+ 0h00:03.052 2021/06/02T12:38:01z: BME280 (0x76)
+ 0h00:03.066 2021/06/02T12:38:01z: 10:52:1c:41:b0:6b
+ 0h00:03.068 2021/06/02T12:38:01z: SSID: purpleAir-aa9c
+ 0h00:03.073 2021/06/02T12:38:01z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.044 2021/06/02T12:57:57z: DS3231
+ 0h00:03.059 2021/06/02T12:57:57z: BME280 (0x76)
+ 0h00:03.073 2021/06/02T12:57:57z: 10:52:1c:41:b0:6b
+ 0h00:03.075 2021/06/02T12:57:57z: SSID: purpleAir-aa9c
+ 0h00:03.080 2021/06/02T12:57:57z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.020 2021/06/02T13:17:52z: DS3231
+ 0h00:03.035 2021/06/02T13:17:52z: BME280 (0x76)
+ 0h00:03.049 2021/06/02T13:17:52z: 10:52:1c:41:b0:6b
+ 0h00:03.051 2021/06/02T13:17:52z: SSID: purpleAir-aa9c
+ 0h00:03.056 2021/06/02T13:17:52z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.012 2021/06/02T13:37:49z: DS3231
+ 0h00:03.027 2021/06/02T13:37:49z: BME280 (0x76)
+ 0h00:03.041 2021/06/02T13:37:49z: 10:52:1c:41:b0:6b
+ 0h00:03.043 2021/06/02T13:37:49z: SSID: purpleAir-aa9c
+ 0h00:03.048 2021/06/02T13:37:49z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.020 2021/06/02T13:57:45z: DS3231
+ 0h00:03.036 2021/06/02T13:57:45z: BME280 (0x76)
+ 0h00:03.050 2021/06/02T13:57:45z: 10:52:1c:41:b0:6b
+ 0h00:03.052 2021/06/02T13:57:45z: SSID: purpleAir-aa9c
+ 0h00:03.057 2021/06/02T13:57:45z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.019 2021/06/02T14:17:40z: DS3231
+ 0h00:03.034 2021/06/02T14:17:40z: BME280 (0x76)
+ 0h00:03.048 2021/06/02T14:17:40z: 10:52:1c:41:b0:6b
+ 0h00:03.050 2021/06/02T14:17:40z: SSID: purpleAir-aa9c
+ 0h00:03.055 2021/06/02T14:17:40z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.022 2021/06/02T14:37:37z: DS3231
+ 0h00:03.037 2021/06/02T14:37:37z: BME280 (0x76)
+ 0h00:03.051 2021/06/02T14:37:37z: 10:52:1c:41:b0:6b
+ 0h00:03.053 2021/06/02T14:37:37z: SSID: purpleAir-aa9c
+ 0h00:03.058 2021/06/02T14:37:37z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.038 2021/06/02T14:57:32z: DS3231
+ 0h00:03.054 2021/06/02T14:57:32z: BME280 (0x76)
+ 0h00:03.068 2021/06/02T14:57:32z: 10:52:1c:41:b0:6b
+ 0h00:03.070 2021/06/02T14:57:32z: SSID: purpleAir-aa9c
+ 0h00:03.075 2021/06/02T14:57:32z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.035 2021/06/02T15:17:28z: DS3231
+ 0h00:03.050 2021/06/02T15:17:28z: BME280 (0x76)
+ 0h00:03.065 2021/06/02T15:17:28z: 10:52:1c:41:b0:6b
+ 0h00:03.066 2021/06/02T15:17:28z: SSID: purpleAir-aa9c
+ 0h00:03.071 2021/06/02T15:17:28z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.043 2021/06/02T15:37:24z: DS3231
+ 0h00:03.058 2021/06/02T15:37:24z: BME280 (0x76)
+ 0h00:03.073 2021/06/02T15:37:24z: 10:52:1c:41:b0:6b
+ 0h00:03.074 2021/06/02T15:37:24z: SSID: purpleAir-aa9c
+ 0h00:03.079 2021/06/02T15:37:24z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.018 2021/06/02T15:57:20z: DS3231
+ 0h00:03.033 2021/06/02T15:57:20z: BME280 (0x76)
+ 0h00:03.047 2021/06/02T15:57:20z: 10:52:1c:41:b0:6b
+ 0h00:03.049 2021/06/02T15:57:20z: SSID: purpleAir-aa9c
+ 0h00:03.054 2021/06/02T15:57:20z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.014 2021/06/02T16:17:17z: DS3231
+ 0h00:03.030 2021/06/02T16:17:17z: BME280 (0x76)
+ 0h00:03.044 2021/06/02T16:17:17z: 10:52:1c:41:b0:6b
+ 0h00:03.046 2021/06/02T16:17:17z: SSID: purpleAir-aa9c
+ 0h00:03.051 2021/06/02T16:17:17z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.024 2021/06/02T16:37:13z: DS3231
+ 0h00:03.039 2021/06/02T16:37:13z: BME280 (0x76)
+ 0h00:03.053 2021/06/02T16:37:13z: 10:52:1c:41:b0:6b
+ 0h00:03.055 2021/06/02T16:37:13z: SSID: purpleAir-aa9c
+ 0h00:03.060 2021/06/02T16:37:13z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.020 2021/06/02T16:57:09z: DS3231
+ 0h00:03.035 2021/06/02T16:57:09z: BME280 (0x76)
+ 0h00:03.049 2021/06/02T16:57:09z: 10:52:1c:41:b0:6b
+ 0h00:03.051 2021/06/02T16:57:09z: SSID: purpleAir-aa9c
+ 0h00:03.056 2021/06/02T16:57:09z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.022 2021/06/02T17:17:04z: DS3231
+ 0h00:03.037 2021/06/02T17:17:04z: BME280 (0x76)
+ 0h00:03.051 2021/06/02T17:17:04z: 10:52:1c:41:b0:6b
+ 0h00:03.053 2021/06/02T17:17:04z: SSID: purpleAir-aa9c
+ 0h00:03.058 2021/06/02T17:17:04z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.027 2021/06/02T17:37:01z: DS3231
+ 0h00:03.042 2021/06/02T17:37:01z: BME280 (0x76)
+ 0h00:03.056 2021/06/02T17:37:01z: 10:52:1c:41:b0:6b
+ 0h00:03.058 2021/06/02T17:37:01z: SSID: purpleAir-aa9c
+ 0h00:03.063 2021/06/02T17:37:01z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.037 2021/06/02T17:56:56z: DS3231
+ 0h00:03.052 2021/06/02T17:56:56z: BME280 (0x76)
+ 0h00:03.066 2021/06/02T17:56:56z: 10:52:1c:41:b0:6b
+ 0h00:03.068 2021/06/02T17:56:56z: SSID: purpleAir-aa9c
+ 0h00:03.073 2021/06/02T17:56:56z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.049 2021/06/02T18:16:52z: DS3231
+ 0h00:03.064 2021/06/02T18:16:52z: BME280 (0x76)
+ 0h00:03.078 2021/06/02T18:16:52z: 10:52:1c:41:b0:6b
+ 0h00:03.080 2021/06/02T18:16:52z: SSID: purpleAir-aa9c
+ 0h00:03.085 2021/06/02T18:16:52z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.024 2021/06/02T18:36:48z: DS3231
+ 0h00:03.040 2021/06/02T18:36:48z: BME280 (0x76)
+ 0h00:03.054 2021/06/02T18:36:49z: 10:52:1c:41:b0:6b
+ 0h00:03.055 2021/06/02T18:36:49z: SSID: purpleAir-aa9c
+ 0h00:03.061 2021/06/02T18:36:49z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.027 2021/06/02T18:56:45z: DS3231
+ 0h00:03.043 2021/06/02T18:56:45z: BME280 (0x76)
+ 0h00:03.057 2021/06/02T18:56:45z: 10:52:1c:41:b0:6b
+ 0h00:03.058 2021/06/02T18:56:45z: SSID: purpleAir-aa9c
+ 0h00:03.064 2021/06/02T18:56:45z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.026 2021/06/02T19:16:41z: DS3231
+ 0h00:03.041 2021/06/02T19:16:41z: BME280 (0x76)
+ 0h00:03.055 2021/06/02T19:16:41z: 10:52:1c:41:b0:6b
+ 0h00:03.057 2021/06/02T19:16:41z: SSID: purpleAir-aa9c
+ 0h00:03.062 2021/06/02T19:16:41z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.028 2021/06/02T19:36:37z: DS3231
+ 0h00:03.043 2021/06/02T19:36:37z: BME280 (0x76)
+ 0h00:03.057 2021/06/02T19:36:37z: 10:52:1c:41:b0:6b
+ 0h00:03.059 2021/06/02T19:36:37z: SSID: purpleAir-aa9c
+ 0h00:03.064 2021/06/02T19:36:37z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.025 2021/06/02T19:56:33z: DS3231
+ 0h00:03.041 2021/06/02T19:56:33z: BME280 (0x76)
+ 0h00:03.055 2021/06/02T19:56:33z: 10:52:1c:41:b0:6b
+ 0h00:03.057 2021/06/02T19:56:33z: SSID: purpleAir-aa9c
+ 0h00:03.062 2021/06/02T19:56:33z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.033 2021/06/02T20:16:29z: DS3231
+ 0h00:03.049 2021/06/02T20:16:29z: BME280 (0x76)
+ 0h00:03.063 2021/06/02T20:16:29z: 10:52:1c:41:b0:6b
+ 0h00:03.065 2021/06/02T20:16:29z: SSID: purpleAir-aa9c
+ 0h00:03.070 2021/06/02T20:16:29z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.040 2021/06/02T20:36:25z: DS3231
+ 0h00:03.055 2021/06/02T20:36:25z: BME280 (0x76)
+ 0h00:03.069 2021/06/02T20:36:25z: 10:52:1c:41:b0:6b
+ 0h00:03.071 2021/06/02T20:36:25z: SSID: purpleAir-aa9c
+ 0h00:03.076 2021/06/02T20:36:25z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.049 2021/06/02T20:56:21z: DS3231
+ 0h00:03.064 2021/06/02T20:56:21z: BME280 (0x76)
+ 0h00:03.078 2021/06/02T20:56:21z: 10:52:1c:41:b0:6b
+ 0h00:03.080 2021/06/02T20:56:21z: SSID: purpleAir-aa9c
+ 0h00:03.085 2021/06/02T20:56:21z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.024 2021/06/02T21:16:17z: DS3231
+ 0h00:03.039 2021/06/02T21:16:17z: BME280 (0x76)
+ 0h00:03.053 2021/06/02T21:16:17z: 10:52:1c:41:b0:6b
+ 0h00:03.055 2021/06/02T21:16:17z: SSID: purpleAir-aa9c
+ 0h00:03.060 2021/06/02T21:16:17z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.022 2021/06/02T21:36:13z: DS3231
+ 0h00:03.037 2021/06/02T21:36:13z: BME280 (0x76)
+ 0h00:03.051 2021/06/02T21:36:13z: 10:52:1c:41:b0:6b
+ 0h00:03.053 2021/06/02T21:36:13z: SSID: purpleAir-aa9c
+ 0h00:03.058 2021/06/02T21:36:13z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.016 2021/06/02T21:56:09z: DS3231
+ 0h00:03.031 2021/06/02T21:56:09z: BME280 (0x76)
+ 0h00:03.045 2021/06/02T21:56:09z: 10:52:1c:41:b0:6b
+ 0h00:03.047 2021/06/02T21:56:09z: SSID: purpleAir-aa9c
+ 0h00:03.052 2021/06/02T21:56:09z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.030 2021/06/02T22:16:05z: DS3231
+ 0h00:03.045 2021/06/02T22:16:05z: BME280 (0x76)
+ 0h00:03.059 2021/06/02T22:16:05z: 10:52:1c:41:b0:6b
+ 0h00:03.061 2021/06/02T22:16:05z: SSID: purpleAir-aa9c
+ 0h00:03.066 2021/06/02T22:16:05z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.024 2021/06/02T22:36:02z: DS3231
+ 0h00:03.039 2021/06/02T22:36:02z: BME280 (0x76)
+ 0h00:03.053 2021/06/02T22:36:02z: 10:52:1c:41:b0:6b
+ 0h00:03.055 2021/06/02T22:36:02z: SSID: purpleAir-aa9c
+ 0h00:03.060 2021/06/02T22:36:02z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.041 2021/06/02T22:55:58z: DS3231
+ 0h00:03.056 2021/06/02T22:55:58z: BME280 (0x76)
+ 0h00:03.070 2021/06/02T22:55:58z: 10:52:1c:41:b0:6b
+ 0h00:03.072 2021/06/02T22:55:58z: SSID: purpleAir-aa9c
+ 0h00:03.077 2021/06/02T22:55:58z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.047 2021/06/02T23:15:54z: DS3231
+ 0h00:03.062 2021/06/02T23:15:54z: BME280 (0x76)
+ 0h00:03.076 2021/06/02T23:15:54z: 10:52:1c:41:b0:6b
+ 0h00:03.078 2021/06/02T23:15:54z: SSID: purpleAir-aa9c
+ 0h00:03.083 2021/06/02T23:15:54z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.046 2021/06/02T23:35:50z: DS3231
+ 0h00:03.061 2021/06/02T23:35:50z: BME280 (0x76)
+ 0h00:03.075 2021/06/02T23:35:50z: 10:52:1c:41:b0:6b
+ 0h00:03.077 2021/06/02T23:35:50z: SSID: purpleAir-aa9c
+ 0h00:03.082 2021/06/02T23:35:50z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.023 2021/06/02T23:55:45z: DS3231
+ 0h00:03.038 2021/06/02T23:55:45z: BME280 (0x76)
+ 0h00:03.052 2021/06/02T23:55:45z: 10:52:1c:41:b0:6b
+ 0h00:03.054 2021/06/02T23:55:45z: SSID: purpleAir-aa9c
+ 0h00:03.059 2021/06/02T23:55:45z: AP_STA

@@ -1,0 +1,658 @@
+---
+title: "STEPS Study: Data preparation for analysis of O2"
+author: "C. Konstantinou and X. Andrianou @ Water and Health Laboratory, CII-CUT"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  rmdformats::downcute:
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    highlight: tango
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r packages,  echo=FALSE, include=FALSE}
+rm(list=ls())
+
+
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg))
+    install.packages(new.pkg, dependencies = TRUE,
+                     repos = "http://cran.us.r-project.org")
+  sapply(pkg, require, character.only = TRUE)
+}
+
+# usage
+packages <- c("tidyverse","lubridate","officer", "rvg","glue", "patchwork","janitor",
+              "tableone","dplyr","lme4","readxl","scales","readr", "lubridate", "knitr")
+
+ipak(packages)
+```
+
+# Dataset preparation for objective 2
+
+```{r readdata, echo=FALSE, message=FALSE, warning=FALSE}
+
+# read questionnaire_sensor files
+questPA <- readRDS("produced_data/questPA.rds", refhook = NULL)
+questMCF <- readRDS("produced_data/questMCF.rds", refhook = NULL)
+
+```
+
+```{r dataprep, echo=FALSE, message=FALSE, warning=FALSE}
+
+# rename variables so that names are similar in MCF and PA files
+
+questMCF <- questMCF %>% 
+  dplyr::rename(EESTDateTime = time, final_value = value) 
+  
+questPA <- questPA %>% 
+  dplyr::rename(name = PM) 
+
+# create variables needed for models
+questPA_1 <- questPA %>% 
+    # create hour variable - check that it is correct
+    mutate(hour=case_when(time_hm >= 0 & time_hm < 1 ~ "1",
+                        time_hm >= 1 & time_hm < 2 ~ "2",
+                        time_hm >= 2 & time_hm < 3 ~ "3",
+                        time_hm >= 3 & time_hm < 4 ~ "4",
+                        time_hm >= 4 & time_hm < 5 ~ "5",
+                        time_hm >= 5 & time_hm < 6 ~ "6",
+                        time_hm >= 6 & time_hm < 7 ~ "7",
+                        time_hm >= 7 & time_hm < 8 ~ "8",
+                        time_hm >= 8 & time_hm < 9 ~ "9",
+                        time_hm >= 9 & time_hm < 10 ~ "10",
+                        time_hm >= 10 & time_hm < 11 ~ "11",
+                        time_hm >= 11 & time_hm < 12 ~ "12",
+                        time_hm >= 12 & time_hm < 13 ~ "13",
+                        time_hm >= 13 & time_hm < 14 ~ "14",
+                        time_hm >= 14 & time_hm < 15 ~ "15",
+                        time_hm >= 15 & time_hm < 16 ~ "16",
+                        time_hm >= 16 & time_hm < 17 ~ "17",
+                        time_hm >= 17 & time_hm < 18 ~ "18",
+                        time_hm >= 18 & time_hm < 19 ~ "19",
+                        time_hm >= 19 & time_hm < 20 ~ "20",
+                        time_hm >= 20 & time_hm < 21 ~ "21",
+                        time_hm >= 21 & time_hm < 22 ~ "22",
+                        time_hm >= 22 & time_hm < 23 ~ "23",
+                        time_hm >= 23 ~ "24")) %>% 
+# create period for times between 7:00 - 7:45 & 13:05 - 15:00
+  mutate(period_new = case_when(time_hm>= "7" & time_hm < "7.75" ~ "bef_classes",
+                                time_hm>= "13.1" & time_hm < "15" ~ "after_classes",
+                                TRUE ~ period_win)) %>% 
+    # add period start time for before and after classes 
+  mutate(period_start_time = case_when(period_new == "bef_classes" ~ "7:00",
+                                       period_new == "after_classes" ~ "13:05",
+                                       TRUE ~ period_start)) %>% 
+# for no school hours add O in open_closed_sum and 0 in percent_open, assuming that windows are closed in no school hours
+  mutate(open_closed_sum_new = case_when(period_new == "no_school" ~ "0",
+                                         TRUE ~ as.character(open_closed_sum)),
+         percent_open_new = case_when(period_new == "no_school" ~ "0",
+                                         TRUE ~ as.character(percent_open)),
+  # create time_type so that you can separate class hours, breaks, no school hours 
+         time_type = case_when(period_new == "5" | period_new == "10" | period_new == "15" ~ "break",
+                               period_new == "no_school" ~ "no_school",
+                               period_new == "bef_classes" ~ "bef_classes",
+                               period_new == "after_classes" ~ "after_classes",
+                               TRUE ~ "class")) %>% 
+separate(EESTDateTime,
+    into = c("remove", "samplingtime"),
+    sep = " ", remove = FALSE, extra = "merge", fill = "right") %>% 
+     select(-remove) %>% 
+  #added a date to the time
+   mutate(samplingtime = as.POSIXct(glue("2020-01-01 {samplingtime}")))
+
+# create variables needed for models
+questMCF_1 <- questMCF %>% 
+    # create hour variable - check that it is correct
+      mutate(hour=case_when(time_hm >= 0 & time_hm < 1 ~ "1",
+                        time_hm >= 1 & time_hm < 2 ~ "2",
+                        time_hm >= 2 & time_hm < 3 ~ "3",
+                        time_hm >= 3 & time_hm < 4 ~ "4",
+                        time_hm >= 4 & time_hm < 5 ~ "5",
+                        time_hm >= 5 & time_hm < 6 ~ "6",
+                        time_hm >= 6 & time_hm < 7 ~ "7",
+                        time_hm >= 7 & time_hm < 8 ~ "8",
+                        time_hm >= 8 & time_hm < 9 ~ "9",
+                        time_hm >= 9 & time_hm < 10 ~ "10",
+                        time_hm >= 10 & time_hm < 11 ~ "11",
+                        time_hm >= 11 & time_hm < 12 ~ "12",
+                        time_hm >= 12 & time_hm < 13 ~ "13",
+                        time_hm >= 13 & time_hm < 14 ~ "14",
+                        time_hm >= 14 & time_hm < 15 ~ "15",
+                        time_hm >= 15 & time_hm < 16 ~ "16",
+                        time_hm >= 16 & time_hm < 17 ~ "17",
+                        time_hm >= 17 & time_hm < 18 ~ "18",
+                        time_hm >= 18 & time_hm < 19 ~ "19",
+                        time_hm >= 19 & time_hm < 20 ~ "20",
+                        time_hm >= 20 & time_hm < 21 ~ "21",
+                        time_hm >= 21 & time_hm < 22 ~ "22",
+                        time_hm >= 22 & time_hm < 23 ~ "23",
+                        time_hm >= 23 ~ "24")) %>% 
+# create period for times between 7:00 - 7:45 & 13:05 - 15:00 - School open by cleaning ladies 
+  mutate(period_new = case_when(time_hm>= "7" & time_hm < "7.75" ~ "bef_classes",
+                                time_hm>= "13.1" & time_hm < "15" ~ "after_classes",
+                                TRUE ~ period_win)) %>% 
+  # add period start time for before and after classes 
+  mutate(period_start_time = case_when(period_new == "bef_classes" ~ "7:00",
+                                       period_new == "after_classes" ~ "13:05",
+                                       TRUE ~ period_start)) %>% 
+# for no school hours add O in open_closed_sum and 0 in percent_open, assuming that windows are closed in no school hours
+  mutate(open_closed_sum_new = case_when(period_new == "no_school" ~ "0",
+                                         TRUE ~ as.character(open_closed_sum)),
+         percent_open_new = case_when(period_new == "no_school" ~ "0",
+                                         TRUE ~ as.character(percent_open)),
+  # create time_type so that you can separate class hours, breaks, no school hours 
+         time_type = case_when(period_new == "5" | period_new == "10" | period_new == "15" ~ "break",
+                               period_new == "no_school" ~ "no_school",
+                               period_new == "bef_classes" ~ "bef_classes",
+                               period_new == "after_classes" ~ "after_classes",
+                               TRUE ~ "class")) %>% 
+ # create sampling time variable to use for plots.. 
+separate(EESTDateTime,
+    into = c("remove", "samplingtime"),
+    sep = " ", remove = FALSE, extra = "merge", fill = "right") %>% 
+     select(-remove) %>% 
+  #added a date to the time
+   mutate(samplingtime = as.POSIXct(glue("2020-01-01 {samplingtime}")))
+
+
+
+saveRDS(questPA_1, file="produced_data/questPA_1.rds")
+saveRDS(questMCF_1, file="produced_data/questMCF_1.rds")  
+```
+
+Period mean for indoor measurements
+
+```{r readdata_part2, echo=FALSE, message=FALSE, warning=FALSE}
+
+# read study log file
+Study_log_210510_DA_copy <- read_excel("rawData/Study_log_210510_DA_copy.xlsx") %>% 
+  clean_names() %>% 
+  dplyr::rename(SchoolID=school_id) 
+
+# read headmasters questionnaire file so that to add selected variables for regression models
+q_headmasters <- readRDS("produced_data/q_headmasters.rds") %>% 
+  dplyr::rename(chlorine_freq = chlorium_2)
+
+```
+
+
+```{r dataset_reg_prep_only_school_PA, echo=FALSE, message=FALSE, warning=FALSE}
+
+# dataset for regression with only school hours including 6:30 - 15:00
+dataset_prep_for_regression <- questPA_1 %>% 
+  # filter only school opening closing hours 
+     filter(period_new!="no_school") %>%
+    # calculate period mean 
+    group_by(name, SchoolID, indoor_outdoor, location, samplingdate, period_new, time_type, period_start_time) %>% 
+dplyr::summarise(period_mean=mean(final_value, na.rm=TRUE), .groups="drop") 
+
+# mean for outdoor 
+dataset_regression_outdoor <- dataset_prep_for_regression %>%
+  filter(indoor_outdoor=="outdoors") %>% 
+  dplyr::rename(mean_outdoors=period_mean) %>% 
+  select(name, SchoolID, samplingdate, period_new, mean_outdoors)
+
+ # dataset with windows
+dataset_PMQUEST_for_regression <- questPA_1 %>% 
+  filter(class_venttype == "window") %>% 
+    # calculate period mean 
+    group_by(name, SchoolID, indoor_outdoor, location, samplingdate, period_new) %>% 
+dplyr::summarise(open_closed_sum_new=mean(as.numeric(open_closed_sum_new)),
+                 percent_open_new=mean(as.numeric(percent_open_new)),
+                 .groups="drop")
+
+ # dataset with doors
+dataset_PMQUEST_for_regression_d <- questPA_1 %>% 
+  filter(class_venttype == "door") %>% 
+    # calculate period mean 
+    group_by(name, SchoolID, indoor_outdoor, location, samplingdate, period_new) %>% 
+dplyr::summarise(open_closed_sum_new_doors=mean(as.numeric(open_closed_sum_new)),
+                 percent_open_new_doors=mean(as.numeric(percent_open_new)),
+                 .groups="drop")
+
+ # dataset with fans
+dataset_PMQUEST_for_regression_f <- questPA_1 %>% 
+  filter(class_venttype == "fan") %>% 
+    # calculate period mean 
+    group_by(name, SchoolID, indoor_outdoor, location, samplingdate, period_new) %>% 
+dplyr::summarise(open_closed_sum_new_fans=mean(as.numeric(open_closed_sum_new)),
+                 percent_open_new_fans=mean(as.numeric(percent_open_new)),
+                 .groups="drop")
+
+# mean for indoor 
+dataset_regression_indoor <- dataset_prep_for_regression %>%
+  filter(indoor_outdoor=="indoors") %>% 
+  dplyr::rename(mean_indoors=period_mean) %>% 
+  select(name, SchoolID, location, samplingdate, period_new, period_start_time, mean_indoors, time_type) %>% 
+ # merge with dataset with windows data
+  left_join(., select(dataset_PMQUEST_for_regression, name, SchoolID, location,
+                      samplingdate, period_new,
+                      open_closed_sum_new, percent_open_new), 
+                                        by = c("name", "SchoolID",
+                                               "samplingdate", "location", "period_new")) %>% 
+   # merge with dataset with fans data
+  left_join(., select(dataset_PMQUEST_for_regression_f, name, SchoolID, location,
+                      samplingdate, period_new,
+                      open_closed_sum_new_fans, percent_open_new_fans), 
+                                        by = c("name", "SchoolID",
+                                               "samplingdate", "location", "period_new")) %>% 
+   # merge with dataset with doors data
+  left_join(., select(dataset_PMQUEST_for_regression_d, name, SchoolID, location,
+                      samplingdate, period_new,
+                      open_closed_sum_new_doors, percent_open_new_doors), 
+                                        by = c("name", "SchoolID",
+                                               "samplingdate", "location", "period_new"))
+
+# final dataset for regression
+dataset_final_regression <- left_join(dataset_regression_indoor,
+                                        dataset_regression_outdoor, 
+                                        by = c("name", "SchoolID",
+                                               "samplingdate", "period_new")) %>% 
+  left_join(., select(Study_log_210510_DA_copy, SchoolID, exclude, district, degurba), by="SchoolID") %>% 
+  mutate(degurba_classification=case_when(degurba=="1"~"Densely populated areas",
+                                          degurba=="2"~"Intermediate density areas")) %>% 
+    left_join(., select(q_headmasters, SchoolID, paint_places, chlorine_freq), by="SchoolID") %>% 
+   mutate(chlorinefreq = case_when(chlorine_freq == "Once_week" ~ "<=Three times_week",
+                                  chlorine_freq == "Twice_week" ~ "<=Three times_week",
+                                  chlorine_freq == "Three times_week" ~ "<=Three times_week",
+                                  TRUE ~ "Five times_week")) %>% 
+  mutate(paint_indoors = case_when(paint_places == "Indoors" ~ "Yes",
+                                  paint_places == "Indoors_and_Outdoors" ~ "Yes",
+                                  TRUE ~ "No")) %>% 
+  mutate(location=as.factor(location),
+         period_new=as.factor(period_new),
+         time_type=as.factor(time_type),
+         district=as.factor(district),
+         degurba_classification=as.factor(degurba_classification),
+         name=as.factor(name),
+         paint_indoors=as.factor(paint_indoors),
+         chlorine_freq=as.factor(chlorine_freq),
+         chlorinefreq=as.factor(chlorinefreq),
+         period_start_time = as.POSIXct(period_start_time,format="%H:%M"))
+
+
+dataset_final_regression$period_new = factor(dataset_final_regression$period_new, 
+                                         levels = c("bef_classes", "1", "2", "3", "4", "5", "6",
+                                                    "7", "8", "9", "10", "after_classes"))
+
+# relevel time_type, district, chlorine_freq
+dataset_final_regression <- within(dataset_final_regression, time_type <- relevel(time_type, ref = "class"))
+dataset_final_regression <- within(dataset_final_regression, district <- relevel(district, ref = "Nicosia"))
+
+# prepare exclusions index dataset with classes that are deemed problematic based on teachers
+exclusions_index <- Study_log_210510_DA_copy %>% 
+  select(SchoolID, exclude) %>% 
+  filter(!is.na(exclude)) %>% 
+  separate(exclude, into=c("one", "two"), sep = "_") %>% 
+  pivot_longer(cols = c("one", "two"), values_to = "classroom_to_exclude") %>% 
+  filter(!is.na(classroom_to_exclude)) %>% 
+  select(-name) %>% 
+  mutate(M_codes=paste0(SchoolID, "_", classroom_to_exclude, "_M"),
+         P_codes=paste0(SchoolID, "_", classroom_to_exclude, "_P"),
+         school_class=paste0(SchoolID, "_", classroom_to_exclude),
+         exclusion="yes")
+
+# dataset with group for problematic and normal classes based on teachers assessment 
+dataset_final_regression_probandnorm <- dataset_final_regression %>% 
+  mutate(exclude_final=case_when(exclude=="C1_C2"~"school",
+                                 exclude=="C1"|exclude=="C2"~"one classroom",
+                                 TRUE~NA_character_)) %>% 
+  mutate(school_class=paste0(SchoolID, "_", location)) %>% 
+  mutate(class_type = case_when(exclude_final == "school" |exclude_final=="one classroom" ~ "problematic",
+         TRUE~"normal"))
+
+# descriptive table for problematic and normal classes
+table_PA_normprob <- dataset_final_regression_probandnorm %>% 
+    filter(period_new!="bef_classes" & period_new!="after_classes") %>% 
+  group_by(name, class_type) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(mean_indoors, na.rm=TRUE), digits=1),
+                   sd=round(sd(mean_indoors, na.rm=TRUE), digits=1),
+                   min=round(min(mean_indoors, na.rm=TRUE), digits=1),
+                   p25=round(quantile(mean_indoors, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(mean_indoors, na.rm=TRUE), digits=1),
+                   p75=round(quantile(mean_indoors, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(mean_indoors, na.rm=TRUE), digits=1), .groups="drop")
+
+# dataset where problematic classes based on teachers assessment are excluded
+dataset_final_regression_excl <- dataset_final_regression %>% 
+  mutate(exclude_final=case_when(exclude=="C1_C2"~"school",
+                                 exclude=="C1"|exclude=="C2"~"one classroom",
+                                 TRUE~NA_character_)) %>% 
+  mutate(school_class=paste0(SchoolID, "_", location)) %>% 
+# exclude classes based on exclusions index
+  filter(!(school_class %in% exclusions_index$school_class))
+
+saveRDS(dataset_final_regression, file="produced_data/dataset_final_regression.rds")
+saveRDS(dataset_final_regression_excl, file="produced_data/dataset_final_regression_excl.rds")
+saveRDS(dataset_final_regression_probandnorm, file="produced_data/dataset_final_regression_probandnorm.rds")
+
+dataset_final_regression_onlysch <- dataset_final_regression %>% 
+  filter(time_type == "break" | time_type == "class")
+
+dataset_final_regression_excl_onlysch <- dataset_final_regression_excl %>% 
+  filter(time_type == "break" | time_type == "class")
+
+saveRDS(dataset_final_regression_onlysch, file="produced_data/dataset_final_regression_onlysch.rds")
+saveRDS(dataset_final_regression_excl_onlysch, file="produced_data/dataset_final_regression_excl_onlysch.rds")
+
+```
+
+### Comparison of "normal" and "problematic" classes based on teachers' assessment
+
+`r kable(print(table_PA_normprob), caption = "PA data (prob-normal classes comparison)")`
+
+```{r dataset_reg_prep_only_school_MCF, echo=FALSE, message=FALSE, warning=FALSE}
+rm(list = setdiff(ls(), c("dataset_final_regression","dataset_final_regression_excl",
+                          "questPA_1","questMCF_1","Study_log_210510_DA_copy",
+                          "exclusions_index","q_headmasters")))
+
+
+# dataset for regression with only school hours including 6:30 - 15:00
+dataset_prep_for_regression_M <- questMCF_1 %>% 
+  # filter only school opening closing hours 
+     filter(period_new!="no_school") %>%
+    # calculate period mean 
+    group_by(name, SchoolID, indoor_outdoor, location, samplingdate, period_new, period_start_time, time_type) %>% 
+dplyr::summarise(period_mean=mean(final_value, na.rm=TRUE), .groups="drop") 
+
+# mean for outdoor 
+dataset_regression_outdoor_M <- dataset_prep_for_regression_M %>%
+  filter(indoor_outdoor=="outdoors") %>% 
+  dplyr::rename(mean_outdoors=period_mean) %>% 
+  select(name, SchoolID, samplingdate, period_new, mean_outdoors)
+
+ # dataset with windows
+dataset_MQUEST_for_regression <- questMCF_1 %>% 
+  filter(class_venttype == "window") %>% 
+    # calculate period mean 
+    group_by(name, SchoolID, indoor_outdoor, location, samplingdate, period_new) %>% 
+dplyr::summarise(open_closed_sum_new=mean(as.numeric(open_closed_sum_new)),
+                 percent_open_new=mean(as.numeric(percent_open_new)),
+                 .groups="drop")
+
+ # dataset with doors
+dataset_MQUEST_for_regression_d <- questMCF_1 %>% 
+  filter(class_venttype == "door") %>% 
+    # calculate period mean 
+    group_by(name, SchoolID, indoor_outdoor, location, samplingdate, period_new) %>% 
+dplyr::summarise(open_closed_sum_new_doors=mean(as.numeric(open_closed_sum_new)),
+                 percent_open_new_doors=mean(as.numeric(percent_open_new)),
+                 .groups="drop")
+
+ # dataset with fans
+dataset_MQUEST_for_regression_f <- questMCF_1 %>% 
+  filter(class_venttype == "fan") %>% 
+    # calculate period mean 
+    group_by(name, SchoolID, indoor_outdoor, location, samplingdate, period_new) %>% 
+dplyr::summarise(open_closed_sum_new_fans=mean(as.numeric(open_closed_sum_new)),
+                 percent_open_new_fans=mean(as.numeric(percent_open_new)),
+                 .groups="drop")
+
+# mean for indoor 
+dataset_regression_indoor_M <- dataset_prep_for_regression_M %>%
+  filter(indoor_outdoor=="indoors") %>% 
+  dplyr::rename(mean_indoors=period_mean) %>% 
+  select(name, SchoolID, location, samplingdate, period_new, period_start_time, mean_indoors, time_type) %>% 
+ # merge with dataset with windows data
+  left_join(., select(dataset_MQUEST_for_regression, name, SchoolID, location,
+                      samplingdate, period_new, percent_open_new,
+                      open_closed_sum_new), 
+                                        by = c("name", "SchoolID",
+                                               "samplingdate", "location", "period_new")) %>% 
+# merge with dataset with fans data
+  left_join(., select(dataset_MQUEST_for_regression_f, name, SchoolID, location,
+                      samplingdate, period_new,
+                      open_closed_sum_new_fans,percent_open_new_fans), 
+                                        by = c("name", "SchoolID",
+                                               "samplingdate", "location", "period_new")) %>% 
+  # merge with dataset with doors data
+  left_join(., select(dataset_MQUEST_for_regression_d, name, SchoolID, location,
+                      samplingdate, period_new,
+                      open_closed_sum_new_doors,percent_open_new_doors), 
+                                        by = c("name", "SchoolID",
+                                               "samplingdate", "location", "period_new"))
+
+# final dataset for regression
+dataset_final_regression_M <- left_join(dataset_regression_indoor_M,
+                                        dataset_regression_outdoor_M, 
+                                        by = c("name", "SchoolID",
+                                               "samplingdate", "period_new")) %>% 
+  left_join(., select(Study_log_210510_DA_copy, SchoolID, exclude, district, degurba), by="SchoolID") %>% 
+  mutate(degurba_classification=case_when(degurba=="1"~"Densely populated areas",
+                                          degurba=="2"~"Intermediate density areas")) %>% 
+left_join(., select(q_headmasters, SchoolID, paint_places, chlorine_freq), by="SchoolID") %>% 
+   mutate(chlorinefreq = case_when(chlorine_freq == "Once_week" ~ "<=Three times_week",
+                                  chlorine_freq == "Twice_week" ~ "<=Three times_week",
+                                  chlorine_freq == "Three times_week" ~ "<=Three times_week",
+                                  TRUE ~ "Five times_week")) %>% 
+  mutate(paint_indoors = case_when(paint_places == "Indoors" ~ "Yes",
+                                  paint_places == "Indoors_and_Outdoors" ~ "Yes",
+                                  TRUE ~ "No")) %>% 
+  mutate(location=as.factor(location),
+         period_new=as.factor(period_new),
+         time_type=as.factor(time_type),
+         district=as.factor(district),
+         degurba_classification=as.factor(degurba_classification),
+         name=as.factor(name),
+         paint_indoors=as.factor(paint_indoors),
+         chlorine_freq=as.factor(chlorine_freq),
+         chlorinefreq=as.factor(chlorinefreq),
+         period_start_time = as.POSIXct(period_start_time,format="%H:%M"))
+
+dataset_final_regression_M$period_new = factor(dataset_final_regression_M$period_new, 
+                                         levels = c("bef_classes", "1", "2", "3", "4", "5", "6",
+                                                    "7", "8", "9", "10", "after_classes"))
+
+# relevel time_type, district
+dataset_final_regression_M <- within(dataset_final_regression_M, time_type <- relevel(time_type, ref = "class"))
+dataset_final_regression_M <- within(dataset_final_regression_M, district <- relevel(district, ref = "Nicosia"))
+
+# dataset with group for problematic and normal classes based on teachers assessment 
+dataset_final_regression_M_probandnorm <- dataset_final_regression_M %>% 
+  mutate(exclude_final=case_when(exclude=="C1_C2"~"school",
+                                 exclude=="C1"|exclude=="C2"~"one classroom",
+                                 TRUE~NA_character_)) %>% 
+  mutate(school_class=paste0(SchoolID, "_", location)) %>% 
+  mutate(class_type = case_when(exclude_final == "school" |exclude_final=="one classroom" ~ "problematic",
+         TRUE~"normal"))
+
+# descriptive table for problematic and normal classes
+table_MCF_normprob <- dataset_final_regression_M_probandnorm %>%     filter(period_new!="bef_classes" & period_new!="after_classes") %>% 
+  group_by(name, class_type) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(mean_indoors, na.rm=TRUE), digits=1),
+                   sd=round(sd(mean_indoors, na.rm=TRUE), digits=1),
+                   min=round(min(mean_indoors, na.rm=TRUE), digits=1),
+                   p25=round(quantile(mean_indoors, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(mean_indoors, na.rm=TRUE), digits=1),
+                   p75=round(quantile(mean_indoors, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(mean_indoors, na.rm=TRUE), digits=1), .groups="drop")
+
+
+# dataset where problematic classes based on teachers assessment are excluded
+dataset_final_regression_excl_M <- dataset_final_regression_M %>% 
+  mutate(exclude_final=case_when(exclude=="C1_C2"~"school",
+                                 exclude=="C1"|exclude=="C2"~"one classroom",
+                                 TRUE~NA_character_)) %>% 
+  mutate(school_class=paste0(SchoolID, "_", location)) %>% 
+# exclude classes based on exclusions index
+  filter(!(school_class %in% exclusions_index$school_class))
+
+saveRDS(dataset_final_regression_M, file="produced_data/dataset_final_regression_M.rds")
+saveRDS(dataset_final_regression_excl_M, file="produced_data/dataset_final_regression_excl_M.rds")
+saveRDS(dataset_final_regression_M_probandnorm, file="produced_data/dataset_final_regression_M_probandnorm.rds")
+
+
+dataset_final_regression_onlysch_M <- dataset_final_regression_M %>% 
+  filter(time_type == "break" | time_type == "class")
+
+dataset_final_regression_excl_onlysch_M <- dataset_final_regression_excl_M %>% 
+  filter(time_type == "break" | time_type == "class")
+
+saveRDS(dataset_final_regression_onlysch_M, file="produced_data/dataset_final_regression_onlysch_M.rds")
+saveRDS(dataset_final_regression_excl_onlysch_M, file="produced_data/dataset_final_regression_excl_onlysch_M.rds")
+```
+
+`r kable(print(table_MCF_normprob), caption = "MCF data (prob-normal classes comparison)")`
+
+```{r dataset_reg_prep_hourly_PA, echo=FALSE}
+
+rm(list = setdiff(ls(), c("questPA_1","questMCF_1","Study_log_210510_DA_copy",
+                      "exclusions_index","q_headmasters")))
+
+# dataset for regression with all datapoints
+dataset_prep_for_regression_all <- questPA_1 %>% 
+ # filter(period == "no_school") %>% 
+    # calculate hour mean 
+    group_by(name, SchoolID, indoor_outdoor, location, samplingdate, hour) %>% 
+dplyr::summarise(hourly_mean=mean(final_value, na.rm=TRUE), .groups="drop") 
+
+# mean for outdoor 
+dataset_regression_outdoor_all <- dataset_prep_for_regression_all %>%
+  filter(indoor_outdoor=="outdoors") %>% 
+  dplyr::rename(mean_outdoors=hourly_mean) %>% 
+  select(name, SchoolID, samplingdate, hour, mean_outdoors)
+
+# mean for indoor 
+dataset_regression_indoor_all <- dataset_prep_for_regression_all %>%
+  filter(indoor_outdoor=="indoors") %>% 
+  dplyr::rename(mean_indoors=hourly_mean) %>% 
+  select(name, SchoolID, location, samplingdate, hour, mean_indoors)
+
+# final dataset for regression
+dataset_final_regression_all <- left_join(dataset_regression_indoor_all,
+                                        dataset_regression_outdoor_all, 
+                                        by = c("name", "SchoolID",
+                                               "samplingdate", "hour")) %>% 
+  left_join(., select(Study_log_210510_DA_copy, SchoolID, exclude, district, degurba), by="SchoolID") %>% 
+  mutate(degurba_classification=case_when(degurba=="1"~"Densely populated areas",
+                                          degurba=="2"~"Intermediate density areas")) %>% 
+left_join(., select(q_headmasters, SchoolID, paint_places, chlorine_freq), by="SchoolID") %>% 
+   mutate(chlorinefreq = case_when(chlorine_freq == "Once_week" ~ "<=Three times_week",
+                                  chlorine_freq == "Twice_week" ~ "<=Three times_week",
+                                  chlorine_freq == "Three times_week" ~ "<=Three times_week",
+                                  TRUE ~ "Five times_week")) %>% 
+  mutate(paint_indoors = case_when(paint_places == "Indoors" ~ "Yes",
+                                  paint_places == "Indoors_and_Outdoors" ~ "Yes",
+                                  TRUE ~ "No")) %>% 
+  mutate(location=as.factor(location),
+         hour=as.factor(hour),
+         district=as.factor(district),
+         degurba_classification=as.factor(degurba_classification),
+         name=as.factor(name),
+         paint_indoors=as.factor(paint_indoors),
+         chlorine_freq=as.factor(chlorine_freq),
+         chlorinefreq=as.factor(chlorinefreq))
+
+#relevel hour variable
+dataset_final_regression_all$hour = factor(dataset_final_regression_all$hour, 
+                                         levels = c("1", "2", "3", "4", "5", "6",
+                                                    "7", "8", "9", "10", "11","12",
+                                                    "13","14","15","16","17",
+                                                    "18","19","20","21","22","23","24"))
+
+# relevel district
+dataset_final_regression_all <- within(dataset_final_regression_all, district <- relevel(district, ref = "Nicosia"))
+
+# dataset where problematic classes based on teachers assessment are excluded
+
+dataset_final_regression_excl_all <- dataset_final_regression_all %>% 
+  mutate(exclude_final=case_when(exclude=="C1_C2"~"school",
+                                 exclude=="C1"|exclude=="C2"~"one classroom",
+                                 TRUE~NA_character_)) %>% 
+  mutate(school_class=paste0(SchoolID, "_", location)) %>% 
+# exclude classes
+  filter(!(school_class %in% exclusions_index$school_class))
+
+saveRDS(dataset_final_regression_all, file="produced_data/dataset_final_regression_all.rds")
+saveRDS(dataset_final_regression_excl_all, file="produced_data/dataset_final_regression_excl_all.rds")
+
+```
+
+```{r dataset_reg_prep_hourly_MCF, echo=FALSE}
+
+rm(list = setdiff(ls(), c("questPA_1","questMCF_1",
+                          "Study_log_210510_DA_copy","exclusions_index"
+                          ,"q_headmasters")))
+
+# dataset for regression with no school hours
+dataset_prep_for_regression_all_M <- questMCF_1 %>% 
+ # filter(period == "no_school") %>% 
+    # calculate hour mean 
+    group_by(name, SchoolID, indoor_outdoor, location, samplingdate, hour) %>% 
+dplyr::summarise(hourly_mean=mean(final_value, na.rm=TRUE), .groups="drop") 
+
+# mean for outdoor 
+dataset_regression_outdoor_all_M <- dataset_prep_for_regression_all_M %>%
+  filter(indoor_outdoor=="outdoors") %>% 
+  dplyr::rename(mean_outdoors=hourly_mean) %>% 
+  select(name, SchoolID, samplingdate, hour, mean_outdoors)
+
+# mean for indoor 
+dataset_regression_indoor_all_M <- dataset_prep_for_regression_all_M %>%
+  filter(indoor_outdoor=="indoors") %>% 
+  dplyr::rename(mean_indoors=hourly_mean) %>% 
+  select(name, SchoolID, location, samplingdate, hour, mean_indoors)
+
+# final dataset for regression
+dataset_final_regression_all_M <- left_join(dataset_regression_indoor_all_M,
+                                        dataset_regression_outdoor_all_M, 
+                                        by = c("name", "SchoolID",
+                                               "samplingdate", "hour")) %>% 
+  left_join(., select(Study_log_210510_DA_copy, SchoolID, exclude, district, degurba), by="SchoolID") %>% 
+  mutate(degurba_classification=case_when(degurba=="1"~"Densely populated areas",
+                                          degurba=="2"~"Intermediate density areas")) %>% 
+left_join(., select(q_headmasters, SchoolID, paint_places, chlorine_freq), by="SchoolID") %>% 
+   mutate(chlorinefreq = case_when(chlorine_freq == "Once_week" ~ "<=Three times_week",
+                                  chlorine_freq == "Twice_week" ~ "<=Three times_week",
+                                  chlorine_freq == "Three times_week" ~ "<=Three times_week",
+                                  TRUE ~ "Five times_week")) %>% 
+  mutate(paint_indoors = case_when(paint_places == "Indoors" ~ "Yes",
+                                  paint_places == "Indoors_and_Outdoors" ~ "Yes",
+                                  TRUE ~ "No")) %>% 
+  mutate(location=as.factor(location),
+         hour=as.factor(hour),
+         district=as.factor(district),
+         degurba_classification=as.factor(degurba_classification),
+         name=as.factor(name),
+         paint_indoors=as.factor(paint_indoors),
+         chlorine_freq=as.factor(chlorine_freq),
+         chlorinefreq=as.factor(chlorinefreq))
+
+#relevel hour variable
+dataset_final_regression_all_M$hour = factor(dataset_final_regression_all_M$hour, 
+                                         levels = c("1", "2", "3", "4", "5", "6",
+                                                    "7", "8", "9", "10", "11","12",
+                                                    "13","14","15","16","17",
+                                                    "18","19","20","21","22","23","24"))
+
+# relevel district
+dataset_final_regression_all_M <- within(dataset_final_regression_all_M, district <- relevel(district, ref = "Nicosia"))
+
+# dataset where problematic classes based on teachers assessment are excluded
+
+dataset_final_regression_excl_all_M <- dataset_final_regression_all_M %>% 
+  mutate(exclude_final=case_when(exclude=="C1_C2"~"school",
+                                 exclude=="C1"|exclude=="C2"~"one classroom",
+                                 TRUE~NA_character_)) %>% 
+  mutate(school_class=paste0(SchoolID, "_", location)) %>% 
+# exclude classes
+  filter(!(school_class %in% exclusions_index$school_class))
+
+saveRDS(dataset_final_regression_all_M, file="produced_data/dataset_final_regression_all_M.rds")
+saveRDS(dataset_final_regression_excl_all_M, file="produced_data/dataset_final_regression_excl_all_M.rds")
+
+```
+
+# Session Information
+
+```{r S5 }
+sessionInfo()
+```

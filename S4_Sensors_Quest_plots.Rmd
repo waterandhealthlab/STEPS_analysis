@@ -1,0 +1,1161 @@
+---
+title: "STEPS Study: Combination of the questionnaire and sensors data (cont. O1)"
+author: "C. Konstantinou and X. Andrianou @ Water and Health Laboratory, CII-CUT"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  rmdformats::downcute:
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    highlight: tango
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r S4-Sensors-Quest-plots-1,  echo=FALSE, include=FALSE}
+rm(list=ls())
+
+
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg))
+    install.packages(new.pkg, dependencies = TRUE,
+                     repos = "http://cran.us.r-project.org")
+  sapply(pkg, require, character.only = TRUE)
+}
+
+# usage
+packages <- c("tidyverse","lubridate","officer", "rvg","glue", "patchwork","janitor",
+              "tableone","plyr","chron","knitr")
+
+ipak(packages)
+```
+
+```{r S4-Sensors-Quest-plots-2,  echo=FALSE, message=FALSE, warning=FALSE}
+# read PA data
+PA_data <- readRDS("produced_data/dataset_P_final_forquestionnaires.rds", refhook = NULL) %>%
+  mutate(samplingday=EESTDateTime) %>%
+separate(samplingday, into=c("samplingdate", "remove"), sep = " ") %>% 
+  mutate(samplingdate=as.POSIXct(samplingdate,format="%Y-%m-%d")) %>% 
+  select(-remove, -contains("ab"),-a,-b, -rsd_20perc) %>% 
+     # this school needs to be excluded as classes and outdoor refer to 1st level and inclusion criteria were schools in ground floor 
+  filter(SchoolID != "S25")
+
+# read MCF data
+MCF_data <- readRDS("produced_data/dataset_M_final.rds", refhook = NULL) %>%
+  mutate(samplingday=time) %>%
+  separate(samplingday, into=c("samplingdate", "remove"), sep = " ") %>% 
+  mutate(samplingdate=as.POSIXct(samplingdate,format="%Y-%m-%d"),
+         indoor_outdoor=case_when(location =="OD" ~ "outdoors",
+                                  TRUE ~ "indoors"))  %>% 
+  select(-remove) %>% 
+     # this school needs to be excluded as classes and outdoor refer to 1st level and inclusion criteria were schools in ground floor 
+  filter(SchoolID != "S25")
+
+# read quest long datasets for windows_doors and ac_fans with summarized the number of open_closed
+  # CK: read the files ending in _1 when issue with fans is corrected 
+windowsdoors_data <- readRDS("produced_data/windows_doors_sum_1.rds", refhook = NULL) %>%  
+  dplyr::rename("period_win"="period") %>% 
+  mutate(period_win=as.character(period_win)) %>% 
+  select(-num_wind, -num_doors) 
+
+acfans_data <- readRDS("produced_data/ac_fans_sum_1.rds", refhook = NULL) %>% 
+  select(-fan_num) 
+### check
+#
+#acfans_data_original <- readRDS("produced_data/ac_fans_sum.rds", refhook = NULL)
+#
+#acfans_data_original2 <- acfans_data_original %>% 
+#  rowid_to_column()
+#
+#
+#diffdf::diffdf(acfans_data_original, acfans_data)
+
+# read sampling days file to merge with questionnaire data and responses of teachers
+# sampling days are the ones on which we have data from teachers because we may have PA data on additional dates when sensors failed 
+samplingdays<- read.csv("rawData/datamanagement.csv", header= TRUE) %>%
+  clean_names() %>%
+  dplyr::rename(SchoolID=1) %>%
+  mutate(samplingday1date=as.POSIXct(samplingday1_date, format="%d/%m/%Y"),
+         samplingday2date=as.POSIXct(samplingday2_date, format="%d/%m/%Y")) %>%
+  select (-c(samplingday1_date,samplingday2_date))
+ 
+# read index file
+index_ac <- read.csv("rawData/questionnaires_diaries/index_ac_fan.csv", sep=",", header = TRUE) %>%  
+  clean_names() %>%  
+  #dplyr::rename("period"="i_period")  %>% 
+  mutate(period=as.character(period))
+
+```
+
+```{r S4-Sensors-Quest-plots-3,  echo=FALSE, message=FALSE, warning=FALSE}
+
+# prepare index for period number and time based on ac_fans periods
+hour_index<- index_ac %>% 
+  mutate(period_start_time=as.POSIXct(period_start, format="%H:%M"),
+         time_hm=hour(period_start_time)+(minute(period_start_time)/60))
+
+rm(index_ac)
+
+# add period in PA data
+PA_data_period <- PA_data  %>% 
+  mutate(time_hm=hour(EESTDateTime)+(minute(EESTDateTime)/60)) %>% 
+  mutate(period=case_when(
+                            time_hm>=hour_index[hour_index$period=="1",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="2",]$time_hm  ~"1",
+                          time_hm>=hour_index[hour_index$period=="2",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="3",]$time_hm  ~"2",
+                          time_hm>=hour_index[hour_index$period=="3",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="4",]$time_hm  ~"3",
+                          time_hm>=hour_index[hour_index$period=="4",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="5",]$time_hm  ~"4",
+                          time_hm>=hour_index[hour_index$period=="5",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="6",]$time_hm  ~"5",
+                          time_hm>=hour_index[hour_index$period=="6",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="7",]$time_hm  ~"6",
+                          time_hm>=hour_index[hour_index$period=="7",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="8",]$time_hm  ~"7",
+                          time_hm>=hour_index[hour_index$period=="8",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="9",]$time_hm  ~"8",
+                          time_hm>=hour_index[hour_index$period=="9",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="10",]$time_hm  ~"9",
+                          time_hm>=hour_index[hour_index$period=="10",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="11",]$time_hm  ~"10",
+                          time_hm>=hour_index[hour_index$period=="11",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="12",]$time_hm  ~"11",
+                          time_hm>=hour_index[hour_index$period=="12",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="13",]$time_hm  ~"12",
+                          time_hm>=hour_index[hour_index$period=="13",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="14",]$time_hm  ~"13",
+                          time_hm>=hour_index[hour_index$period=="14",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="15",]$time_hm  ~"14",
+                          time_hm>=hour_index[hour_index$period=="15",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="16",]$time_hm  ~"15",
+                          time_hm>=hour_index[hour_index$period=="16",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="17",]$time_hm  ~"16",
+                          time_hm>=hour_index[hour_index$period=="17",]$time_hm &
+                            time_hm<13.08333  ~"17",
+                          TRUE~"no_school")) %>% 
+  mutate(period_win=case_when(
+                              time_hm>=hour_index[hour_index$period=="1",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="2",]$time_hm  ~"1",
+                              time_hm>=hour_index[hour_index$period=="2",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="3",]$time_hm  ~"1",
+                              time_hm>=hour_index[hour_index$period=="3",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="4",]$time_hm  ~"2",
+                              time_hm>=hour_index[hour_index$period=="4",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="5",]$time_hm  ~"2",
+                              time_hm>=hour_index[hour_index$period=="5",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="6",]$time_hm  ~"3",
+                              time_hm>=hour_index[hour_index$period=="6",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="7",]$time_hm  ~"4",
+                              time_hm>=hour_index[hour_index$period=="7",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="8",]$time_hm  ~"4",
+                              time_hm>=hour_index[hour_index$period=="8",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="9",]$time_hm  ~"5",
+                              time_hm>=hour_index[hour_index$period=="9",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="10",]$time_hm  ~"5",
+                              time_hm>=hour_index[hour_index$period=="10",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="11",]$time_hm  ~"6",
+                              time_hm>=hour_index[hour_index$period=="11",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="12",]$time_hm  ~"7",
+                              time_hm>=hour_index[hour_index$period=="12",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="13",]$time_hm  ~"7",
+                              time_hm>=hour_index[hour_index$period=="13",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="14",]$time_hm  ~"8",
+                              time_hm>=hour_index[hour_index$period=="14",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="15",]$time_hm  ~"8",
+                              time_hm>=hour_index[hour_index$period=="15",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="16",]$time_hm  ~"9",
+                              time_hm>=hour_index[hour_index$period=="16",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="17",]$time_hm  ~"10",
+                              time_hm>=hour_index[hour_index$period=="17",]$time_hm &
+                                time_hm<13.08333  ~"10",
+                          TRUE~"no_school")) %>%
+  rowid_to_column(var="PA_index")
+
+# add period in MCF data
+MCF_data_period <- MCF_data  %>% 
+  mutate(time_hm=hour(time)+(minute(time)/60)) %>% 
+  mutate(period=case_when(
+                            time_hm>=hour_index[hour_index$period=="1",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="2",]$time_hm  ~"1",
+                          time_hm>=hour_index[hour_index$period=="2",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="3",]$time_hm  ~"2",
+                          time_hm>=hour_index[hour_index$period=="3",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="4",]$time_hm  ~"3",
+                          time_hm>=hour_index[hour_index$period=="4",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="5",]$time_hm  ~"4",
+                          time_hm>=hour_index[hour_index$period=="5",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="6",]$time_hm  ~"5",
+                          time_hm>=hour_index[hour_index$period=="6",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="7",]$time_hm  ~"6",
+                          time_hm>=hour_index[hour_index$period=="7",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="8",]$time_hm  ~"7",
+                          time_hm>=hour_index[hour_index$period=="8",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="9",]$time_hm  ~"8",
+                          time_hm>=hour_index[hour_index$period=="9",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="10",]$time_hm  ~"9",
+                          time_hm>=hour_index[hour_index$period=="10",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="11",]$time_hm  ~"10",
+                          time_hm>=hour_index[hour_index$period=="11",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="12",]$time_hm  ~"11",
+                          time_hm>=hour_index[hour_index$period=="12",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="13",]$time_hm  ~"12",
+                          time_hm>=hour_index[hour_index$period=="13",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="14",]$time_hm  ~"13",
+                          time_hm>=hour_index[hour_index$period=="14",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="15",]$time_hm  ~"14",
+                          time_hm>=hour_index[hour_index$period=="15",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="16",]$time_hm  ~"15",
+                          time_hm>=hour_index[hour_index$period=="16",]$time_hm &
+                            time_hm<hour_index[hour_index$period=="17",]$time_hm  ~"16",
+                          time_hm>=hour_index[hour_index$period=="17",]$time_hm &
+                            time_hm<13.08333  ~"17",
+                          TRUE~"no_school")) %>% 
+  mutate(period_win=case_when(
+                              time_hm>=hour_index[hour_index$period=="1",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="2",]$time_hm  ~"1",
+                              time_hm>=hour_index[hour_index$period=="2",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="3",]$time_hm  ~"1",
+                              time_hm>=hour_index[hour_index$period=="3",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="4",]$time_hm  ~"2",
+                              time_hm>=hour_index[hour_index$period=="4",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="5",]$time_hm  ~"2",
+                              time_hm>=hour_index[hour_index$period=="5",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="6",]$time_hm  ~"3",
+                              time_hm>=hour_index[hour_index$period=="6",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="7",]$time_hm  ~"4",
+                              time_hm>=hour_index[hour_index$period=="7",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="8",]$time_hm  ~"4",
+                              time_hm>=hour_index[hour_index$period=="8",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="9",]$time_hm  ~"5",
+                              time_hm>=hour_index[hour_index$period=="9",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="10",]$time_hm  ~"5",
+                              time_hm>=hour_index[hour_index$period=="10",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="11",]$time_hm  ~"6",
+                              time_hm>=hour_index[hour_index$period=="11",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="12",]$time_hm  ~"7",
+                              time_hm>=hour_index[hour_index$period=="12",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="13",]$time_hm  ~"7",
+                              time_hm>=hour_index[hour_index$period=="13",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="14",]$time_hm  ~"8",
+                              time_hm>=hour_index[hour_index$period=="14",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="15",]$time_hm  ~"8",
+                              time_hm>=hour_index[hour_index$period=="15",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="16",]$time_hm  ~"9",
+                              time_hm>=hour_index[hour_index$period=="16",]$time_hm &
+                                time_hm<hour_index[hour_index$period=="17",]$time_hm  ~"10",
+                              time_hm>=hour_index[hour_index$period=="17",]$time_hm &
+                                time_hm<13.08333  ~"10",
+                          TRUE~"no_school")) %>%
+  rowid_to_column(var="MCF_index")
+
+```
+
+
+
+```{r S4-Sensors-Quest-plots-4, echo=FALSE, message=FALSE, warning=FALSE}
+
+## descriptives for school periods only - 7:45 - 13:05
+
+table_PA_indooroutdoor <- PA_data_period %>% 
+   filter(period_win!="no_school") %>% 
+  group_by(indoor_outdoor, PM) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(final_value, na.rm=TRUE), digits=1),
+                   sd=round(sd(final_value, na.rm=TRUE), digits=1),
+                   min=round(min(final_value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(final_value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(final_value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(final_value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(final_value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_MCF_indooroutdoor <- MCF_data_period %>% 
+      filter(period_win!="no_school") %>% 
+  group_by(indoor_outdoor, name) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(value, na.rm=TRUE), digits=1),
+                   sd=round(sd(value, na.rm=TRUE), digits=1),
+                   min=round(min(value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_PA_district_indooroutdoor <- PA_data_period %>% 
+         filter(period_win!="no_school") %>% 
+  group_by(district, indoor_outdoor, PM) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(final_value, na.rm=TRUE), digits=1),
+                   sd=round(sd(final_value, na.rm=TRUE), digits=1),
+                   min=round(min(final_value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(final_value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(final_value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(final_value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(final_value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_MCF_district_indooroutdoor <- MCF_data_period %>% 
+         filter(period_win!="no_school") %>% 
+  group_by(district, indoor_outdoor, name) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(value, na.rm=TRUE), digits=1),
+                   sd=round(sd(value, na.rm=TRUE), digits=1),
+                   min=round(min(value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_PA_district_degurba_indooroutdoor <- PA_data_period %>% 
+         filter(period_win!="no_school") %>% 
+  group_by(district, degurba, indoor_outdoor, PM) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(final_value, na.rm=TRUE), digits=1),
+                   sd=round(sd(final_value, na.rm=TRUE), digits=1),
+                   min=round(min(final_value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(final_value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(final_value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(final_value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(final_value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_MCF_district_degurba_indooroutdoor <- MCF_data_period %>% 
+         filter(period_win!="no_school") %>% 
+  group_by(district, degurba, name, indoor_outdoor) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(value, na.rm=TRUE), digits=1),
+                   sd=round(sd(value, na.rm=TRUE), digits=1),
+                   min=round(min(value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(value, na.rm=TRUE), digits=1), .groups="drop")
+
+
+## Descriptives for no school period
+table_PA_indooroutdoor_nosch <- PA_data_period %>% 
+   filter(period_win=="no_school") %>% 
+  group_by(indoor_outdoor, PM) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(final_value, na.rm=TRUE), digits=1),
+                   sd=round(sd(final_value, na.rm=TRUE), digits=1),
+                   min=round(min(final_value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(final_value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(final_value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(final_value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(final_value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_MCF_indooroutdoor_nosch <- MCF_data_period %>% 
+   filter(period_win=="no_school") %>% 
+  group_by(indoor_outdoor, name) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(value, na.rm=TRUE), digits=1),
+                   sd=round(sd(value, na.rm=TRUE), digits=1),
+                   min=round(min(value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_PA_district_indooroutdoor_nosch <- PA_data_period %>% 
+   filter(period_win=="no_school") %>% 
+  group_by(district, indoor_outdoor, PM) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(final_value, na.rm=TRUE), digits=1),
+                   sd=round(sd(final_value, na.rm=TRUE), digits=1),
+                   min=round(min(final_value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(final_value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(final_value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(final_value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(final_value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_MCF_district_indooroutdoor_nosch <- MCF_data_period %>% 
+         filter(period_win=="no_school") %>% 
+  group_by(district, indoor_outdoor, name) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(value, na.rm=TRUE), digits=1),
+                   sd=round(sd(value, na.rm=TRUE), digits=1),
+                   min=round(min(value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_PA_district_degurba_indooroutdoor_nosch <- PA_data_period %>% 
+         filter(period_win=="no_school") %>% 
+  group_by(district, degurba, indoor_outdoor, PM) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(final_value, na.rm=TRUE), digits=1),
+                   sd=round(sd(final_value, na.rm=TRUE), digits=1),
+                   min=round(min(final_value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(final_value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(final_value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(final_value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(final_value, na.rm=TRUE), digits=1), .groups="drop")
+
+table_MCF_district_degurba_indooroutdoor_nosch <- MCF_data_period %>% 
+         filter(period_win=="no_school") %>% 
+  group_by(district, degurba, name, indoor_outdoor) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(value, na.rm=TRUE), digits=1),
+                   sd=round(sd(value, na.rm=TRUE), digits=1),
+                   min=round(min(value, na.rm=TRUE), digits=1),
+                   p25=round(quantile(value, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(value, na.rm=TRUE), digits=1),
+                   p75=round(quantile(value, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(value, na.rm=TRUE), digits=1), .groups="drop")
+
+# save PA_data_period and MCF_data_period dataframes
+saveRDS(PA_data_period, file = "produced_data/PA_data_period.rds")
+saveRDS(MCF_data_period, file = "produced_data/MCF_data_period.rds")
+            
+```
+
+# Descriptives of raw values during school periods
+
+`r DT::datatable(table_PA_indooroutdoor, caption="PA data (indoor-outdoor comparison) - school period")`
+
+`r DT::datatable(table_MCF_indooroutdoor, caption = "MCF data (indoor-outdoor comparison) - school period")`
+
+`r DT::datatable(table_PA_district_indooroutdoor, caption = "PA data (district, indoor-outdoor comparison) - school period")`
+
+`r DT::datatable(table_MCF_district_indooroutdoor, caption = "MCF data (district, indoor-outdoor comparison) - school period")`
+
+`r DT::datatable(table_PA_district_degurba_indooroutdoor, caption = "PA data (district,degurba indoor-outdoor comparison) - school period")`
+
+`r DT::datatable(table_MCF_district_degurba_indooroutdoor, caption = "MCF data (district, degurba, indoor-outdoor comparison) - school period")`
+
+# Descriptives of raw values outside school periods
+
+`r DT::datatable(table_PA_indooroutdoor_nosch, caption="PA data (indoor-outdoor comparison) - no school period")`
+
+`r DT::datatable(table_MCF_indooroutdoor_nosch, caption = "MCF data (indoor-outdoor comparison) - no school period")`
+
+`r DT::datatable(table_PA_district_indooroutdoor_nosch, caption = "PA data (district, indoor-outdoor comparison) - no school period")`
+
+`r DT::datatable(table_MCF_district_indooroutdoor_nosch, caption = "MCF data (district, indoor-outdoor comparison) - no school period")`
+
+`r DT::datatable(table_PA_district_degurba_indooroutdoor_nosch, caption = "PA data (district,degurba indoor-outdoor comparison) - no school period")`
+
+`r DT::datatable(table_MCF_district_degurba_indooroutdoor_nosch, caption = "MCF data (district, degurba, indoor-outdoor comparison) - no school period")`
+
+
+```{r S4-Sensors-Quest-plots-5,  echo=FALSE, message=FALSE, warning=FALSE}
+
+# right join questionnaire and samplingdates data - windowsdoors
+quest_sampldate<- windowsdoors_data %>% 
+  right_join(samplingdays, by="SchoolID") %>%
+  filter(SchoolID!="S25") %>% 
+  mutate(samplingdate = as.POSIXct(case_when(samplingday == "d1" ~ samplingday1date,
+                                             samplingday == "d2" ~ samplingday2date,
+                                  TRUE ~ NA_real_)))  %>%
+  mutate(date_hour_start=as.POSIXct(paste0(samplingdate, " ", period_start, ":00"), format="%Y-%m-%d %H:%M:%OS")) %>% 
+  mutate(date_hour_end=as.POSIXct(paste0(samplingdate, " ", period_end, ":00"), format="%Y-%m-%d %H:%M:%OS")) %>% 
+  dplyr::rename(location=ClassID) %>%
+  select (-c(samplingday1date,samplingday2date))  %>%
+  rowid_to_column(var="quest_index")
+
+# right join questionnaire and samplingdates data - ac and fans
+quest_sampldate_acfans<- acfans_data %>% 
+  right_join(samplingdays, by="SchoolID") %>%
+    filter(SchoolID!="S25") %>% 
+  mutate(samplingdate = as.POSIXct(case_when(samplingday == "1" ~ samplingday1date,
+                                             samplingday == "2" ~ samplingday2date,
+                                             TRUE ~ NA_real_)))  %>%
+  mutate(date_hour_start=as.POSIXct(paste0(samplingdate, " ", period_start, ":00"), format="%Y-%m-%d %H:%M:%OS")) %>% 
+  mutate(date_hour_end=as.POSIXct(paste0(samplingdate, " ", period_end, ":00"), format="%Y-%m-%d %H:%M:%OS")) %>% 
+  dplyr::rename(location=ClassID) %>%
+  select (-c(samplingday1date,samplingday2date))  %>%
+  rowid_to_column(var="quest_index")
+
+```
+
+# Tables and Plots of raw and % of open windows, fans, doors, ac by period - school hours (only first sampling day)
+
+```{r S4-Sensors-Quest-plots-6, echo = FALSE, message=FALSE, warning=FALSE}
+
+table_win_doors <- quest_sampldate %>% 
+  mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+  group_by(period_win, class_venttype) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(open_closed_sum, na.rm=TRUE), digits=1),
+                   sd=round(sd(open_closed_sum, na.rm=TRUE), digits=1),
+                   min=round(min(open_closed_sum, na.rm=TRUE), digits=1),
+                   p25=round(quantile(open_closed_sum, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(open_closed_sum, na.rm=TRUE), digits=1),
+                   p75=round(quantile(open_closed_sum, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(open_closed_sum, na.rm=TRUE), digits=1), 
+                   mean_perc = round(mean(percent_open, na.rm=TRUE), digits=1),
+                   sd_perc=round(sd(percent_open, na.rm=TRUE), digits=1),
+                   min_perc=round(min(percent_open, na.rm=TRUE), digits=1),
+                   p25_perc=round(quantile(percent_open, probs=0.25, na.rm=TRUE), digits=1),
+                   median_perc=round(median(percent_open, na.rm=TRUE), digits=1),
+                   p75_perc=round(quantile(percent_open, probs=0.75, na.rm=TRUE), digits=1),
+                   max_perc=round(max(percent_open, na.rm=TRUE), digits=1), .groups="drop")
+
+
+  quest_sampldate_acfans_sum <- quest_sampldate_acfans %>% 
+    mutate(period_win = case_when(period=="1" ~"1",
+                                period=="2" ~"1",
+                                period=="3" ~"2",
+                                period=="4" ~"2",
+                                period=="5" ~"3",
+                                period=="6" ~"4",
+                                period=="7" ~"4",
+                                period=="8" ~"5",
+                                period=="9" ~"5",
+                                period=="10" ~"6",
+                                period=="11" ~"7",
+                                period=="12" ~"7",
+                                period=="13" ~"8",
+                                period=="14" ~"8",
+                                period=="15" ~"9",
+                                period=="16" ~"10",
+                                period=="17" ~"10")) %>% 
+    mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) 
+  
+table_ac_fans <- quest_sampldate_acfans_sum %>% 
+  group_by(period_win, class_venttype) %>% 
+  dplyr::summarise(n=n(),
+                   mean=round(mean(open_closed_sum, na.rm=TRUE), digits=1),
+                   sd=round(sd(open_closed_sum, na.rm=TRUE), digits=1),
+                   min=round(min(open_closed_sum, na.rm=TRUE), digits=1),
+                   p25=round(quantile(open_closed_sum, probs=0.25, na.rm=TRUE), digits=1),
+                   median=round(median(open_closed_sum, na.rm=TRUE), digits=1),
+                   p75=round(quantile(open_closed_sum, probs=0.75, na.rm=TRUE), digits=1),
+                   max=round(max(open_closed_sum, na.rm=TRUE), digits=1), 
+                   mean_perc = round(mean(percent_open, na.rm=TRUE), digits=1),
+                   sd_perc=round(sd(percent_open, na.rm=TRUE), digits=1),
+                   min_perc=round(min(percent_open, na.rm=TRUE), digits=1),
+                   p25_perc=round(quantile(percent_open, probs=0.25, na.rm=TRUE), digits=1),
+                   median_perc=round(median(percent_open, na.rm=TRUE), digits=1),
+                   p75_perc=round(quantile(percent_open, probs=0.75, na.rm=TRUE), digits=1),
+                   max_perc=round(max(percent_open, na.rm=TRUE), digits=1), .groups="drop")
+
+
+# check the plots 
+## windows
+quest_sampldate %>%
+    filter(samplingdate < "2021-06-03") %>% 
+   filter(samplingday == "d1") %>% 
+     mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+   filter(class_venttype=="window") %>%
+   ggplot() +
+   geom_point(aes(x=period_win, y=open_closed_sum, color = location), 
+              position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = 0.5, size = 3) +
+facet_wrap(~SchoolID, ncol=4) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y= "Number of open windows", x = "School period")
+
+quest_sampldate %>%
+    filter(samplingdate >= "2021-06-03") %>% 
+   filter(samplingday == "d1") %>% 
+     mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+   filter(class_venttype=="window") %>%
+   ggplot() +
+   geom_point(aes(x=period_win, y=open_closed_sum, color = location), 
+              position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = 0.5, size = 3) +
+facet_wrap(~SchoolID, ncol=4) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y= "Number of open windows", x = "School period")
+
+quest_sampldate %>%
+    filter(samplingdate < "2021-06-03") %>% 
+   filter(samplingday == "d1") %>% 
+     mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+   filter(class_venttype=="window") %>%
+   ggplot() +
+   geom_point(aes(x=period_win, y=percent_open, color = location), 
+              position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = 0.5, size = 3) +
+facet_wrap(~SchoolID, ncol=4) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y= "% of open windows", x = "School period")
+
+quest_sampldate %>%
+    filter(samplingdate >= "2021-06-03") %>% 
+   filter(samplingday == "d1") %>% 
+     mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+   filter(class_venttype=="window") %>%
+   ggplot() +
+   geom_point(aes(x=period_win, y=percent_open, color = location), 
+              position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = 0.5, size = 3) +
+facet_wrap(~SchoolID, ncol=4) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y= "% of open windows", x = "School period")
+
+## doors
+quest_sampldate %>%
+    filter(samplingdate < "2021-06-03") %>% 
+   filter(samplingday == "d1") %>% 
+     mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+   filter(class_venttype=="door") %>%
+   ggplot() +
+   geom_point(aes(x=period_win, y=open_closed_sum, color = location), 
+              position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = 0.5, size = 3) +
+facet_wrap(~SchoolID, ncol=4) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y= "Number of open doors", x = "School period")
+
+quest_sampldate %>%
+    filter(samplingdate >= "2021-06-03") %>% 
+   filter(samplingday == "d1") %>% 
+     mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+   filter(class_venttype=="door") %>%
+   ggplot() +
+   geom_point(aes(x=period_win, y=open_closed_sum, color = location), 
+              position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = 0.5, size = 3) +
+facet_wrap(~SchoolID, ncol=4) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y= "Number of open doors", x = "School period")
+ 
+quest_sampldate %>%
+    filter(samplingdate < "2021-06-03") %>% 
+   filter(samplingday == "d1") %>% 
+     mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+   filter(class_venttype=="door") %>%
+   ggplot() +
+   geom_point(aes(x=period_win, y=percent_open, color = location), 
+              position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = 0.5, size = 3) +
+facet_wrap(~SchoolID, ncol=4) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y= "% of open doors", x = "School period")
+
+quest_sampldate %>%
+    filter(samplingdate >= "2021-06-03") %>% 
+   filter(samplingday == "d1") %>% 
+     mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+   filter(class_venttype=="door") %>%
+   ggplot() +
+   geom_point(aes(x=period_win, y=percent_open, color = location), 
+              position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = 0.5, size = 3) +
+facet_wrap(~SchoolID, ncol=4) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y= "% of open doors", x = "School period")
+
+
+## fans
+ 
+quest_sampldate_acfans_sum %>%
+ filter(samplingdate >= "2021-06-03") %>% 
+   filter(samplingday == "1") %>% 
+     mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+   filter(class_venttype=="fan") %>%
+   ggplot() +
+   geom_point(aes(x=period_win, y=open_closed_sum, color = location), 
+              position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = 0.5, size = 3) +
+facet_wrap(~SchoolID, ncol=3) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y= "Number of open fans", x = "School period")
+ 
+quest_sampldate_acfans_sum %>%
+ filter(samplingdate < "2021-06-03") %>% 
+   filter(samplingday == "1") %>% 
+     mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+   filter(class_venttype=="fan") %>%
+   ggplot() +
+   geom_point(aes(x=period_win, y=open_closed_sum, color = location), 
+              position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = 0.5, size = 3) +
+facet_wrap(~SchoolID, ncol=3) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y= "Number of open fans", x = "School period")
+
+quest_sampldate_acfans_sum %>%
+ filter(samplingdate >= "2021-06-03") %>% 
+   filter(samplingday == "1") %>% 
+     mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+   filter(class_venttype=="fan") %>%
+   ggplot() +
+   geom_point(aes(x=period_win, y=percent_open, color = location), 
+              position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = 0.5, size = 3) +
+facet_wrap(~SchoolID, ncol=3) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y= "% of open fans", x = "School period")
+ 
+quest_sampldate_acfans_sum %>%
+ filter(samplingdate < "2021-06-03") %>% 
+   filter(samplingday == "1") %>% 
+     mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+   filter(class_venttype=="fan") %>%
+   ggplot() +
+   geom_point(aes(x=period_win, y=percent_open, color = location), 
+              position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = 0.5, size = 3) +
+facet_wrap(~SchoolID, ncol=3) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y= "% of open fans", x = "School period")
+
+## ac
+ 
+quest_sampldate_acfans_sum %>%
+ filter(samplingdate >= "2021-06-03") %>% 
+   filter(samplingday == "1") %>% 
+     mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+   filter(class_venttype=="air-condition") %>%
+   ggplot() +
+   geom_point(aes(x=period_win, y=open_closed_sum, color = location), 
+              position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = 0.5, size = 3) +
+facet_wrap(~SchoolID, ncol=3) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y= "Number of open A/C", x = "School period")
+ 
+quest_sampldate_acfans_sum %>%
+ filter(samplingdate < "2021-06-03") %>% 
+   filter(samplingday == "1") %>% 
+     mutate(period_win = factor(period_win, levels = c("1","2","3","4","5","6","7","8","9","10"))) %>% 
+   filter(class_venttype=="air-condition") %>%
+   ggplot() +
+   geom_point(aes(x=period_win, y=open_closed_sum, color = location), 
+              position=position_jitter(h=0.1, w=0.1), shape = 21, alpha = 0.5, size = 3) +
+facet_wrap(~SchoolID, ncol=3) +
+  scale_color_brewer(palette="Dark2") +
+theme_bw() +
+   theme(legend.position="bottom") +
+  labs(y= "Number of open A/C", x = "School period")
+  
+```
+
+`r kable(print(table_win_doors), caption = "Summary table of windows and doors open during school periods (raw and %)")`
+
+`r kable(print(table_ac_fans), caption = "Summary table of a/c and fans open during school periods (raw and %) - % applies only for fans as if there was an a/c it was only one in a classroom")`
+
+
+```{r S4-Sensors-Quest-plots-7,  echo=FALSE, message=FALSE, warning=FALSE}
+### Merge questionnaire data with sensors data
+#### right join quest_sampldate with PA data 
+
+# merge wind_doors data with PA data
+# extra rows are added because for same period we have info in quest about doors and windows 
+ questPA_wd<- left_join(PA_data_period,quest_sampldate, 
+                     by=c("SchoolID","location","samplingdate","period_win")) %>% 
+   mutate(open_closed_sum=as.factor(open_closed_sum)) %>%
+   mutate(location=as.factor(location))
+ 
+ # merge acfans data with PA data
+ questPA_acfans<- left_join(PA_data_period,quest_sampldate_acfans, 
+                     by=c("SchoolID","location","samplingdate","period")) %>% 
+   mutate(open_closed_sum=as.factor(open_closed_sum)) %>%
+   mutate(location=as.factor(location)) 
+ 
+# bind windows_doors and ac_fans data
+ questPA<-rbind.data.frame(questPA_wd, questPA_acfans) %>%
+   mutate(SchoolID=as.factor(SchoolID)) 
+ 
+ 
+ #### right join quest_sampldate with MCF data 
+
+  # merge wind_doors data with MCF data
+# extra rows are added because for same period we have info in quest about doors and windows 
+ questMCF_wd<- left_join(MCF_data_period,quest_sampldate, 
+                     by=c("SchoolID","location","samplingdate","period_win")) %>% 
+   mutate(open_closed_sum=as.factor(open_closed_sum)) %>%
+   mutate(location=as.factor(location))
+ 
+ # merge acfans data with MCF data
+ questMCF_acfans<- left_join(MCF_data_period,quest_sampldate_acfans, 
+                     by=c("SchoolID","location","samplingdate","period")) %>% 
+   mutate(open_closed_sum=as.factor(open_closed_sum)) %>%
+   mutate(location=as.factor(location)) 
+ 
+# bind windows_doors and ac_fans data
+ questMCF<-rbind.data.frame(questMCF_wd, questMCF_acfans) 
+
+
+  # check with summarize if correct n
+ 
+ sumarize2 <- questPA  %>%
+   group_by(PA_index, SchoolID, location, samplingdate, period_win) %>%
+   dplyr::summarize(num=n())
+ 
+ ## CK: is it logical to have only 1? ....
+ sumarize3 <- questPA_acfans  %>%
+   group_by(PA_index, SchoolID, location, samplingdate, period) %>%
+   dplyr::summarize(num=n())
+ 
+ table<- sumarize2 %>% tabyl (period_win, num) 
+ 
+ 
+# save PAquest and MCFquest dataframes
+saveRDS(questPA, file = "produced_data/questPA.rds")
+saveRDS(questMCF, file = "produced_data/questMCF.rds")
+
+```
+
+# Plots of the PA parameters with % windows-open - school hours (only first sampling day)
+
+Note: The plots were divided in two periods before and after 3 June 2021 to allow for better visualization. All data are plotted only for the first day of sampling and only the time is used in the x-axis.
+
+```{r S4-Sensors-Quest-plots-8,  echo=FALSE, message=FALSE, warning=FALSE}
+
+# prepare factor variable for % windows open
+questPA_plots <- questPA %>% 
+    mutate(open_win = as.factor(case_when(percent_open == 0 ~ "0%",
+                                                percent_open > 0 & percent_open <= 25 ~ "1-25%",
+                                                percent_open > 25 & percent_open <= 50 ~ "26-50%",
+                                                percent_open > 50 & percent_open <= 75 ~ "51-75%",
+                                                percent_open > 75 & percent_open <= 99 ~ "76-99%",
+                                                percent_open == 100 ~ "100%"))) %>% 
+  mutate(open_win = factor(open_win, levels = c("0%", "1-25%", "26-50%","51-75%","76-99%", "100%"))) %>% 
+  droplevels() 
+
+# check the plots 
+ questPA_plots %>%
+   #group_by(name) %>% 
+  filter(EESTDateTime < "2021-06-03") %>% 
+   filter(PM=="pm1_0") %>%
+   filter(period!="no_school") %>%
+   filter(samplingday!="d2") %>% 
+   filter(indoor_outdoor =="indoors") %>% 
+   # if using this then all NA are not present so no school hours are not present in the plot
+   filter(class_venttype=="window") %>%
+   filter(final_value<quantile(final_value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=EESTDateTime, y=final_value)) +
+   geom_smooth(aes(x=EESTDateTime, y=final_value), method="loess", se = F) +
+   geom_vline(aes(xintercept=as.numeric(date_hour_start), color=open_win), size =1.2 ) +
+   #scale_color_brewer(palette="Greens") +
+   scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07","#52854C", "#4E84C4", "#293352"))+
+     facet_wrap(~SchoolID, ncol = 4, scales = "free") + 
+  theme_bw() +
+   theme(axis.text.x = element_text(size=7),
+         axis.text.y = element_text(size=7)) +
+  labs(y= "PM1.0 (ug/m3)", x = "School hours (only first sampling day)")
+ 
+ questPA_plots %>%
+   #group_by(name) %>% 
+  filter(EESTDateTime >= "2021-06-03") %>% 
+   filter(PM=="pm1_0") %>%
+      filter(period!="no_school") %>%
+   filter(samplingday!="d2") %>% 
+   filter(indoor_outdoor =="indoors") %>% 
+   # if using this then all NA are not present so no school hours are not present in the plot
+   filter(class_venttype=="window") %>%
+   filter(final_value<quantile(final_value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=EESTDateTime, y=final_value)) +
+   geom_smooth(aes(x=EESTDateTime, y=final_value), method="loess", se = F) +
+   geom_vline(aes(xintercept=as.numeric(date_hour_start), color=open_win), size =1.2 ) +
+   #scale_color_brewer(palette="Greens") +
+   scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07","#52854C", "#4E84C4", "#293352"))+
+     facet_wrap(~SchoolID, ncol = 4, scales = "free") + 
+  theme_bw() +
+   theme(axis.text.x = element_text(size=7),
+         axis.text.y = element_text(size=7)) +
+  labs(y= "PM1.0 (ug/m3)", x = "School hours (only first sampling day)")
+ 
+   questPA_plots %>%
+   #group_by(name) %>% 
+  filter(EESTDateTime < "2021-06-03") %>% 
+   filter(PM=="pm2_5") %>%
+   filter(period!="no_school") %>%
+   filter(samplingday!="d2") %>% 
+   filter(indoor_outdoor =="indoors") %>% 
+   # if using this then all NA are not present so no school hours are not present in the plot
+   filter(class_venttype=="window") %>%
+   filter(final_value<quantile(final_value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=EESTDateTime, y=final_value)) +
+   geom_smooth(aes(x=EESTDateTime, y=final_value), method="loess", se = F) +
+   geom_vline(aes(xintercept=as.numeric(date_hour_start), color=open_win), size =1.2 ) +
+   #scale_color_brewer(palette="Greens") +
+   scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07","#52854C", "#4E84C4", "#293352"))+
+     facet_wrap(~SchoolID, ncol = 4, scales = "free") + 
+  theme_bw() +
+   theme(axis.text.x = element_text(size=7),
+         axis.text.y = element_text(size=7)) +
+  labs(y= "PM2.5 (ug/m3)", x = "School hours (only first sampling day)")
+ 
+ questPA_plots %>%
+   #group_by(name) %>% 
+  filter(EESTDateTime >= "2021-06-03") %>% 
+   filter(PM=="pm2_5") %>%
+      filter(period!="no_school") %>%
+   filter(samplingday!="d2") %>% 
+   filter(indoor_outdoor =="indoors") %>% 
+   # if using this then all NA are not present so no school hours are not present in the plot
+   filter(class_venttype=="window") %>%
+   filter(final_value<quantile(final_value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=EESTDateTime, y=final_value)) +
+   geom_smooth(aes(x=EESTDateTime, y=final_value), method="loess", se = F) +
+   geom_vline(aes(xintercept=as.numeric(date_hour_start), color=open_win), size =1.2 ) +
+   #scale_color_brewer(palette="Greens") +
+   scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07","#52854C", "#4E84C4", "#293352"))+
+     facet_wrap(~SchoolID, ncol = 4, scales = "free") + 
+  theme_bw() +
+   theme(axis.text.x = element_text(size=7),
+         axis.text.y = element_text(size=7)) +
+  labs(y= "PM2.5 (ug/m3)", x = "School hours (only first sampling day)")
+
+  questPA_plots %>%
+   #group_by(name) %>% 
+  filter(EESTDateTime < "2021-06-03") %>% 
+   filter(PM=="pm10_0") %>%
+   filter(period!="no_school") %>%
+   filter(samplingday!="d2") %>% 
+   filter(indoor_outdoor =="indoors") %>% 
+   # if using this then all NA are not present so no school hours are not present in the plot
+   filter(class_venttype=="window") %>%
+   filter(final_value<quantile(final_value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=EESTDateTime, y=final_value)) +
+   geom_smooth(aes(x=EESTDateTime, y=final_value), method="loess", se = F) +
+   geom_vline(aes(xintercept=as.numeric(date_hour_start), color=open_win), size =1.2 ) +
+   #scale_color_brewer(palette="Greens") +
+   scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07","#52854C", "#4E84C4", "#293352"))+
+     facet_wrap(~SchoolID, ncol = 4, scales = "free") + 
+  theme_bw() +
+   theme(axis.text.x = element_text(size=7),
+         axis.text.y = element_text(size=7)) +
+  labs(y= "PM10 (ug/m3)", x = "School hours (only first sampling day)")
+ 
+ questPA_plots %>%
+   #group_by(name) %>% 
+  filter(EESTDateTime >= "2021-06-03") %>% 
+   filter(PM=="pm10_0") %>%
+      filter(period!="no_school") %>%
+   filter(samplingday!="d2") %>% 
+   filter(indoor_outdoor =="indoors") %>% 
+   # if using this then all NA are not present so no school hours are not present in the plot
+   filter(class_venttype=="window") %>%
+   filter(final_value<quantile(final_value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=EESTDateTime, y=final_value)) +
+   geom_smooth(aes(x=EESTDateTime, y=final_value), method="loess", se = F) +
+   geom_vline(aes(xintercept=as.numeric(date_hour_start), color=open_win), size =1.2 ) +
+   #scale_color_brewer(palette="Greens") +
+   scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07","#52854C", "#4E84C4", "#293352"))+
+     facet_wrap(~SchoolID, ncol = 4, scales = "free") + 
+  theme_bw() +
+   theme(axis.text.x = element_text(size=7),
+         axis.text.y = element_text(size=7)) +
+  labs(y= "PM10 (ug/m3)", x = "School hours (only first sampling day)")
+```
+
+
+# Plots of the MCF parameters with % windows-open - school hours (only first sampling day)
+ 
+Note: The plots were divided in two periods before and after 3 June 2021 to allow for better visualization. All data are plotted only for the first day of sampling and only the time is used in the x-axis.
+ 
+```{r S4-Sensors-Quest-plots-9,  echo=FALSE, message=FALSE, warning=FALSE}
+
+# prepare factor variable for % windows open
+questMCF_plots <- questMCF %>% 
+    mutate(open_win = as.factor(case_when(percent_open == 0 ~ "0%",
+                                                percent_open > 0 & percent_open <= 25 ~ "1-25%",
+                                                percent_open > 25 & percent_open <= 50 ~ "26-50%",
+                                                percent_open > 50 & percent_open <= 75 ~ "51-75%",
+                                                percent_open > 75 & percent_open <= 99 ~ "76-99%",
+                                                percent_open == 100 ~ "100%"))) %>% 
+  mutate(open_win = factor(open_win, levels = c("0%", "1-25%", "26-50%","51-75%","76-99%", "100%"))) %>% 
+  droplevels() 
+
+# check the plots 
+questMCF_plots %>%
+   #group_by(name) %>% 
+  filter(time < "2021-06-03") %>% 
+   filter(name=="temperature") %>%
+   filter(period!="no_school") %>%
+   filter(samplingday!="d2") %>% 
+   filter(indoor_outdoor =="indoors") %>% 
+   filter(class_venttype=="window") %>%
+   filter(value<quantile(value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=time, y=value)) +
+   geom_smooth(aes(x=time, y=value), method="loess", se = F) +
+   geom_vline(aes(xintercept=as.numeric(date_hour_start), color=open_win), size =1.2 ) +
+   #scale_color_brewer(palette="Greens") +
+   scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07","#52854C", "#4E84C4", "#293352"))+
+     facet_wrap(~SchoolID, ncol = 4, scales = "free") + 
+  theme_bw() +
+   theme(axis.text.x = element_text(size=7),
+         axis.text.y = element_text(size=7)) +
+  labs(y= "Temperature (C)", x = "School hours (only first sampling day)")
+ 
+ questMCF_plots %>%
+   #group_by(name) %>% 
+  filter(time >= "2021-06-03") %>% 
+  filter(name=="temperature") %>%
+   filter(period!="no_school") %>%
+   filter(samplingday!="d2") %>% 
+   filter(indoor_outdoor =="indoors") %>% 
+   # if using this then all NA are not present so no school hours are not present in the plot
+   filter(class_venttype=="window") %>%
+   filter(value<quantile(value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=time, y=value)) +
+   geom_smooth(aes(x=time, y=value), method="loess", se = F) +
+   geom_vline(aes(xintercept=as.numeric(date_hour_start), color=open_win), size =1.2 ) +
+   #scale_color_brewer(palette="Greens") +
+   scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07","#52854C", "#4E84C4", "#293352"))+
+     facet_wrap(~SchoolID, ncol = 4, scales = "free") + 
+  theme_bw() +
+   theme(axis.text.x = element_text(size=7),
+         axis.text.y = element_text(size=7)) +
+  labs(y= "Temperature (C)", x = "School hours (only first sampling day)")
+ 
+ questMCF_plots %>%
+   #group_by(name) %>% 
+  filter(time < "2021-06-03") %>% 
+   filter(name=="humidity") %>%
+   filter(period!="no_school") %>%
+   filter(samplingday!="d2") %>% 
+   filter(indoor_outdoor =="indoors") %>% 
+   # if using this then all NA are not present so no school hours are not present in the plot
+   filter(class_venttype=="window") %>%
+   filter(value<quantile(value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=time, y=value)) +
+   geom_smooth(aes(x=time, y=value), method="loess", se = F) +
+   geom_vline(aes(xintercept=as.numeric(date_hour_start), color=open_win), size =1.2 ) +
+   #scale_color_brewer(palette="Greens") +
+   scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07","#52854C", "#4E84C4", "#293352"))+
+     facet_wrap(~SchoolID, ncol = 4, scales = "free") + 
+  theme_bw() +
+   theme(axis.text.x = element_text(size=7),
+         axis.text.y = element_text(size=7)) +
+  labs(y= "Rel. Humidity (%)", x = "School hours (only first sampling day)")
+ 
+ questMCF_plots %>%
+   #group_by(name) %>% 
+  filter(time >= "2021-06-03") %>% 
+  filter(name=="humidity") %>%
+   filter(period!="no_school") %>%
+   filter(samplingday!="d2") %>% 
+   filter(indoor_outdoor =="indoors") %>% 
+   # if using this then all NA are not present so no school hours are not present in the plot
+   filter(class_venttype=="window") %>%
+   filter(value<quantile(value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=time, y=value)) +
+   geom_smooth(aes(x=time, y=value), method="loess", se = F) +
+   geom_vline(aes(xintercept=as.numeric(date_hour_start), color=open_win), size =1.2 ) +
+   #scale_color_brewer(palette="Greens") +
+   scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07","#52854C", "#4E84C4", "#293352"))+
+     facet_wrap(~SchoolID, ncol = 4, scales = "free") + 
+  theme_bw() +
+   theme(axis.text.x = element_text(size=7),
+         axis.text.y = element_text(size=7)) +
+  labs(y= "Rel. Humidity (%)", x = "School hours (only first sampling day)")
+ 
+  questMCF_plots %>%
+   #group_by(name) %>% 
+  filter(time < "2021-06-03") %>% 
+   filter(name=="carbon_dioxide") %>%
+   filter(period!="no_school") %>%
+   filter(samplingday!="d2") %>% 
+   filter(indoor_outdoor =="indoors") %>% 
+   # if using this then all NA are not present so no school hours are not present in the plot
+   filter(class_venttype=="window") %>%
+   filter(value<quantile(value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=time, y=value)) +
+   geom_smooth(aes(x=time, y=value), method="loess", se = F) +
+   geom_vline(aes(xintercept=as.numeric(date_hour_start), color=open_win), size =1.2 ) +
+   #scale_color_brewer(palette="Greens") +
+   scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07","#52854C", "#4E84C4", "#293352"))+
+     facet_wrap(~SchoolID, ncol = 4, scales = "free") + 
+  theme_bw() +
+   theme(axis.text.x = element_text(size=7),
+         axis.text.y = element_text(size=7)) +
+  labs(y= "CO2 (ppm)", x = "School hours (only first sampling day)")
+ 
+ questMCF_plots %>%
+   #group_by(name) %>% 
+  filter(time >= "2021-06-03") %>% 
+   filter(name=="carbon_dioxide") %>%
+   filter(period!="no_school") %>%
+   filter(samplingday!="d2") %>% 
+   filter(indoor_outdoor =="indoors") %>% 
+   # if using this then all NA are not present so no school hours are not present in the plot
+   filter(class_venttype=="window") %>%
+   filter(value<quantile(value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=time, y=value)) +
+   geom_smooth(aes(x=time, y=value), method="loess", se = F) +
+   geom_vline(aes(xintercept=as.numeric(date_hour_start), color=open_win), size =1.2 ) +
+   #scale_color_brewer(palette="Greens") +
+   scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07","#52854C", "#4E84C4", "#293352"))+
+     facet_wrap(~SchoolID, ncol = 4, scales = "free") + 
+  theme_bw() +
+   theme(axis.text.x = element_text(size=7),
+         axis.text.y = element_text(size=7)) +
+  labs(y= "CO2 (ppm)", x = "School hours (only first sampling day)")
+ 
+   questMCF_plots %>%
+   #group_by(name) %>% 
+  filter(time < "2021-06-03") %>% 
+   filter(name=="b_voc") %>%
+   filter(period!="no_school") %>%
+   filter(samplingday!="d2") %>% 
+   filter(indoor_outdoor =="indoors") %>% 
+   # if using this then all NA are not present so no school hours are not present in the plot
+   filter(class_venttype=="window") %>%
+   filter(value<quantile(value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=time, y=value)) +
+   geom_smooth(aes(x=time, y=value), method="loess", se = F) +
+   geom_vline(aes(xintercept=as.numeric(date_hour_start), color=open_win), size =1.2 ) +
+   #scale_color_brewer(palette="Greens") +
+   scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07","#52854C", "#4E84C4", "#293352"))+
+     facet_wrap(~SchoolID, ncol = 4, scales = "free") + 
+  theme_bw() +
+   theme(axis.text.x = element_text(size=7),
+         axis.text.y = element_text(size=7)) +
+  labs(y= "VOCs (ppb)", x = "School hours (only first sampling day)")
+ 
+ questMCF_plots %>%
+   #group_by(name) %>% 
+  filter(time >= "2021-06-03") %>% 
+ filter(name=="b_voc") %>%
+   filter(period!="no_school") %>%
+   filter(samplingday!="d2") %>% 
+   filter(indoor_outdoor =="indoors") %>% 
+   # if using this then all NA are not present so no school hours are not present in the plot
+   filter(class_venttype=="window") %>%
+   filter(value<quantile(value, probs=0.99, na.rm=TRUE)) %>%
+   ggplot() +
+   geom_point(aes(x=time, y=value)) +
+   geom_smooth(aes(x=time, y=value), method="loess", se = F) +
+   geom_vline(aes(xintercept=as.numeric(date_hour_start), color=open_win), size =1.2 ) +
+   #scale_color_brewer(palette="Greens") +
+   scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07","#52854C", "#4E84C4", "#293352"))+
+     facet_wrap(~SchoolID, ncol = 4, scales = "free") + 
+  theme_bw() +
+   theme(axis.text.x = element_text(size=7),
+         axis.text.y = element_text(size=7)) +
+  labs(y= "VOCs (ppb)", x = "School hours (only first sampling day)")
+```
+
+
+# Session Information
+
+```{r S4 }
+sessionInfo()
+```

@@ -1,0 +1,758 @@
+---
+title: "STEPS Study: MCF and PA data import and finalization"
+author: "C. Konstantinou and X. Andrianou @ Water and Health Laboratory, CII-CUT"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  rmdformats::downcute:
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    highlight: tango
+---
+
+
+```{r S1-PA-MCF-data-1,  echo=FALSE, include=FALSE}
+
+## Prepare workspace & install libraries
+rm(list = ls(all = TRUE))
+
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg)) 
+    install.packages(new.pkg, dependencies = TRUE)
+  sapply(pkg, require, character.only = TRUE)
+}
+
+# usage
+packages <- c("readr", "dplyr", "tidyverse", "tabulizer", "stringr", 
+              "lubridate", "janitor", "weathermetrics",
+              "readxl")
+
+ipak(packages)
+
+```
+
+
+# MCF data imported
+
+```{r S1-PA-MCF-data-2,  echo=FALSE, message=FALSE, warning=FALSE}
+
+all_filesM<- list.files(path="rawData/MCF_school_exported_data_20210908_renamed",
+                  pattern= ".csv",
+                  recursive = TRUE,
+                  full.names = TRUE)
+dataset_M <- data.frame()
+
+#summary_collected_dataM <- data.frame() %>% 
+#  add_column("SchoolID", "SensorID", "Date", "Start", "End")
+
+process_logM <- data.frame(SchoolID=character(), 
+                          SensorID=character(), 
+                          file=character(), 
+                          Start=POSIXct(tz = "Europe/Nicosia"), 
+                          End=POSIXct(tz = "Europe/Nicosia"), 
+                          n.Entries=double(), DataAssessment=character())
+
+for(i in 1:length(all_filesM)){ 
+ 
+  print(paste0("I: ", i))
+  print(all_filesM[i])
+ 
+  
+  temp <- read_csv(all_filesM[i]) %>% 
+    clean_names() %>% 
+    select(-measurement_unit)  %>% 
+    filter(str_detect(sensor, "_M")) %>% 
+    pivot_wider(id_cols = c("sensor", "time"), names_from = "physical_property", values_from = "value") %>% 
+    clean_names() %>% 
+    dplyr::rename(SensorID=sensor) %>% 
+    mutate(SchoolID=substr(SensorID, start=1, stop = 3))
+  # check
+  if(nrow(temp)!=0){
+    
+    
+  dataset_M <- bind_rows(dataset_M, temp)
+   
+  
+    # TAKE UNIQUE SENSOR ID
+    # SUBSET PER SENSOR ID
+    # FOR (LOOP) EACH OF THE IDS COUNT AND ADD ROWS ETC..
+    
+  for_logM <- temp %>% 
+    group_by(SchoolID, SensorID) %>% 
+    summarise(n.Entries=n(), 
+              Start=min(temp$time, na.rm=T), End=max(temp$time, na.rm = T),
+              .groups = "drop") %>% 
+    mutate(file=all_filesM[i],
+           DataAssessment="Data_added")
+  
+  # log
+  process_logM <- bind_rows(process_logM, for_logM)
+  rm(for_logM)
+  print("Result: added to the main dataset with all the MCF data")
+  }
+  
+    if(nrow(temp)==0){
+      # if no data from MCF but data from PA include them in the log
+      #load again and get the info for the school from the PA recorded data
+      metadata_for_log <- read_csv(all_filesM[i]) %>% 
+    clean_names() %>% 
+    select( -measurement_unit)  %>% 
+    filter(str_detect(sensor, "_P")) %>% 
+    dplyr::rename(SensorID=sensor) %>% 
+    mutate(SchoolID=substr(SensorID, start=1, stop = 3)) %>% 
+        group_by(SchoolID, SensorID) %>% 
+    summarise(n.Entries=n(), 
+              Start=min(temp$time, na.rm=T), End=max(temp$time, na.rm = T),
+              .groups = "drop") %>% 
+    mutate(file=all_filesM[i],
+           DataAssessment="NO_data")
+      
+      # log
+  process_logM <- bind_rows(process_logM, metadata_for_log)
+  
+  rm(metadata_for_log)
+  
+  print("Result:  NO additions to the main dataset with all the PA data (no data recorded in the file)")
+  }
+  
+  rm(temp)
+}
+
+```
+
+
+# PA data imported
+
+```{r S1-PA-MCF-data-3,  echo=FALSE, message=FALSE, warning=FALSE}
+#reading the data
+all_filesP<- list.files(path="rawData/PA_Data_copy",
+                  pattern= ".csv",
+                  recursive = TRUE,
+                  full.names = TRUE)
+
+filesP_index <- as.data.frame(all_filesP) %>% 
+  separate(all_filesP, sep = "/", into=c("rawData", "PA_Data_copy", "SchoolID", "SensorID", "csv_name"), remove = F) %>% 
+  mutate(Date=ymd(str_extract(csv_name, "^\\d+")))
+
+# from this you can prepare the summary
+process_logP <- data.frame(SchoolID=character(), 
+                          SensorID=character(), 
+                          CSV_Date=dmy(), 
+                          Start=POSIXct(tz = "Europe/Nicosia"), 
+                          End=POSIXct(tz = "Europe/Nicosia"), 
+                          n.Entries=double(), DataAssessment=character())
+
+#initiating the dataframe to load the PA data
+dataset_P <- data.frame()
+
+for(i in 1:nrow(filesP_index)){ 
+  temp <- read_csv(filesP_index$all_filesP[i], 
+                   col_types =cols(
+                     UTCDateTime = col_character(),
+                     mac_address = col_character(),
+                     firmware_ver = col_double(),
+                     hardware = col_character(),
+                     current_temp_f = col_double(),
+                     current_humidity = col_double(),
+                     current_dewpoint_f = col_double(),
+                     pressure = col_double(),
+                     adc = col_double(),
+                     mem = col_double(),
+                     rssi = col_double(),
+                     uptime = col_double(),
+                     pm1_0_cf_1 = col_double(),
+                     pm2_5_cf_1 = col_double(),
+                     pm10_0_cf_1 = col_double(),
+                     pm1_0_atm = col_double(),
+                     pm2_5_atm = col_double(),
+                     pm10_0_atm = col_double(),
+                     pm2.5_aqi_cf_1 = col_double(),
+                     pm2.5_aqi_atm = col_double(),
+                     p_0_3_um = col_double(),
+                     p_0_5_um = col_double(),
+                     p_1_0_um = col_double(),
+                     p_2_5_um = col_double(),
+                     p_5_0_um = col_double(),
+                     p_10_0_um = col_double(),
+                     pm1_0_cf_1_b = col_double(),
+                     pm2_5_cf_1_b = col_double(),
+                     pm10_0_cf_1_b = col_double(),
+                     pm1_0_atm_b = col_double(),
+                     pm2_5_atm_b = col_double(),
+                     pm10_0_atm_b = col_double(),
+                     pm2.5_aqi_cf_1_b = col_double(),
+                     pm2.5_aqi_atm_b = col_double(),
+                     p_0_3_um_b = col_double(),
+                     p_0_5_um_b = col_double(),
+                     p_1_0_um_b = col_double(),
+                     p_2_5_um_b = col_double(),
+                     p_5_0_um_b = col_double(),
+                     p_10_0_um_b = col_character(),
+                     gas = col_character()), na = "") 
+
+  # check
+  
+  if(nrow(temp)!=0){
+  
+  temp2 <- temp %>% 
+    dplyr::rename(p_10_0_um_b_original=p_10_0_um_b) %>% 
+    mutate(p_10_0_um_b=as.numeric(as.character(paste0(str_extract(p_10_0_um_b_original, pattern = "\\d+"), #check if there is codebook
+                                                       str_extract(p_10_0_um_b_original, pattern = "\\.(\\d+)"))))) %>%
+    mutate(EESTDateTime = with_tz(as_datetime(UTCDateTime), tzone="Europe/Nicosia")) %>% #format the date (to EEST)
+    mutate(current_temp_f_adj=current_temp_f - 8)  %>%  #convert F to Celsius
+    mutate(current_temp_c=fahrenheit.to.celsius(current_temp_f_adj))  %>%  #convert F to Celsius
+    mutate(SensorID=filesP_index$SensorID[i],
+           SchoolID=filesP_index$SchoolID[i]) 
+  
+  dataset_P <- bind_rows(dataset_P, temp2)
+   
+  # log
+  process_logP <- process_logP %>% 
+    add_row(SchoolID=temp2$SchoolID[1], 
+            SensorID=temp2$SensorID[1], 
+            CSV_Date=filesP_index$Date[i],  
+            Start=min(temp2$EESTDateTime, na.rm=T), End=max(temp2$EESTDateTime, na.rm = T), 
+            n.Entries=nrow(temp2), DataAssessment="Data_added")
+  
+  print("Result: added to the main dataset with all the PA data")
+  rm(temp2)
+  }
+  
+  if(nrow(temp)==0){
+    
+    # Using the file metadata
+    
+  process_logP <- process_logP %>% 
+    add_row(SchoolID=filesP_index$SchoolID[i], 
+            SensorID=filesP_index$SensorID[i], 
+            CSV_Date=filesP_index$Date[i],  
+            n.Entries=nrow(temp), DataAssessment="NO_data")
+  
+  print("Result: NO additions to the main dataset with all the PA data (no data recorded in the file)")
+  
+  }
+  
+  rm(temp)
+  
+  # Warning: Problem with `mutate()` column `p_10_0_um_b`.
+  #   i `p_10_0_um_b = as.numeric(...)`.
+  #   i One or more parsing issues, see `problems()` for details
+  # --- no action for now as there doesnt seem to be a problem 
+  
+ # Error in rename(., p_10_0_um_b_original = "p_10_0_um_b") :                                          0s
+#  unused argument (p_10_0_um_b_original = "p_10_0_um_b")
+  #CK: I removed the "" from the name and it worked 
+}        
+```
+
+
+## Save PA and MCF raw data in rds format 
+
+```{r S1-PA-MCF-data-4,  echo=FALSE, message=FALSE, warning=FALSE}
+if(!file.exists("producted_data")){
+          
+        dir.create("produced_data")}
+
+ # save MCF and PA dataframes for temp check
+saveRDS(dataset_M, file="produced_data/dataset_M.rds")
+saveRDS(dataset_P, file="produced_data/dataset_P.rds")
+```
+
+# Continuing the mergining and cleaning of the data
+
+## Merge MCF data with Study log data
+```{r S1-PA-MCF-data-5,echo=FALSE, message=FALSE, warning=FALSE}
+
+# a check on the variables and units for the files downloaded from domognostics
+check <- read_csv(all_filesM[1]) %>% 
+  clean_names() %>% 
+  separate(sensor, sep="_", into = c(NA, NA, "sensor", NA)) %>% 
+  select(sensor, measurement_unit, physical_property) %>% 
+  group_by(sensor, measurement_unit, physical_property) %>% 
+  dplyr::summarise(n=n()) 
+
+# > print(check)
+# # A tibble: 22 x 4
+# # Groups:   sensor, measurement_unit [15]
+# sensor measurement_unit           physical_property                        n
+# <chr>  <chr>                      <chr>                                <int>
+#   1 M      Celsius                    Temperature                            274
+# 2 M      Parts Per Billion          bVOC                                   274
+# 3 M      Parts Per Million          Carbon Dioxide                         274
+# 4 M      Relative                   Humidity                               274
+
+# Warning message:
+# Expected 4 pieces. Missing pieces filled with `NA` in 69800 rows [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, # 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...]. 
+
+# read study log file
+Study_log_210510_DA_copy <- read_excel("rawData/Study_log_210510_DA_copy.xlsx") %>% 
+  clean_names() %>% 
+  dplyr::rename(SchoolID=school_id)
+
+# prepare exclusions index dataset with classes that are deemed problematic based on teachers
+exclusions_index <- Study_log_210510_DA_copy %>% 
+  select(SchoolID, exclude) %>% 
+  filter(!is.na(exclude)) %>% 
+  separate(exclude, into=c("one", "two"), sep = "_") %>% 
+  pivot_longer(cols = c("one", "two"), values_to = "classroom_to_exclude") %>% 
+  filter(!is.na(classroom_to_exclude)) %>% 
+  select(-name) %>% 
+  mutate(M_codes=paste0(SchoolID, "_", classroom_to_exclude, "_M"),
+         P_codes=paste0(SchoolID, "_", classroom_to_exclude, "_P"),
+         school_class=paste0(SchoolID, "_", classroom_to_exclude),
+         exclusion="yes") 
+
+dataset_M_final <- dataset_M %>% 
+  left_join(., select(Study_log_210510_DA_copy, SchoolID, district, degurba), by="SchoolID") %>% 
+  left_join(., select(exclusions_index, P_codes, exclusion), by=c("SensorID"="P_codes")) %>% 
+  mutate(location=substr(SensorID, start = 5, stop=6)) %>% 
+  pivot_longer(cols=c("carbon_dioxide", "humidity", "b_voc", "temperature")) 
+
+# save MCF final dataframe for merging with questionnaire data
+saveRDS(dataset_M_final, file="produced_data/dataset_M_final.rds")
+
+```
+
+## PA data finalization
+
+•	PA CODEBOOK: Each sensor contains two identical laser counters, hence channel A and B. If these two channels do not agree to some extent then there is something wrong with one or both channels.
+
+Steps:
+
++ Check number of values with RSD > 20%, absolute difference > 5, absolute difference/mean > 50% - summary tables and plots
++ Conservative Decision of values to keep: 
+- If absdiff > 5 OR difftomean above 50 percent -> remove points (NA)
+ else keep the mean of the two channels
+ 
+### Merge PA data with Study log data
+
+
+```{r S1-PA-MCF-data-6, echo=FALSE, message=FALSE, warning=FALSE}
+
+# PA: Codebook in folder and email communication with company
+## Select variables in atm for OD and in cf for Classrooms 
+#  two channels A and B - take average
+## Notes by company - PA-II NOTES: 
+## Each sensor contains two identical laser counters, hence channel A and B. If these two channels 
+## do not agree to some extent then there is something wrong with one or both channels.
+
+
+dataset_P_classes <- dataset_P %>%
+  select(EESTDateTime, SchoolID, SensorID, contains("_cf"), -contains("aqi")) %>% 
+  mutate(location=substr(SensorID, start = 5, stop=6)) %>% 
+  filter(location!="OD") %>% 
+  pivot_longer(cols=starts_with("pm"))  %>% 
+  separate(name, into=c("PM", "channel_prelim"), sep = "_cf_1") %>%
+  # case_when use - 
+  mutate(channel=case_when(channel_prelim=="_b"~"b",
+                            channel_prelim==""~"a")) %>% 
+  mutate(SchoolID=as.factor(SchoolID)) %>% 
+  select(-channel_prelim)
+
+# Create dataset for PA data for outdoor - select both channels and _atm
+dataset_P_OD <- dataset_P %>%
+  select(EESTDateTime, SchoolID, SensorID, contains("_atm"), -contains("aqi")) %>% 
+  mutate(location=substr(SensorID, start = 5, stop=6)) %>% 
+  filter(location=="OD") %>% 
+  pivot_longer(cols=starts_with("pm"))  %>% 
+  separate(name, into=c("PM", "channel_prelim"), sep = "_atm") %>%  
+  mutate(channel=case_when(channel_prelim=="_b"~"b",
+                            channel_prelim==""~"a")) %>% 
+  mutate(SchoolID=as.factor(SchoolID)) %>% 
+  select(-channel_prelim)
+
+
+dataset_P_analysis <- bind_rows(dataset_P_classes, dataset_P_OD)
+
+# create variables that show the mean, sd, rsd, absolute difference, absolute differnce/mean
+dataset_P_analysis_stats <- dataset_P_analysis %>% 
+  pivot_wider(names_from = channel, values_from = value) %>% 
+  rowwise() %>% 
+  mutate(ab_mean=mean(c(a, b), na.rm = T),
+         ab_sd=sd(c(a, b), na.rm=T),
+         ab_min=min(c(a, b), na.rm=T),
+         ab_max=max(c(a, b), na.rm=T)) %>% 
+  ungroup() %>% 
+  mutate(ab_rsd=(ab_sd/ab_mean)*100) %>% 
+  mutate(ab_absdiff=abs(a-b)) %>% 
+  mutate(ab_diff_to_mean=(abs(a-b)/ab_mean)*100)
+
+
+dataset_P_prep <- dataset_P_analysis_stats %>% 
+  # create variables for indoor-outdoor
+  mutate(indoor_outdoor=case_when(location=="C1"~"indoors",
+                                  location=="C2"~"indoors",
+                                  location=="OD"~"outdoors")) %>% 
+  # create variable for above and below 20% for RSD
+  mutate(rsd_20perc=case_when(ab_rsd>20~"above20perc",
+                          ab_rsd<=20~"below_eq20perc",
+                          is.na(ab_rsd)~NA_character_,
+                          TRUE~"problem"),
+           # create variable for above and below 5 for absolute difference
+         absdiff_5=case_when(ab_absdiff>=5~"above_eq5",
+                          ab_absdiff<5~"below5",
+                          is.na(ab_absdiff)~NA_character_,
+                          TRUE~"problem"),
+                    # create variable for above and below 50% for absolute difference/mean
+         absdiff_to_mean_50perc=case_when(ab_diff_to_mean>=50~"above_eq50perc",
+                          ab_diff_to_mean<50~"below50perc",
+                          is.na(ab_diff_to_mean)~NA_character_,
+                          TRUE~"problem")) %>% 
+  mutate(remove_rsd_above20perc=case_when(rsd_20perc=="above20perc"~"yes",
+                                          TRUE~"no"),
+         remove_absdiff_AND_above5_difftomean_above50perc=case_when(absdiff_5=="above_eq5" & absdiff_to_mean_50perc=="above_eq50perc"~"yes",
+                                                                TRUE~"no"),
+         remove_absdiff_OR_above5_difftomean_above50perc=case_when(absdiff_5=="above_eq5" | absdiff_to_mean_50perc=="above_eq50perc"~"yes",
+                                                                TRUE~"no"))
+
+
+tabyl(dataset_P_prep, remove_rsd_above20perc)
+
+tabyl(dataset_P_prep, absdiff_to_mean_50perc)
+
+tabyl(dataset_P_prep, remove_absdiff_AND_above5_difftomean_above50perc)
+
+tabyl(dataset_P_prep, remove_absdiff_OR_above5_difftomean_above50perc)
+
+# decision to remove points with absdiff above5 OR difftomean above 50 percent and for the rest points to keep the mean
+dataset_P_final <- dataset_P_prep %>% 
+mutate(final_value=case_when(remove_absdiff_OR_above5_difftomean_above50perc=="no" ~ ab_mean,
+                                                                TRUE~ NA_real_))
+
+dataset_P_final <- dataset_P_final %>% 
+  left_join(., select(Study_log_210510_DA_copy, SchoolID, district, degurba), by="SchoolID") %>% 
+  left_join(., select(exclusions_index, P_codes, exclusion), by=c("SensorID"="P_codes"))
+
+# save PA final dataframe after decision for which points we are keeping for merging with questionnaire data
+saveRDS(dataset_P_final, file="produced_data/dataset_P_final_forquestionnaires.rds")
+
+```
+
+## PA plots
+
+```{r S1-PA-MCF-data-7, echo=FALSE, message=FALSE, warning=FALSE}
+if(!file.exists("plots")){
+          
+        dir.create("plots")}
+  
+#plot after applying RSD - average values for outdoor data - 99th percentile
+ab_mean_plot_all<-ggplot(dataset_P_final) +
+  geom_jitter(aes(y=ab_mean, x=EESTDateTime, 
+                  color=remove_absdiff_OR_above5_difftomean_above50perc,
+                  shape=remove_absdiff_OR_above5_difftomean_above50perc), 
+              alpha=0.7) +
+  scale_shape_manual(values=c(1,4)) +
+  scale_color_manual(values=c("gold3", "black")) +
+  facet_grid(PM~indoor_outdoor+remove_absdiff_OR_above5_difftomean_above50perc, scales = "free") +
+  labs(caption="Including all points") +
+  theme_bw()+
+  theme(legend.position = "bottom")
+ab_mean_plot_all
+
+rm(ab_mean_plot_all)
+#ggsave(plot = ab_mean_plot_all, filename = "plots/ab_mean_plot_all.png", dpi=100)
+```
+
+```{r S1-PA-MCF-data-8, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+# mean all
+p99_abs_mean <- quantile(dataset_P_final$ab_mean, probs=0.99, na.rm=TRUE)
+
+ab_mean_plot_all2<-ggplot(filter(dataset_P_final, ab_mean<p99_abs_mean)) +
+  geom_jitter(aes(y=ab_mean, x=EESTDateTime, 
+                  color=remove_absdiff_OR_above5_difftomean_above50perc,
+                  shape=remove_absdiff_OR_above5_difftomean_above50perc), 
+              alpha=0.7) +
+  scale_shape_manual(values=c(1,4)) +
+  scale_color_manual(values=c("gold3", "black")) +
+  facet_grid(PM~indoor_outdoor+remove_absdiff_OR_above5_difftomean_above50perc, scales = "free") +
+  labs(caption="Including only <99th perc mean values") +
+  theme_bw()+
+  theme(legend.position = "bottom")
+ab_mean_plot_all2
+
+rm(ab_mean_plot_all2)
+
+#ggsave(plot = ab_mean_plot_all2, filename = "plots/ab_mean_plot_all2.png", dpi=100)
+```
+
+```{r S1-PA-MCF-data-9, echo=FALSE, message=FALSE, warning=FALSE}
+
+# Including rsd only
+
+
+ab_rsd_plot_all<-ggplot(dataset_P_final)+
+  geom_jitter(aes(y=ab_rsd, x=EESTDateTime, 
+                  color=remove_rsd_above20perc,
+                  shape=remove_rsd_above20perc), 
+              alpha=0.7) +
+  scale_shape_manual(values=c(1,4)) +
+  scale_color_manual(values=c("gold3", "black")) +
+  facet_grid(PM~indoor_outdoor, scales = "free") +
+  labs(caption="Including all points") +
+  theme_bw()+
+  theme(legend.position = "bottom")
+ab_rsd_plot_all
+
+
+rm(ab_rsd_plot_all)
+#ggsave(plot = ab_rsd_plot_all, filename = "plots/ab_rsd_plot_all.png", dpi=100)
+```
+
+```{r S1-PA-MCF-data-10, echo=FALSE, message=FALSE, warning=FALSE}
+
+ab_rsd_plot_all2<-ggplot(filter(dataset_P_final, ab_mean<p99_abs_mean))+
+  geom_jitter(aes(y=ab_rsd, x=EESTDateTime, 
+                  color=remove_rsd_above20perc,
+                  shape=remove_rsd_above20perc), 
+              alpha=0.7) +
+  scale_shape_manual(values=c(1,4)) +
+  scale_color_manual(values=c("gold3", "black")) +
+  facet_grid(PM~indoor_outdoor, scales = "free") +
+  labs(caption="Including all points < 99th percentile of mean") +
+  theme_bw()+
+  theme(legend.position = "bottom")
+ab_rsd_plot_all2
+rm(ab_rsd_plot_all2)
+#ggsave(plot = ab_rsd_plot_all2, filename = "plots/ab_rsd_plot_all2.png", dpi=100)
+```
+
+```{r S1-PA-MCF-data-11, echo=FALSE, message=FALSE, warning=FALSE}
+
+ab_mean_rsd_plot_all<-ggplot(dataset_P_final)+
+  geom_jitter(aes(y=ab_mean, x=ab_rsd, 
+                  color=remove_rsd_above20perc,
+                  shape=remove_rsd_above20perc), 
+              alpha=0.7) +
+  scale_shape_manual(values=c(1,4)) +
+  scale_color_manual(values=c("gold3", "black")) +
+  facet_grid(PM~indoor_outdoor, scales = "free") +
+  labs(caption="Including all points") +
+  theme_bw()+
+  theme(legend.position = "bottom")
+ab_mean_rsd_plot_all
+
+rm(ab_mean_rsd_plot_all)
+```
+
+```{r S1-PA-MCF-data-12, echo=FALSE, message=FALSE, warning=FALSE}
+
+#ggsave(plot = ab_mean_rsd_plot_all, filename = "plots/ab_mean_rsd_plot_all.png", dpi=100)
+
+
+ab_mean_rsd_plot_all2<-ggplot(filter(dataset_P_final, ab_mean<p99_abs_mean))+
+  geom_jitter(aes(y=ab_mean, x=ab_rsd, 
+                  color=remove_rsd_above20perc,
+                  shape=remove_rsd_above20perc), 
+              alpha=0.7) +
+  scale_shape_manual(values=c(1,4)) +
+  scale_color_manual(values=c("gold3", "black")) +
+  facet_grid(PM~indoor_outdoor, scales = "free") +
+  labs(caption="Including all points < 99th percentile of mean") +
+  theme_bw()+
+  theme(legend.position = "bottom")
+ab_mean_rsd_plot_all2
+
+rm(ab_mean_rsd_plot_all2)
+
+
+#ggsave(plot = ab_mean_rsd_plot_all2, filename = "plots/ab_mean_rsd_plot_all2.png", dpi=100)
+```
+
+```{r S1-PA-MCF-data-13, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+ab_absdiff_plot<-ggplot(dataset_P_final) +
+  geom_point(aes(x=EESTDateTime, y=ab_absdiff, 
+                 color=remove_absdiff_OR_above5_difftomean_above50perc,
+                 shape=remove_absdiff_OR_above5_difftomean_above50perc), alpha=0.7) +
+  geom_hline(aes(yintercept=5)) +
+  scale_shape_manual(values=c(1,4)) +
+  scale_color_manual(values=c("gold3", "black")) +
+  facet_grid(PM~indoor_outdoor, scales = "free") +
+  labs(caption="Including all points") +
+  theme_bw()+
+  theme(legend.position = "bottom")
+
+ab_absdiff_plot
+
+rm(ab_absdiff_plot)
+
+#ggsave(plot = ab_absdiff_plot, filename = "plots/ab_absdiff_plot.png", dpi=100)
+```
+
+```{r S1-PA-MCF-data-14, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+ab_diff_to_mean_plot<-ggplot(dataset_P_final) +
+  geom_point(aes(x=EESTDateTime, y=ab_diff_to_mean, 
+                 color=remove_absdiff_OR_above5_difftomean_above50perc,
+                 shape=remove_absdiff_OR_above5_difftomean_above50perc), alpha=0.7) +
+  geom_hline(aes(yintercept=50)) +
+  scale_shape_manual(values=c(1,4)) +
+  scale_color_manual(values=c("gold3", "black")) +
+  facet_grid(PM~indoor_outdoor, scales = "free") +
+  labs(caption="Including all points") +
+  theme_bw()+
+  theme(legend.position = "bottom")
+
+ab_diff_to_mean_plot
+rm(ab_diff_to_mean_plot)
+#ggsave(plot = ab_diff_to_mean_plot, filename = "plots/ab_diff_to_mean_plot.png", dpi=100)
+```
+
+```{r S1-PA-MCF-data-15, echo=FALSE, message=FALSE, warning=FALSE}
+
+ab_diff_to_mean_plot2<-ggplot(filter(dataset_P_final, ab_mean<p99_abs_mean)) +
+  geom_point(aes(x=EESTDateTime, y=ab_diff_to_mean, 
+                 color=remove_absdiff_OR_above5_difftomean_above50perc,
+                 shape=remove_absdiff_OR_above5_difftomean_above50perc), alpha=0.7) +
+  geom_hline(aes(yintercept=50)) +
+  scale_shape_manual(values=c(1,4)) +
+  scale_color_manual(values=c("gold3", "black")) +
+  facet_grid(PM~indoor_outdoor, scales = "free") +
+  labs(caption="Including all points <99th percentile of mean") +
+  theme_bw()+
+  theme(legend.position = "bottom")
+
+ab_diff_to_mean_plot2
+rm(ab_diff_to_mean_plot2)
+#ggsave(plot = ab_diff_to_mean_plot2, filename = "plots/ab_diff_to_mean_plot2.png", dpi=100)
+
+```
+
+```{r S1-PA-MCF-data-16, echo=FALSE, message=FALSE, warning=FALSE}
+
+#plot after applying RSD - average values for outdoor data - 99th percentile
+ab_diff_to_mean_absdiff_plot<-ggplot(dataset_P_final) +
+  geom_point(aes(y=ab_absdiff, x=ab_diff_to_mean, 
+                 color=remove_absdiff_OR_above5_difftomean_above50perc,
+                 shape=remove_absdiff_OR_above5_difftomean_above50perc), alpha=0.7) +
+  scale_shape_manual(values=c(1,4)) +
+  scale_color_manual(values=c("gold3", "black")) +
+  facet_grid(PM~indoor_outdoor, scales = "free") +
+  geom_hline(aes(yintercept=5)) +
+  geom_vline(aes(xintercept=50)) +
+  facet_grid(PM~indoor_outdoor, scales = "free") +
+  labs(caption="Including all points")  +
+  theme_bw()+
+  theme(legend.position = "bottom")
+
+ab_diff_to_mean_absdiff_plot
+rm(ab_diff_to_mean_absdiff_plot)
+#ggsave(plot = ab_diff_to_mean_absdiff_plot, filename = "plots/ab_diff_to_mean_absdiff_plot.png", dpi=100)
+```
+
+```{r S1-PA-MCF-data-17, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+#plot after applying RSD - average values for outdoor data - 99th percentile
+ab_diff_to_mean_absdiff_plot2<-ggplot(filter(dataset_P_final, ab_mean<p99_abs_mean)) +
+  geom_point(aes(y=ab_absdiff, x=ab_diff_to_mean, 
+                 color=remove_absdiff_OR_above5_difftomean_above50perc,
+                 shape=remove_absdiff_OR_above5_difftomean_above50perc), alpha=0.7) +
+  scale_shape_manual(values=c(1,4)) +
+  scale_color_manual(values=c("gold3", "black")) +
+  facet_grid(PM~indoor_outdoor, scales = "free") +
+  geom_hline(aes(yintercept=5)) +
+  geom_vline(aes(xintercept=50)) +
+  facet_grid(PM~indoor_outdoor, scales = "free") +
+  labs(caption="Including all points <99th percentile of mean values")  +
+  theme_bw()+
+  theme(legend.position = "bottom")
+
+ab_diff_to_mean_absdiff_plot2
+rm(ab_diff_to_mean_absdiff_plot2)
+
+#ggsave(plot = ab_diff_to_mean_absdiff_plot2, filename = "plots/ab_diff_to_mean_absdiff_plot2.png", dpi=100)
+```
+
+```{r S1-PA-MCF-data-18, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+#plot after applying RSD - average values for outdoor data - 99th percentile
+ab_diff_to_mean_absdiff_plot3<-ggplot(filter(dataset_P_final, ab_mean<p99_abs_mean)) +
+  geom_point(aes(y=ab_absdiff, x=ab_diff_to_mean, 
+                 color=remove_absdiff_OR_above5_difftomean_above50perc,
+                 shape=remove_absdiff_OR_above5_difftomean_above50perc), alpha=0.7) +
+  scale_shape_manual(values=c(1,4)) +
+  scale_color_manual(values=c("gold3", "black")) +
+  facet_grid(PM~indoor_outdoor, scales = "free") +
+  geom_hline(aes(yintercept=5)) +
+  geom_vline(aes(xintercept=50)) +
+  facet_grid(PM~., scales = "free") +
+  labs(caption="Including all points <99th percentile of mean values")  +
+  theme_bw()+
+  theme(legend.position = "bottom")
+
+ab_diff_to_mean_absdiff_plot3
+rm(ab_diff_to_mean_absdiff_plot3)
+
+#ggsave(plot = ab_diff_to_mean_absdiff_plot3, filename = "plots/ab_diff_to_mean_absdiff_plot3.png", dpi=100)
+
+
+
+```
+
+
+## PA summary tables
+```{r S1-PA-MCF-data-19, echo=FALSE, message=FALSE, warning=FALSE}
+dataset_P_final_summary <- dataset_P_final %>% 
+  group_by(indoor_outdoor, rsd_20perc, absdiff_5, absdiff_to_mean_50perc) %>% 
+  summarise(n=n(), .groups = "drop") %>% 
+  group_by(indoor_outdoor) %>% 
+  mutate(perc=round(proportions(n)*100, digits=1))
+
+dataset_P_final_summary2 <- dataset_P_final %>% 
+  group_by(indoor_outdoor, absdiff_5, absdiff_to_mean_50perc) %>% 
+  summarise(n=n(), .groups = "drop") %>% 
+  group_by(indoor_outdoor) %>% 
+  mutate(perc=round(proportions(n)*100, digits=1))
+
+
+dataset_P_final_summary3 <- dataset_P_final %>% 
+  group_by(indoor_outdoor, rsd_20perc) %>% 
+  summarise(n=n(), .groups = "drop") %>% 
+  group_by(indoor_outdoor) %>% 
+  mutate(perc=round(proportions(n)*100, digits=1))
+
+
+
+dataset_P_final_summary4 <- dataset_P_final %>% 
+  group_by(indoor_outdoor, remove_rsd_above20perc, remove_absdiff_OR_above5_difftomean_above50perc,
+           remove_absdiff_AND_above5_difftomean_above50perc) %>% 
+  summarise(n=n(), .groups = "drop") %>% 
+  group_by(indoor_outdoor) %>% 
+  mutate(perc=round(proportions(n)*100, digits=1))
+
+
+
+dataset_P_final_summary4_overall <- dataset_P_final %>% 
+  group_by(remove_rsd_above20perc, remove_absdiff_OR_above5_difftomean_above50perc,
+           remove_absdiff_AND_above5_difftomean_above50perc) %>% 
+  summarise(n=n(), .groups = "drop") %>% 
+  mutate(perc=round(proportions(n)*100, digits=1))
+
+```
+
+
+`r knitr::kable(dataset_P_final_summary)`
+
+
+`r knitr::kable(dataset_P_final_summary2)`
+
+`r knitr::kable(dataset_P_final_summary3)`
+
+
+`r knitr::kable(dataset_P_final_summary4)`
+
+`r knitr::kable(dataset_P_final_summary4_overall)`
+
+# Session Information
+
+```{r S1 }
+sessionInfo()
+```

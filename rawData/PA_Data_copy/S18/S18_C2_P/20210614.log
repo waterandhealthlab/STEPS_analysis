@@ -1,0 +1,625 @@
+R tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.038 2021/06/14T11:10:19z: DS3231
+ 0h00:03.053 2021/06/14T11:10:19z: BME280 (0x76)
+ 0h00:03.067 2021/06/14T11:10:19z: 50:2:91:db:e4:21
+ 0h00:03.069 2021/06/14T11:10:19z: SSID: Isogeio
+ 0h00:03.074 2021/06/14T11:10:19z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.105 2021/06/14T11:30:16z: DS3231
+ 0h00:03.120 2021/06/14T11:30:16z: BME280 (0x76)
+ 0h00:03.134 2021/06/14T11:30:16z: 50:2:91:db:e4:21
+ 0h00:03.136 2021/06/14T11:30:16z: SSID: Isogeio
+ 0h00:03.141 2021/06/14T11:30:16z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.109 2021/06/14T11:50:12z: DS3231
+ 0h00:03.124 2021/06/14T11:50:12z: BME280 (0x76)
+ 0h00:03.138 2021/06/14T11:50:12z: 50:2:91:db:e4:21
+ 0h00:03.140 2021/06/14T11:50:12z: SSID: Isogeio
+ 0h00:03.145 2021/06/14T11:50:12z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.071 2021/06/14T12:10:07z: DS3231
+ 0h00:03.086 2021/06/14T12:10:07z: BME280 (0x76)
+ 0h00:03.100 2021/06/14T12:10:07z: 50:2:91:db:e4:21
+ 0h00:03.102 2021/06/14T12:10:07z: SSID: Isogeio
+ 0h00:03.107 2021/06/14T12:10:07z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.040 2021/06/14T12:30:04z: DS3231
+ 0h00:03.056 2021/06/14T12:30:04z: BME280 (0x76)
+ 0h00:03.070 2021/06/14T12:30:04z: 50:2:91:db:e4:21
+ 0h00:03.072 2021/06/14T12:30:04z: SSID: Isogeio
+ 0h00:03.077 2021/06/14T12:30:04z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.106 2021/06/14T12:50:00z: DS3231
+ 0h00:03.122 2021/06/14T12:50:00z: BME280 (0x76)
+ 0h00:03.136 2021/06/14T12:50:00z: 50:2:91:db:e4:21
+ 0h00:03.138 2021/06/14T12:50:00z: SSID: Isogeio
+ 0h00:03.143 2021/06/14T12:50:00z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.169 2021/06/14T13:09:56z: DS3231
+ 0h00:03.184 2021/06/14T13:09:56z: BME280 (0x76)
+ 0h00:03.199 2021/06/14T13:09:56z: 50:2:91:db:e4:21
+ 0h00:03.200 2021/06/14T13:09:56z: SSID: Isogeio
+ 0h00:03.205 2021/06/14T13:09:56z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.061 2021/06/14T13:29:52z: DS3231
+ 0h00:03.076 2021/06/14T13:29:52z: BME280 (0x76)
+ 0h00:03.090 2021/06/14T13:29:52z: 50:2:91:db:e4:21
+ 0h00:03.092 2021/06/14T13:29:52z: SSID: Isogeio
+ 0h00:03.097 2021/06/14T13:29:52z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.063 2021/06/14T13:49:48z: DS3231
+ 0h00:03.079 2021/06/14T13:49:48z: BME280 (0x76)
+ 0h00:03.093 2021/06/14T13:49:48z: 50:2:91:db:e4:21
+ 0h00:03.095 2021/06/14T13:49:48z: SSID: Isogeio
+ 0h00:03.100 2021/06/14T13:49:48z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.108 2021/06/14T14:09:44z: DS3231
+ 0h00:03.123 2021/06/14T14:09:44z: BME280 (0x76)
+ 0h00:03.137 2021/06/14T14:09:44z: 50:2:91:db:e4:21
+ 0h00:03.139 2021/06/14T14:09:44z: SSID: Isogeio
+ 0h00:03.144 2021/06/14T14:09:44z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.102 2021/06/14T14:29:40z: DS3231
+ 0h00:03.117 2021/06/14T14:29:40z: BME280 (0x76)
+ 0h00:03.131 2021/06/14T14:29:40z: 50:2:91:db:e4:21
+ 0h00:03.133 2021/06/14T14:29:40z: SSID: Isogeio
+ 0h00:03.138 2021/06/14T14:29:40z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.167 2021/06/14T14:49:35z: DS3231
+ 0h00:03.182 2021/06/14T14:49:35z: BME280 (0x76)
+ 0h00:03.196 2021/06/14T14:49:35z: 50:2:91:db:e4:21
+ 0h00:03.198 2021/06/14T14:49:35z: SSID: Isogeio
+ 0h00:03.203 2021/06/14T14:49:35z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.065 2021/06/14T15:09:31z: DS3231
+ 0h00:03.080 2021/06/14T15:09:31z: BME280 (0x76)
+ 0h00:03.094 2021/06/14T15:09:31z: 50:2:91:db:e4:21
+ 0h00:03.096 2021/06/14T15:09:31z: SSID: Isogeio
+ 0h00:03.101 2021/06/14T15:09:31z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.043 2021/06/14T15:29:27z: DS3231
+ 0h00:03.058 2021/06/14T15:29:27z: BME280 (0x76)
+ 0h00:03.072 2021/06/14T15:29:27z: 50:2:91:db:e4:21
+ 0h00:03.074 2021/06/14T15:29:27z: SSID: Isogeio
+ 0h00:03.079 2021/06/14T15:29:27z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.109 2021/06/14T15:49:24z: DS3231
+ 0h00:03.124 2021/06/14T15:49:24z: BME280 (0x76)
+ 0h00:03.138 2021/06/14T15:49:24z: 50:2:91:db:e4:21
+ 0h00:03.140 2021/06/14T15:49:24z: SSID: Isogeio
+ 0h00:03.145 2021/06/14T15:49:24z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.042 2021/06/14T16:09:20z: DS3231
+ 0h00:03.057 2021/06/14T16:09:20z: BME280 (0x76)
+ 0h00:03.071 2021/06/14T16:09:20z: 50:2:91:db:e4:21
+ 0h00:03.073 2021/06/14T16:09:20z: SSID: Isogeio
+ 0h00:03.078 2021/06/14T16:09:20z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.046 2021/06/14T16:29:16z: DS3231
+ 0h00:03.061 2021/06/14T16:29:16z: BME280 (0x76)
+ 0h00:03.075 2021/06/14T16:29:16z: 50:2:91:db:e4:21
+ 0h00:03.077 2021/06/14T16:29:16z: SSID: Isogeio
+ 0h00:03.082 2021/06/14T16:29:16z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.113 2021/06/14T16:49:12z: DS3231
+ 0h00:03.128 2021/06/14T16:49:12z: BME280 (0x76)
+ 0h00:03.142 2021/06/14T16:49:12z: 50:2:91:db:e4:21
+ 0h00:03.144 2021/06/14T16:49:12z: SSID: Isogeio
+ 0h00:03.149 2021/06/14T16:49:12z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.102 2021/06/14T17:09:08z: DS3231
+ 0h00:03.117 2021/06/14T17:09:08z: BME280 (0x76)
+ 0h00:03.131 2021/06/14T17:09:08z: 50:2:91:db:e4:21
+ 0h00:03.133 2021/06/14T17:09:08z: SSID: Isogeio
+ 0h00:03.138 2021/06/14T17:09:08z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.041 2021/06/14T17:29:05z: DS3231
+ 0h00:03.056 2021/06/14T17:29:05z: BME280 (0x76)
+ 0h00:03.070 2021/06/14T17:29:05z: 50:2:91:db:e4:21
+ 0h00:03.072 2021/06/14T17:29:05z: SSID: Isogeio
+ 0h00:03.077 2021/06/14T17:29:05z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.041 2021/06/14T17:49:01z: DS3231
+ 0h00:03.057 2021/06/14T17:49:01z: BME280 (0x76)
+ 0h00:03.071 2021/06/14T17:49:01z: 50:2:91:db:e4:21
+ 0h00:03.072 2021/06/14T17:49:01z: SSID: Isogeio
+ 0h00:03.078 2021/06/14T17:49:01z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.041 2021/06/14T18:08:58z: DS3231
+ 0h00:03.057 2021/06/14T18:08:58z: BME280 (0x76)
+ 0h00:03.071 2021/06/14T18:08:58z: 50:2:91:db:e4:21
+ 0h00:03.072 2021/06/14T18:08:58z: SSID: Isogeio
+ 0h00:03.078 2021/06/14T18:08:58z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.041 2021/06/14T18:28:53z: DS3231
+ 0h00:03.056 2021/06/14T18:28:53z: BME280 (0x76)
+ 0h00:03.070 2021/06/14T18:28:53z: 50:2:91:db:e4:21
+ 0h00:03.072 2021/06/14T18:28:53z: SSID: Isogeio
+ 0h00:03.077 2021/06/14T18:28:53z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.058 2021/06/14T18:48:49z: DS3231
+ 0h00:03.073 2021/06/14T18:48:49z: BME280 (0x76)
+ 0h00:03.087 2021/06/14T18:48:49z: 50:2:91:db:e4:21
+ 0h00:03.089 2021/06/14T18:48:49z: SSID: Isogeio
+ 0h00:03.094 2021/06/14T18:48:49z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.058 2021/06/14T19:08:45z: DS3231
+ 0h00:03.073 2021/06/14T19:08:45z: BME280 (0x76)
+ 0h00:03.087 2021/06/14T19:08:45z: 50:2:91:db:e4:21
+ 0h00:03.089 2021/06/14T19:08:45z: SSID: Isogeio
+ 0h00:03.094 2021/06/14T19:08:45z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.068 2021/06/14T19:28:41z: DS3231
+ 0h00:03.083 2021/06/14T19:28:41z: BME280 (0x76)
+ 0h00:03.097 2021/06/14T19:28:41z: 50:2:91:db:e4:21
+ 0h00:03.099 2021/06/14T19:28:41z: SSID: Isogeio
+ 0h00:03.104 2021/06/14T19:28:41z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.045 2021/06/14T19:48:37z: DS3231
+ 0h00:03.060 2021/06/14T19:48:37z: BME280 (0x76)
+ 0h00:03.074 2021/06/14T19:48:37z: 50:2:91:db:e4:21
+ 0h00:03.076 2021/06/14T19:48:37z: SSID: Isogeio
+ 0h00:03.081 2021/06/14T19:48:37z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.041 2021/06/14T20:08:33z: DS3231
+ 0h00:03.056 2021/06/14T20:08:33z: BME280 (0x76)
+ 0h00:03.070 2021/06/14T20:08:33z: 50:2:91:db:e4:21
+ 0h00:03.072 2021/06/14T20:08:33z: SSID: Isogeio
+ 0h00:03.077 2021/06/14T20:08:33z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.039 2021/06/14T20:28:29z: DS3231
+ 0h00:03.054 2021/06/14T20:28:29z: BME280 (0x76)
+ 0h00:03.068 2021/06/14T20:28:29z: 50:2:91:db:e4:21
+ 0h00:03.070 2021/06/14T20:28:29z: SSID: Isogeio
+ 0h00:03.075 2021/06/14T20:28:29z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.041 2021/06/14T20:48:25z: DS3231
+ 0h00:03.056 2021/06/14T20:48:25z: BME280 (0x76)
+ 0h00:03.070 2021/06/14T20:48:25z: 50:2:91:db:e4:21
+ 0h00:03.072 2021/06/14T20:48:25z: SSID: Isogeio
+ 0h00:03.077 2021/06/14T20:48:25z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.044 2021/06/14T21:08:21z: DS3231
+ 0h00:03.059 2021/06/14T21:08:21z: BME280 (0x76)
+ 0h00:03.073 2021/06/14T21:08:21z: 50:2:91:db:e4:21
+ 0h00:03.075 2021/06/14T21:08:21z: SSID: Isogeio
+ 0h00:03.080 2021/06/14T21:08:21z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.060 2021/06/14T21:28:17z: DS3231
+ 0h00:03.075 2021/06/14T21:28:17z: BME280 (0x76)
+ 0h00:03.089 2021/06/14T21:28:17z: 50:2:91:db:e4:21
+ 0h00:03.091 2021/06/14T21:28:17z: SSID: Isogeio
+ 0h00:03.096 2021/06/14T21:28:17z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.059 2021/06/14T21:48:13z: DS3231
+ 0h00:03.074 2021/06/14T21:48:13z: BME280 (0x76)
+ 0h00:03.088 2021/06/14T21:48:13z: 50:2:91:db:e4:21
+ 0h00:03.090 2021/06/14T21:48:13z: SSID: Isogeio
+ 0h00:03.095 2021/06/14T21:48:13z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.070 2021/06/14T22:08:09z: DS3231
+ 0h00:03.085 2021/06/14T22:08:09z: BME280 (0x76)
+ 0h00:03.099 2021/06/14T22:08:09z: 50:2:91:db:e4:21
+ 0h00:03.101 2021/06/14T22:08:09z: SSID: Isogeio
+ 0h00:03.106 2021/06/14T22:08:09z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.047 2021/06/14T22:28:05z: DS3231
+ 0h00:03.062 2021/06/14T22:28:05z: BME280 (0x76)
+ 0h00:03.077 2021/06/14T22:28:05z: 50:2:91:db:e4:21
+ 0h00:03.078 2021/06/14T22:28:05z: SSID: Isogeio
+ 0h00:03.083 2021/06/14T22:28:05z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.037 2021/06/14T22:48:01z: DS3231
+ 0h00:03.052 2021/06/14T22:48:01z: BME280 (0x76)
+ 0h00:03.066 2021/06/14T22:48:01z: 50:2:91:db:e4:21
+ 0h00:03.068 2021/06/14T22:48:01z: SSID: Isogeio
+ 0h00:03.073 2021/06/14T22:48:01z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.043 2021/06/14T23:07:57z: DS3231
+ 0h00:03.058 2021/06/14T23:07:57z: BME280 (0x76)
+ 0h00:03.072 2021/06/14T23:07:57z: 50:2:91:db:e4:21
+ 0h00:03.074 2021/06/14T23:07:57z: SSID: Isogeio
+ 0h00:03.079 2021/06/14T23:07:57z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.040 2021/06/14T23:27:53z: DS3231
+ 0h00:03.055 2021/06/14T23:27:53z: BME280 (0x76)
+ 0h00:03.069 2021/06/14T23:27:53z: 50:2:91:db:e4:21
+ 0h00:03.071 2021/06/14T23:27:53z: SSID: Isogeio
+ 0h00:03.076 2021/06/14T23:27:53z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,7)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.047 2021/06/14T23:47:50z: DS3231
+ 0h00:03.062 2021/06/14T23:47:50z: BME280 (0x76)
+ 0h00:03.076 2021/06/14T23:47:50z: 50:2:91:db:e4:21
+ 0h00:03.078 2021/06/14T23:47:50z: SSID: Isogeio
+ 0h00:03.083 2021/06/14T23:47:50z: AP_STA

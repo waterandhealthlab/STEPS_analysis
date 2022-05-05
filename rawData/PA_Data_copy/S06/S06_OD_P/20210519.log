@@ -1,0 +1,1074 @@
+R tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.057 2021/05/19T00:06:40z: DS3231
+ 0h00:03.072 2021/05/19T00:06:40z: BME280 (0x76)
+ 0h00:03.087 2021/05/19T00:06:40z: 50:2:91:e5:36:6e
+ 0h00:03.088 2021/05/19T00:06:40z: SSID: ARRIS-A013
+ 0h00:03.093 2021/05/19T00:06:40z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.063 2021/05/19T00:26:36z: DS3231
+ 0h00:03.079 2021/05/19T00:26:36z: BME280 (0x76)
+ 0h00:03.093 2021/05/19T00:26:36z: 50:2:91:e5:36:6e
+ 0h00:03.095 2021/05/19T00:26:36z: SSID: ARRIS-A013
+ 0h00:03.100 2021/05/19T00:26:36z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.065 2021/05/19T00:46:32z: DS3231
+ 0h00:03.080 2021/05/19T00:46:32z: BME280 (0x76)
+ 0h00:03.094 2021/05/19T00:46:32z: 50:2:91:e5:36:6e
+ 0h00:03.096 2021/05/19T00:46:32z: SSID: ARRIS-A013
+ 0h00:03.101 2021/05/19T00:46:32z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.079 2021/05/19T01:06:29z: DS3231
+ 0h00:03.095 2021/05/19T01:06:29z: BME280 (0x76)
+ 0h00:03.109 2021/05/19T01:06:29z: 50:2:91:e5:36:6e
+ 0h00:03.111 2021/05/19T01:06:29z: SSID: ARRIS-A013
+ 0h00:03.116 2021/05/19T01:06:29z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.087 2021/05/19T01:26:25z: DS3231
+ 0h00:03.102 2021/05/19T01:26:25z: BME280 (0x76)
+ 0h00:03.116 2021/05/19T01:26:25z: 50:2:91:e5:36:6e
+ 0h00:03.118 2021/05/19T01:26:25z: SSID: ARRIS-A013
+ 0h00:03.123 2021/05/19T01:26:25z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.056 2021/05/19T01:46:22z: DS3231
+ 0h00:03.071 2021/05/19T01:46:22z: BME280 (0x76)
+ 0h00:03.085 2021/05/19T01:46:22z: 50:2:91:e5:36:6e
+ 0h00:03.087 2021/05/19T01:46:22z: SSID: ARRIS-A013
+ 0h00:03.092 2021/05/19T01:46:22z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.057 2021/05/19T02:06:18z: DS3231
+ 0h00:03.073 2021/05/19T02:06:18z: BME280 (0x76)
+ 0h00:03.087 2021/05/19T02:06:18z: 50:2:91:e5:36:6e
+ 0h00:03.089 2021/05/19T02:06:18z: SSID: ARRIS-A013
+ 0h00:03.094 2021/05/19T02:06:18z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.065 2021/05/19T02:26:14z: DS3231
+ 0h00:03.081 2021/05/19T02:26:14z: BME280 (0x76)
+ 0h00:03.095 2021/05/19T02:26:14z: 50:2:91:e5:36:6e
+ 0h00:03.097 2021/05/19T02:26:14z: SSID: ARRIS-A013
+ 0h00:03.102 2021/05/19T02:26:14z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.072 2021/05/19T02:46:11z: DS3231
+ 0h00:03.087 2021/05/19T02:46:11z: BME280 (0x76)
+ 0h00:03.101 2021/05/19T02:46:11z: 50:2:91:e5:36:6e
+ 0h00:03.103 2021/05/19T02:46:11z: SSID: ARRIS-A013
+ 0h00:03.108 2021/05/19T02:46:11z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.060 2021/05/19T03:06:07z: DS3231
+ 0h00:03.075 2021/05/19T03:06:07z: BME280 (0x76)
+ 0h00:03.089 2021/05/19T03:06:07z: 50:2:91:e5:36:6e
+ 0h00:03.091 2021/05/19T03:06:07z: SSID: ARRIS-A013
+ 0h00:03.096 2021/05/19T03:06:07z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.073 2021/05/19T03:26:04z: DS3231
+ 0h00:03.088 2021/05/19T03:26:04z: BME280 (0x76)
+ 0h00:03.102 2021/05/19T03:26:04z: 50:2:91:e5:36:6e
+ 0h00:03.104 2021/05/19T03:26:04z: SSID: ARRIS-A013
+ 0h00:03.109 2021/05/19T03:26:04z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.071 2021/05/19T03:46:01z: DS3231
+ 0h00:03.086 2021/05/19T03:46:01z: BME280 (0x76)
+ 0h00:03.100 2021/05/19T03:46:01z: 50:2:91:e5:36:6e
+ 0h00:03.102 2021/05/19T03:46:01z: SSID: ARRIS-A013
+ 0h00:03.107 2021/05/19T03:46:01z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.088 2021/05/19T04:05:57z: DS3231
+ 0h00:03.103 2021/05/19T04:05:57z: BME280 (0x76)
+ 0h00:03.117 2021/05/19T04:05:57z: 50:2:91:e5:36:6e
+ 0h00:03.119 2021/05/19T04:05:57z: SSID: ARRIS-A013
+ 0h00:03.124 2021/05/19T04:05:57z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.062 2021/05/19T04:25:53z: DS3231
+ 0h00:03.078 2021/05/19T04:25:53z: BME280 (0x76)
+ 0h00:03.092 2021/05/19T04:25:53z: 50:2:91:e5:36:6e
+ 0h00:03.093 2021/05/19T04:25:53z: SSID: ARRIS-A013
+ 0h00:03.099 2021/05/19T04:25:53z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.064 2021/05/19T04:45:49z: DS3231
+ 0h00:03.080 2021/05/19T04:45:49z: BME280 (0x76)
+ 0h00:03.094 2021/05/19T04:45:49z: 50:2:91:e5:36:6e
+ 0h00:03.096 2021/05/19T04:45:49z: SSID: ARRIS-A013
+ 0h00:03.101 2021/05/19T04:45:49z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.063 2021/05/19T05:05:46z: DS3231
+ 0h00:03.078 2021/05/19T05:05:46z: BME280 (0x76)
+ 0h00:03.092 2021/05/19T05:05:46z: 50:2:91:e5:36:6e
+ 0h00:03.094 2021/05/19T05:05:46z: SSID: ARRIS-A013
+ 0h00:03.099 2021/05/19T05:05:46z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.056 2021/05/19T05:25:42z: DS3231
+ 0h00:03.071 2021/05/19T05:25:42z: BME280 (0x76)
+ 0h00:03.086 2021/05/19T05:25:42z: 50:2:91:e5:36:6e
+ 0h00:03.087 2021/05/19T05:25:42z: SSID: ARRIS-A013
+ 0h00:03.092 2021/05/19T05:25:42z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.063 2021/05/19T05:45:38z: DS3231
+ 0h00:03.078 2021/05/19T05:45:38z: BME280 (0x76)
+ 0h00:03.092 2021/05/19T05:45:38z: 50:2:91:e5:36:6e
+ 0h00:03.094 2021/05/19T05:45:38z: SSID: ARRIS-A013
+ 0h00:03.099 2021/05/19T05:45:38z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.071 2021/05/19T06:05:34z: DS3231
+ 0h00:03.087 2021/05/19T06:05:34z: BME280 (0x76)
+ 0h00:03.101 2021/05/19T06:05:35z: 50:2:91:e5:36:6e
+ 0h00:03.102 2021/05/19T06:05:35z: SSID: ARRIS-A013
+ 0h00:03.108 2021/05/19T06:05:35z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.082 2021/05/19T06:25:31z: DS3231
+ 0h00:03.097 2021/05/19T06:25:31z: BME280 (0x76)
+ 0h00:03.111 2021/05/19T06:25:31z: 50:2:91:e5:36:6e
+ 0h00:03.113 2021/05/19T06:25:31z: SSID: ARRIS-A013
+ 0h00:03.118 2021/05/19T06:25:31z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.089 2021/05/19T06:45:28z: DS3231
+ 0h00:03.104 2021/05/19T06:45:28z: BME280 (0x76)
+ 0h00:03.118 2021/05/19T06:45:28z: 50:2:91:e5:36:6e
+ 0h00:03.120 2021/05/19T06:45:28z: SSID: ARRIS-A013
+ 0h00:03.125 2021/05/19T06:45:28z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.067 2021/05/19T07:05:25z: DS3231
+ 0h00:03.082 2021/05/19T07:05:25z: BME280 (0x76)
+ 0h00:03.096 2021/05/19T07:05:25z: 50:2:91:e5:36:6e
+ 0h00:03.098 2021/05/19T07:05:25z: SSID: ARRIS-A013
+ 0h00:03.103 2021/05/19T07:05:25z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.062 2021/05/19T07:25:21z: DS3231
+ 0h00:03.077 2021/05/19T07:25:21z: BME280 (0x76)
+ 0h00:03.091 2021/05/19T07:25:21z: 50:2:91:e5:36:6e
+ 0h00:03.093 2021/05/19T07:25:21z: SSID: ARRIS-A013
+ 0h00:03.098 2021/05/19T07:25:21z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.061 2021/05/19T07:45:17z: DS3231
+ 0h00:03.076 2021/05/19T07:45:17z: BME280 (0x76)
+ 0h00:03.091 2021/05/19T07:45:17z: 50:2:91:e5:36:6e
+ 0h00:03.092 2021/05/19T07:45:17z: SSID: ARRIS-A013
+ 0h00:03.097 2021/05/19T07:45:17z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.075 2021/05/19T08:05:14z: DS3231
+ 0h00:03.090 2021/05/19T08:05:14z: BME280 (0x76)
+ 0h00:03.104 2021/05/19T08:05:14z: 50:2:91:e5:36:6e
+ 0h00:03.106 2021/05/19T08:05:14z: SSID: ARRIS-A013
+ 0h00:03.111 2021/05/19T08:05:14z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.065 2021/05/19T08:25:11z: DS3231
+ 0h00:03.080 2021/05/19T08:25:11z: BME280 (0x76)
+ 0h00:03.094 2021/05/19T08:25:11z: 50:2:91:e5:36:6e
+ 0h00:03.096 2021/05/19T08:25:11z: SSID: ARRIS-A013
+ 0h00:03.101 2021/05/19T08:25:11z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.060 2021/05/19T08:45:07z: DS3231
+ 0h00:03.076 2021/05/19T08:45:07z: BME280 (0x76)
+ 0h00:03.090 2021/05/19T08:45:07z: 50:2:91:e5:36:6e
+ 0h00:03.091 2021/05/19T08:45:07z: SSID: ARRIS-A013
+ 0h00:03.097 2021/05/19T08:45:07z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.062 2021/05/19T09:05:03z: DS3231
+ 0h00:03.078 2021/05/19T09:05:03z: BME280 (0x76)
+ 0h00:03.092 2021/05/19T09:05:03z: 50:2:91:e5:36:6e
+ 0h00:03.094 2021/05/19T09:05:03z: SSID: ARRIS-A013
+ 0h00:03.099 2021/05/19T09:05:03z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.070 2021/05/19T09:25:00z: DS3231
+ 0h00:03.086 2021/05/19T09:25:00z: BME280 (0x76)
+ 0h00:03.100 2021/05/19T09:25:00z: 50:2:91:e5:36:6e
+ 0h00:03.102 2021/05/19T09:25:00z: SSID: ARRIS-A013
+ 0h00:03.107 2021/05/19T09:25:00z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.089 2021/05/19T09:44:56z: DS3231
+ 0h00:03.104 2021/05/19T09:44:56z: BME280 (0x76)
+ 0h00:03.118 2021/05/19T09:44:56z: 50:2:91:e5:36:6e
+ 0h00:03.120 2021/05/19T09:44:56z: SSID: ARRIS-A013
+ 0h00:03.125 2021/05/19T09:44:56z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.091 2021/05/19T10:04:53z: DS3231
+ 0h00:03.106 2021/05/19T10:04:53z: BME280 (0x76)
+ 0h00:03.120 2021/05/19T10:04:53z: 50:2:91:e5:36:6e
+ 0h00:03.122 2021/05/19T10:04:53z: SSID: ARRIS-A013
+ 0h00:03.127 2021/05/19T10:04:53z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.078 2021/05/19T12:36:24z: DS3231
+ 0h00:03.094 2021/05/19T12:36:24z: BME280 (0x76)
+ 0h00:03.108 2021/05/19T12:36:24z: 50:2:91:e5:36:6e
+ 0h00:03.110 2021/05/19T12:36:24z: SSID: ARRIS-A013
+ 0h00:03.115 2021/05/19T12:36:24z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.052 2021/05/19T12:56:20z: DS3231
+ 0h00:03.068 2021/05/19T12:56:20z: BME280 (0x76)
+ 0h00:03.082 2021/05/19T12:56:20z: 50:2:91:e5:36:6e
+ 0h00:03.084 2021/05/19T12:56:20z: SSID: ARRIS-A013
+ 0h00:03.089 2021/05/19T12:56:20z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.056 2021/05/19T13:16:17z: DS3231
+ 0h00:03.072 2021/05/19T13:16:17z: BME280 (0x76)
+ 0h00:03.086 2021/05/19T13:16:17z: 50:2:91:e5:36:6e
+ 0h00:03.087 2021/05/19T13:16:17z: SSID: ARRIS-A013
+ 0h00:03.093 2021/05/19T13:16:17z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.049 2021/05/19T13:36:13z: DS3231
+ 0h00:03.065 2021/05/19T13:36:13z: BME280 (0x76)
+ 0h00:03.079 2021/05/19T13:36:13z: 50:2:91:e5:36:6e
+ 0h00:03.081 2021/05/19T13:36:13z: SSID: ARRIS-A013
+ 0h00:03.086 2021/05/19T13:36:13z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.054 2021/05/19T13:56:09z: DS3231
+ 0h00:03.069 2021/05/19T13:56:09z: BME280 (0x76)
+ 0h00:03.083 2021/05/19T13:56:09z: 50:2:91:e5:36:6e
+ 0h00:03.085 2021/05/19T13:56:09z: SSID: ARRIS-A013
+ 0h00:03.090 2021/05/19T13:56:09z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.057 2021/05/19T14:16:06z: DS3231
+ 0h00:03.072 2021/05/19T14:16:06z: BME280 (0x76)
+ 0h00:03.086 2021/05/19T14:16:06z: 50:2:91:e5:36:6e
+ 0h00:03.088 2021/05/19T14:16:06z: SSID: ARRIS-A013
+ 0h00:03.093 2021/05/19T14:16:06z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.062 2021/05/19T14:36:02z: DS3231
+ 0h00:03.077 2021/05/19T14:36:02z: BME280 (0x76)
+ 0h00:03.091 2021/05/19T14:36:02z: 50:2:91:e5:36:6e
+ 0h00:03.093 2021/05/19T14:36:02z: SSID: ARRIS-A013
+ 0h00:03.098 2021/05/19T14:36:02z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.071 2021/05/19T14:55:58z: DS3231
+ 0h00:03.086 2021/05/19T14:55:58z: BME280 (0x76)
+ 0h00:03.101 2021/05/19T14:55:58z: 50:2:91:e5:36:6e
+ 0h00:03.102 2021/05/19T14:55:58z: SSID: ARRIS-A013
+ 0h00:03.108 2021/05/19T14:55:58z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.086 2021/05/19T15:15:54z: DS3231
+ 0h00:03.101 2021/05/19T15:15:54z: BME280 (0x76)
+ 0h00:03.115 2021/05/19T15:15:54z: 50:2:91:e5:36:6e
+ 0h00:03.117 2021/05/19T15:15:54z: SSID: ARRIS-A013
+ 0h00:03.122 2021/05/19T15:15:54z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.053 2021/05/19T15:35:51z: DS3231
+ 0h00:03.068 2021/05/19T15:35:51z: BME280 (0x76)
+ 0h00:03.082 2021/05/19T15:35:51z: 50:2:91:e5:36:6e
+ 0h00:03.084 2021/05/19T15:35:51z: SSID: ARRIS-A013
+ 0h00:03.089 2021/05/19T15:35:51z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.082 2021/05/19T15:55:47z: DS3231
+ 0h00:03.098 2021/05/19T15:55:47z: BME280 (0x76)
+ 0h00:03.112 2021/05/19T15:55:47z: 50:2:91:e5:36:6e
+ 0h00:03.113 2021/05/19T15:55:47z: SSID: ARRIS-A013
+ 0h00:03.119 2021/05/19T15:55:47z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.055 2021/05/19T16:15:42z: DS3231
+ 0h00:03.070 2021/05/19T16:15:42z: BME280 (0x76)
+ 0h00:03.084 2021/05/19T16:15:42z: 50:2:91:e5:36:6e
+ 0h00:03.086 2021/05/19T16:15:42z: SSID: ARRIS-A013
+ 0h00:03.091 2021/05/19T16:15:42z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.056 2021/05/19T16:35:38z: DS3231
+ 0h00:03.071 2021/05/19T16:35:38z: BME280 (0x76)
+ 0h00:03.085 2021/05/19T16:35:38z: 50:2:91:e5:36:6e
+ 0h00:03.087 2021/05/19T16:35:38z: SSID: ARRIS-A013
+ 0h00:03.092 2021/05/19T16:35:38z: AP_STA
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01R tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:02.998 2021/05/19T17:10:40z: DS3231
+ 0h00:03.013 2021/05/19T17:10:40z: BME280 (0x76)
+ 0h00:03.027 2021/05/19T17:10:40z: 50:2:91:e5:36:6e
+ 0h00:03.029 2021/05/19T17:10:40z: SSID: ARRIS-A013
+ 0h00:03.034 2021/05/19T17:10:40z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.014 2021/05/19T17:30:36z: DS3231
+ 0h00:03.029 2021/05/19T17:30:36z: BME280 (0x76)
+ 0h00:03.043 2021/05/19T17:30:36z: 50:2:91:e5:36:6e
+ 0h00:03.045 2021/05/19T17:30:36z: SSID: ARRIS-A013
+ 0h00:03.050 2021/05/19T17:30:36z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.021 2021/05/19T17:50:33z: DS3231
+ 0h00:03.036 2021/05/19T17:50:33z: BME280 (0x76)
+ 0h00:03.050 2021/05/19T17:50:33z: 50:2:91:e5:36:6e
+ 0h00:03.052 2021/05/19T17:50:33z: SSID: ARRIS-A013
+ 0h00:03.057 2021/05/19T17:50:33z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.014 2021/05/19T18:10:29z: DS3231
+ 0h00:03.029 2021/05/19T18:10:29z: BME280 (0x76)
+ 0h00:03.044 2021/05/19T18:10:29z: 50:2:91:e5:36:6e
+ 0h00:03.045 2021/05/19T18:10:29z: SSID: ARRIS-A013
+ 0h00:03.050 2021/05/19T18:10:29z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.021 2021/05/19T18:30:25z: DS3231
+ 0h00:03.036 2021/05/19T18:30:25z: BME280 (0x76)
+ 0h00:03.050 2021/05/19T18:30:25z: 50:2:91:e5:36:6e
+ 0h00:03.052 2021/05/19T18:30:25z: SSID: ARRIS-A013
+ 0h00:03.057 2021/05/19T18:30:25z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.020 2021/05/19T18:50:22z: DS3231
+ 0h00:03.035 2021/05/19T18:50:22z: BME280 (0x76)
+ 0h00:03.049 2021/05/19T18:50:22z: 50:2:91:e5:36:6e
+ 0h00:03.051 2021/05/19T18:50:22z: SSID: ARRIS-A013
+ 0h00:03.056 2021/05/19T18:50:22z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.018 2021/05/19T19:10:18z: DS3231
+ 0h00:03.034 2021/05/19T19:10:18z: BME280 (0x76)
+ 0h00:03.048 2021/05/19T19:10:18z: 50:2:91:e5:36:6e
+ 0h00:03.050 2021/05/19T19:10:18z: SSID: ARRIS-A013
+ 0h00:03.055 2021/05/19T19:10:18z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.021 2021/05/19T19:30:15z: DS3231
+ 0h00:03.037 2021/05/19T19:30:15z: BME280 (0x76)
+ 0h00:03.051 2021/05/19T19:30:15z: 50:2:91:e5:36:6e
+ 0h00:03.053 2021/05/19T19:30:15z: SSID: ARRIS-A013
+ 0h00:03.058 2021/05/19T19:30:15z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.023 2021/05/19T19:50:11z: DS3231
+ 0h00:03.038 2021/05/19T19:50:11z: BME280 (0x76)
+ 0h00:03.052 2021/05/19T19:50:11z: 50:2:91:e5:36:6e
+ 0h00:03.054 2021/05/19T19:50:11z: SSID: ARRIS-A013
+ 0h00:03.059 2021/05/19T19:50:11z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.022 2021/05/19T20:10:08z: DS3231
+ 0h00:03.038 2021/05/19T20:10:08z: BME280 (0x76)
+ 0h00:03.052 2021/05/19T20:10:08z: 50:2:91:e5:36:6e
+ 0h00:03.054 2021/05/19T20:10:08z: SSID: ARRIS-A013
+ 0h00:03.059 2021/05/19T20:10:08z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.019 2021/05/19T20:30:04z: DS3231
+ 0h00:03.034 2021/05/19T20:30:04z: BME280 (0x76)
+ 0h00:03.048 2021/05/19T20:30:04z: 50:2:91:e5:36:6e
+ 0h00:03.050 2021/05/19T20:30:04z: SSID: ARRIS-A013
+ 0h00:03.055 2021/05/19T20:30:04z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.023 2021/05/19T20:50:01z: DS3231
+ 0h00:03.039 2021/05/19T20:50:01z: BME280 (0x76)
+ 0h00:03.053 2021/05/19T20:50:01z: 50:2:91:e5:36:6e
+ 0h00:03.054 2021/05/19T20:50:01z: SSID: ARRIS-A013
+ 0h00:03.060 2021/05/19T20:50:01z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.023 2021/05/19T21:09:57z: DS3231
+ 0h00:03.038 2021/05/19T21:09:57z: BME280 (0x76)
+ 0h00:03.052 2021/05/19T21:09:57z: 50:2:91:e5:36:6e
+ 0h00:03.054 2021/05/19T21:09:57z: SSID: ARRIS-A013
+ 0h00:03.059 2021/05/19T21:09:57z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.015 2021/05/19T21:29:54z: DS3231
+ 0h00:03.031 2021/05/19T21:29:54z: BME280 (0x76)
+ 0h00:03.045 2021/05/19T21:29:54z: 50:2:91:e5:36:6e
+ 0h00:03.047 2021/05/19T21:29:54z: SSID: ARRIS-A013
+ 0h00:03.052 2021/05/19T21:29:54z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.024 2021/05/19T21:49:49z: DS3231
+ 0h00:03.039 2021/05/19T21:49:49z: BME280 (0x76)
+ 0h00:03.053 2021/05/19T21:49:49z: 50:2:91:e5:36:6e
+ 0h00:03.055 2021/05/19T21:49:49z: SSID: ARRIS-A013
+ 0h00:03.060 2021/05/19T21:49:49z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.023 2021/05/19T22:09:46z: DS3231
+ 0h00:03.039 2021/05/19T22:09:46z: BME280 (0x76)
+ 0h00:03.053 2021/05/19T22:09:46z: 50:2:91:e5:36:6e
+ 0h00:03.054 2021/05/19T22:09:46z: SSID: ARRIS-A013
+ 0h00:03.060 2021/05/19T22:09:46z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.026 2021/05/19T22:29:43z: DS3231
+ 0h00:03.041 2021/05/19T22:29:43z: BME280 (0x76)
+ 0h00:03.055 2021/05/19T22:29:43z: 50:2:91:e5:36:6e
+ 0h00:03.057 2021/05/19T22:29:43z: SSID: ARRIS-A013
+ 0h00:03.062 2021/05/19T22:29:43z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.023 2021/05/19T22:49:39z: DS3231
+ 0h00:03.038 2021/05/19T22:49:39z: BME280 (0x76)
+ 0h00:03.052 2021/05/19T22:49:39z: 50:2:91:e5:36:6e
+ 0h00:03.054 2021/05/19T22:49:39z: SSID: ARRIS-A013
+ 0h00:03.059 2021/05/19T22:49:39z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.022 2021/05/19T23:09:35z: DS3231
+ 0h00:03.037 2021/05/19T23:09:35z: BME280 (0x76)
+ 0h00:03.051 2021/05/19T23:09:35z: 50:2:91:e5:36:6e
+ 0h00:03.053 2021/05/19T23:09:35z: SSID: ARRIS-A013
+ 0h00:03.058 2021/05/19T23:09:35z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.022 2021/05/19T23:29:32z: DS3231
+ 0h00:03.038 2021/05/19T23:29:32z: BME280 (0x76)
+ 0h00:03.052 2021/05/19T23:29:32z: 50:2:91:e5:36:6e
+ 0h00:03.054 2021/05/19T23:29:32z: SSID: ARRIS-A013
+ 0h00:03.059 2021/05/19T23:29:32z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:4, boot mode:(3,6)
+
+wdt reset
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.021 2021/05/19T23:49:28z: DS3231
+ 0h00:03.036 2021/05/19T23:49:28z: BME280 (0x76)
+ 0h00:03.050 2021/05/19T23:49:28z: 50:2:91:e5:36:6e
+ 0h00:03.052 2021/05/19T23:49:28z: SSID: ARRIS-A013
+ 0h00:03.057 2021/05/19T23:49:28z: AP_STA

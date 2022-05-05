@@ -1,0 +1,481 @@
+R tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.057 2021/06/04T00:09:31z: DS3231
+ 0h00:03.072 2021/06/04T00:09:31z: BME280 (0x76)
+ 0h00:03.086 2021/06/04T00:09:31z: 10:52:1c:41:b0:6b
+ 0h00:03.088 2021/06/04T00:09:31z: SSID: LIVADIA_KB
+ 0h00:03.093 2021/06/04T00:09:31z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.038 2021/06/04T00:29:27z: DS3231
+ 0h00:03.053 2021/06/04T00:29:27z: BME280 (0x76)
+ 0h00:03.067 2021/06/04T00:29:27z: 10:52:1c:41:b0:6b
+ 0h00:03.069 2021/06/04T00:29:27z: SSID: LIVADIA_KB
+ 0h00:03.074 2021/06/04T00:29:27z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.046 2021/06/04T00:49:23z: DS3231
+ 0h00:03.061 2021/06/04T00:49:23z: BME280 (0x76)
+ 0h00:03.075 2021/06/04T00:49:23z: 10:52:1c:41:b0:6b
+ 0h00:03.077 2021/06/04T00:49:23z: SSID: LIVADIA_KB
+ 0h00:03.082 2021/06/04T00:49:23z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.033 2021/06/04T01:09:20z: DS3231
+ 0h00:03.049 2021/06/04T01:09:20z: BME280 (0x76)
+ 0h00:03.063 2021/06/04T01:09:20z: 10:52:1c:41:b0:6b
+ 0h00:03.064 2021/06/04T01:09:20z: SSID: LIVADIA_KB
+ 0h00:03.070 2021/06/04T01:09:20z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.032 2021/06/04T01:29:16z: DS3231
+ 0h00:03.047 2021/06/04T01:29:16z: BME280 (0x76)
+ 0h00:03.061 2021/06/04T01:29:16z: 10:52:1c:41:b0:6b
+ 0h00:03.063 2021/06/04T01:29:16z: SSID: LIVADIA_KB
+ 0h00:03.068 2021/06/04T01:29:16z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.053 2021/06/04T01:49:12z: DS3231
+ 0h00:03.069 2021/06/04T01:49:12z: BME280 (0x76)
+ 0h00:03.083 2021/06/04T01:49:12z: 10:52:1c:41:b0:6b
+ 0h00:03.084 2021/06/04T01:49:12z: SSID: LIVADIA_KB
+ 0h00:03.090 2021/06/04T01:49:12z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.029 2021/06/04T02:09:08z: DS3231
+ 0h00:03.044 2021/06/04T02:09:08z: BME280 (0x76)
+ 0h00:03.058 2021/06/04T02:09:08z: 10:52:1c:41:b0:6b
+ 0h00:03.060 2021/06/04T02:09:08z: SSID: LIVADIA_KB
+ 0h00:03.065 2021/06/04T02:09:08z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.030 2021/06/04T02:29:04z: DS3231
+ 0h00:03.045 2021/06/04T02:29:04z: BME280 (0x76)
+ 0h00:03.060 2021/06/04T02:29:04z: 10:52:1c:41:b0:6b
+ 0h00:03.061 2021/06/04T02:29:04z: SSID: LIVADIA_KB
+ 0h00:03.066 2021/06/04T02:29:04z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.056 2021/06/04T02:49:01z: DS3231
+ 0h00:03.071 2021/06/04T02:49:01z: BME280 (0x76)
+ 0h00:03.085 2021/06/04T02:49:01z: 10:52:1c:41:b0:6b
+ 0h00:03.087 2021/06/04T02:49:01z: SSID: LIVADIA_KB
+ 0h00:03.092 2021/06/04T02:49:01z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.034 2021/06/04T03:08:57z: DS3231
+ 0h00:03.049 2021/06/04T03:08:57z: BME280 (0x76)
+ 0h00:03.063 2021/06/04T03:08:57z: 10:52:1c:41:b0:6b
+ 0h00:03.065 2021/06/04T03:08:57z: SSID: LIVADIA_KB
+ 0h00:03.070 2021/06/04T03:08:57z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.046 2021/06/04T03:28:54z: DS3231
+ 0h00:03.061 2021/06/04T03:28:54z: BME280 (0x76)
+ 0h00:03.075 2021/06/04T03:28:54z: 10:52:1c:41:b0:6b
+ 0h00:03.077 2021/06/04T03:28:54z: SSID: LIVADIA_KB
+ 0h00:03.082 2021/06/04T03:28:54z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.026 2021/06/04T03:48:50z: DS3231
+ 0h00:03.041 2021/06/04T03:48:50z: BME280 (0x76)
+ 0h00:03.055 2021/06/04T03:48:50z: 10:52:1c:41:b0:6b
+ 0h00:03.057 2021/06/04T03:48:50z: SSID: LIVADIA_KB
+ 0h00:03.062 2021/06/04T03:48:50z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.032 2021/06/04T04:08:46z: DS3231
+ 0h00:03.048 2021/06/04T04:08:46z: BME280 (0x76)
+ 0h00:03.062 2021/06/04T04:08:46z: 10:52:1c:41:b0:6b
+ 0h00:03.064 2021/06/04T04:08:46z: SSID: LIVADIA_KB
+ 0h00:03.069 2021/06/04T04:08:46z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.052 2021/06/04T04:28:43z: DS3231
+ 0h00:03.067 2021/06/04T04:28:43z: BME280 (0x76)
+ 0h00:03.081 2021/06/04T04:28:43z: 10:52:1c:41:b0:6b
+ 0h00:03.083 2021/06/04T04:28:43z: SSID: LIVADIA_KB
+ 0h00:03.088 2021/06/04T04:28:43z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.026 2021/06/04T04:48:39z: DS3231
+ 0h00:03.041 2021/06/04T04:48:39z: BME280 (0x76)
+ 0h00:03.055 2021/06/04T04:48:39z: 10:52:1c:41:b0:6b
+ 0h00:03.057 2021/06/04T04:48:39z: SSID: LIVADIA_KB
+ 0h00:03.062 2021/06/04T04:48:39z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.030 2021/06/04T05:08:35z: DS3231
+ 0h00:03.045 2021/06/04T05:08:35z: BME280 (0x76)
+ 0h00:03.059 2021/06/04T05:08:35z: 10:52:1c:41:b0:6b
+ 0h00:03.061 2021/06/04T05:08:35z: SSID: LIVADIA_KB
+ 0h00:03.066 2021/06/04T05:08:35z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.047 2021/06/04T05:28:31z: DS3231
+ 0h00:03.062 2021/06/04T05:28:31z: BME280 (0x76)
+ 0h00:03.077 2021/06/04T05:28:31z: 10:52:1c:41:b0:6b
+ 0h00:03.078 2021/06/04T05:28:31z: SSID: LIVADIA_KB
+ 0h00:03.083 2021/06/04T05:28:31z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.031 2021/06/04T05:48:28z: DS3231
+ 0h00:03.046 2021/06/04T05:48:28z: BME280 (0x76)
+ 0h00:03.060 2021/06/04T05:48:28z: 10:52:1c:41:b0:6b
+ 0h00:03.062 2021/06/04T05:48:28z: SSID: LIVADIA_KB
+ 0h00:03.067 2021/06/04T05:48:28z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.046 2021/06/04T06:08:24z: DS3231
+ 0h00:03.061 2021/06/04T06:08:24z: BME280 (0x76)
+ 0h00:03.075 2021/06/04T06:08:24z: 10:52:1c:41:b0:6b
+ 0h00:03.077 2021/06/04T06:08:24z: SSID: LIVADIA_KB
+ 0h00:03.082 2021/06/04T06:08:24z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.030 2021/06/04T06:28:21z: DS3231
+ 0h00:03.045 2021/06/04T06:28:21z: BME280 (0x76)
+ 0h00:03.059 2021/06/04T06:28:21z: 10:52:1c:41:b0:6b
+ 0h00:03.061 2021/06/04T06:28:21z: SSID: LIVADIA_KB
+ 0h00:03.066 2021/06/04T06:28:21z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.032 2021/06/04T06:48:18z: DS3231
+ 0h00:03.047 2021/06/04T06:48:18z: BME280 (0x76)
+ 0h00:03.061 2021/06/04T06:48:18z: 10:52:1c:41:b0:6b
+ 0h00:03.063 2021/06/04T06:48:18z: SSID: LIVADIA_KB
+ 0h00:03.068 2021/06/04T06:48:18z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.046 2021/06/04T07:08:14z: DS3231
+ 0h00:03.062 2021/06/04T07:08:14z: BME280 (0x76)
+ 0h00:03.076 2021/06/04T07:08:14z: 10:52:1c:41:b0:6b
+ 0h00:03.077 2021/06/04T07:08:14z: SSID: LIVADIA_KB
+ 0h00:03.083 2021/06/04T07:08:14z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.030 2021/06/04T07:28:10z: DS3231
+ 0h00:03.045 2021/06/04T07:28:10z: BME280 (0x76)
+ 0h00:03.059 2021/06/04T07:28:10z: 10:52:1c:41:b0:6b
+ 0h00:03.061 2021/06/04T07:28:10z: SSID: LIVADIA_KB
+ 0h00:03.066 2021/06/04T07:28:10z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.028 2021/06/04T07:48:06z: DS3231
+ 0h00:03.044 2021/06/04T07:48:06z: BME280 (0x76)
+ 0h00:03.058 2021/06/04T07:48:06z: 10:52:1c:41:b0:6b
+ 0h00:03.059 2021/06/04T07:48:06z: SSID: LIVADIA_KB
+ 0h00:03.065 2021/06/04T07:48:06z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.049 2021/06/04T08:08:02z: DS3231
+ 0h00:03.065 2021/06/04T08:08:02z: BME280 (0x76)
+ 0h00:03.079 2021/06/04T08:08:02z: 10:52:1c:41:b0:6b
+ 0h00:03.081 2021/06/04T08:08:02z: SSID: LIVADIA_KB
+ 0h00:03.086 2021/06/04T08:08:02z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.041 2021/06/04T08:27:58z: DS3231
+ 0h00:03.056 2021/06/04T08:27:58z: BME280 (0x76)
+ 0h00:03.070 2021/06/04T08:27:58z: 10:52:1c:41:b0:6b
+ 0h00:03.072 2021/06/04T08:27:58z: SSID: LIVADIA_KB
+ 0h00:03.077 2021/06/04T08:27:58z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.056 2021/06/04T08:47:54z: DS3231
+ 0h00:03.072 2021/06/04T08:47:54z: BME280 (0x76)
+ 0h00:03.086 2021/06/04T08:47:54z: 10:52:1c:41:b0:6b
+ 0h00:03.087 2021/06/04T08:47:54z: SSID: LIVADIA_KB
+ 0h00:03.093 2021/06/04T08:47:54z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.035 2021/06/04T09:07:51z: DS3231
+ 0h00:03.051 2021/06/04T09:07:51z: BME280 (0x76)
+ 0h00:03.065 2021/06/04T09:07:51z: 10:52:1c:41:b0:6b
+ 0h00:03.066 2021/06/04T09:07:51z: SSID: LIVADIA_KB
+ 0h00:03.072 2021/06/04T09:07:51z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.030 2021/06/04T09:27:47z: DS3231
+ 0h00:03.045 2021/06/04T09:27:47z: BME280 (0x76)
+ 0h00:03.059 2021/06/04T09:27:47z: 10:52:1c:41:b0:6b
+ 0h00:03.061 2021/06/04T09:27:47z: SSID: LIVADIA_KB
+ 0h00:03.066 2021/06/04T09:27:47z: AP_STAR tmr
+ ets Jan  8 2013,rst cause:1, boot mode:(3,6)
+
+load 0x4010f000, len 1384, room 16 
+tail 8
+chksum 0x2d
+csum 0x2d
+v8b899c12
+~ld
+
+
+6.01
+ 0h00:03.047 2021/06/04T09:47:44z: DS3231
+ 0h00:03.062 2021/06/04T09:47:44z: BME280 (0x76)
+ 0h00:03.076 2021/06/04T09:47:44z: 10:52:1c:41:b0:6b
+ 0h00:03.078 2021/06/04T09:47:44z: SSID: LIVADIA_KB
+ 0h00:03.083 2021/06/04T09:47:44z: AP_STA
